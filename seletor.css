@@ -24,7 +24,8 @@ body {
   height: 100svh;
   max-height: 100svh;
   margin: auto;
-  padding: clamp(16px, 3vh, 36px) 0 clamp(16px, 2.5vh, 28px);
+  padding-top: clamp(24px, 4.5vh, 48px);
+  padding-bottom: clamp(36px, 6.5vh, 64px);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -36,7 +37,8 @@ body {
 /* 1. Topo: Apenas a Logo */
 .entry-head {
   text-align: center;
-  margin-top: clamp(0px, 1vh, 12px);
+  margin-top: 0;
+  flex: 0 0 auto;
 }
 
 .selector-logo {
@@ -75,24 +77,24 @@ body {
   perspective: 1200px;
   perspective-origin: 50% 50%;
   margin-top: auto;
-  margin-bottom: clamp(10px, 1.6vh, 18px);
+  margin-bottom: 0;
+  flex: 0 0 auto;
 }
 
 .choice {
   position: relative;
   display: flex;
   flex-direction: column;
-  border-radius: 16px;
+  border-radius: 18px;
   overflow: hidden;
-  background: linear-gradient(165deg, rgba(16, 74, 72, 0.75) 0%, rgba(9, 44, 46, 0.95) 100%);
-  border: 1px solid var(--sel-border);
-  box-shadow: 0 20px 48px rgba(2, 28, 29, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  background: linear-gradient(165deg, rgba(16, 74, 72, 0.8) 0%, rgba(9, 44, 46, 0.95) 100%);
+  border: none;
+  box-shadow: 0 20px 48px rgba(2, 28, 29, 0.65);
   text-decoration: none;
   color: inherit;
   transform-style: preserve-3d;
   will-change: transform;
   transition: transform 320ms cubic-bezier(0.22, 1, 0.36, 1),
-              border-color 320ms cubic-bezier(0.22, 1, 0.36, 1),
               box-shadow 320ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
@@ -100,27 +102,18 @@ body {
 .choice:first-child {
   transform: perspective(1000px) rotateY(4deg);
   transform-origin: center center;
-  box-shadow: 8px 20px 44px rgba(2, 28, 29, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  box-shadow: 8px 20px 44px rgba(2, 28, 29, 0.65);
 }
 
 /* Card da Direita (Matriz): virado suavemente para dentro, borda direita projetada */
 .choice:last-child {
   transform: perspective(1000px) rotateY(-4deg);
   transform-origin: center center;
-  box-shadow: -8px 20px 44px rgba(2, 28, 29, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.08);
-}
-
-.choice::after {
-  content: '';
-  position: absolute;
-  inset: 1px;
-  border-radius: 15px;
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  pointer-events: none;
+  box-shadow: -8px 20px 44px rgba(2, 28, 29, 0.65);
 }
 
 .choice:focus-visible {
-  outline: 3px solid var(--accent);
+  outline: 2px solid var(--accent);
   outline-offset: 4px;
 }
 
@@ -128,8 +121,7 @@ body {
   .choice:hover {
     transform: perspective(1000px) rotateY(0deg) translateY(-8px) scale(1.025) !important;
     z-index: 10;
-    border-color: var(--sel-border-hover);
-    box-shadow: 0 32px 64px rgba(2, 28, 29, 0.8), 0 0 30px rgba(59, 136, 132, 0.35);
+    box-shadow: 0 32px 64px rgba(2, 28, 29, 0.85), 0 0 32px rgba(59, 136, 132, 0.3);
   }
 
   .choice:hover .picture img {
@@ -232,12 +224,9 @@ body {
   color: var(--ink);
 }
 
-/* 3. Rodapé Minimalista: "Escolha sua unidade" */
+/* 3. Rodapé: "Escolha sua unidade" (Oculto no desktop, ativo no mobile) */
 .entry-foot {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
+  display: none;
 }
 
 .entry-title {
@@ -322,6 +311,13 @@ body {
   .choice h2 {
     font-size: clamp(22px, 5.8vw, 30px);
     line-height: 1.02;
+  }
+
+  .entry-foot {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
   }
 
   .entry-title {
