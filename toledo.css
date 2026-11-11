@@ -522,10 +522,140 @@ section, .wrap {
 .hero-copy {
   padding-block: var(--s4);
   margin-left: clamp(24px, 6vw, 96px);
-  width: clamp(380px, 44vw, 520px);
+  width: clamp(390px, 46vw, 560px);
   pointer-events: auto;
   position: relative;
   z-index: 4;
+}
+
+.hero-title {
+  margin: 0;
+  font-family: var(--title);
+  font-size: clamp(38px, 4.6vw, 68px);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+  color: var(--ink);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(6px, 1vh, 12px);
+}
+
+.hero-line {
+  display: block;
+  will-change: transform, opacity;
+}
+
+.hero-line.line-left {
+  animation: heroLineSlideLeft 1200ms cubic-bezier(0.16, 1, 0.3, 1) 180ms both;
+}
+
+.hero-line.line-right {
+  animation: heroLineSlideRight 1200ms cubic-bezier(0.16, 1, 0.3, 1) 340ms both;
+  color: var(--ink);
+}
+
+.hero-line.line-brand {
+  margin-top: clamp(2px, 0.6vh, 6px);
+  animation: heroLineSlideLeft 1200ms cubic-bezier(0.16, 1, 0.3, 1) 500ms both;
+}
+
+/* Background Sweep especial da marca Toledo */
+.brand-sweep {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 22px 6px 18px;
+  color: var(--accent-gold);
+  border-radius: 999px;
+  border: 1px solid rgba(196, 174, 136, 0.36);
+  box-shadow: 0 10px 30px rgba(2, 28, 29, 0.75), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  overflow: hidden;
+  letter-spacing: 0.04em;
+  text-shadow: 0 0 24px rgba(196, 174, 136, 0.45);
+}
+
+.brand-sweep::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(14, 61, 63, 0.95) 0%, rgba(196, 174, 136, 0.35) 100%);
+  transform: scaleX(0);
+  transform-origin: left;
+  animation: brandBgSweep 1000ms cubic-bezier(0.16, 1, 0.3, 1) 1000ms both;
+  z-index: -1;
+}
+
+.hero-cta {
+  animation: heroCtaFadeUp 900ms cubic-bezier(0.16, 1, 0.3, 1) 950ms both;
+}
+
+@keyframes heroLineSlideLeft {
+  0% {
+    opacity: 0;
+    transform: translateX(-80px) scale(0.85);
+  }
+  16% {
+    opacity: 1;
+  }
+  54% {
+    transform: translateX(0) scale(0.85);
+  }
+  62% {
+    transform: translateX(0) scale(0.86);
+  }
+  86% {
+    transform: translateX(0) scale(1.02);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+@keyframes heroLineSlideRight {
+  0% {
+    opacity: 0;
+    transform: translateX(80px) scale(0.85);
+  }
+  16% {
+    opacity: 1;
+  }
+  54% {
+    transform: translateX(0) scale(0.85);
+  }
+  62% {
+    transform: translateX(0) scale(0.86);
+  }
+  86% {
+    transform: translateX(0) scale(1.02);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+@keyframes brandBgSweep {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes heroCtaFadeUp {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .hero h1 {
@@ -1354,6 +1484,17 @@ footer p {
     font-size: var(--big);
     margin-top: 14px;
     text-align: center;
+  }
+
+  .hero-title {
+    font-size: clamp(30px, 7.8vw, 44px);
+    align-items: center;
+    text-align: center;
+    gap: 6px;
+  }
+
+  .brand-sweep {
+    padding: 3px 18px 5px 16px;
   }
 
   .hero-copy > p:not(.label) {
