@@ -20,31 +20,33 @@ body {
 }
 
 .entry {
-  width: min(1180px, calc(100% - 48px));
+  width: min(980px, calc(100% - 48px));
+  height: 100svh;
+  max-height: 100svh;
   margin: auto;
-  padding-top: clamp(12px, 2.5vh, 28px);
-  padding-bottom: clamp(24px, 4vh, 44px);
+  padding: clamp(12px, 2.5vh, 24px) 0;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: clamp(18px, 2.8vh, 32px);
+  gap: clamp(14px, 2.4vh, 22px);
   position: relative;
+  box-sizing: border-box;
 }
 
 /* 1. Topo: Apenas a Logo */
 .entry-head {
   text-align: center;
-  margin-top: -8px;
+  margin-top: 0;
 }
 
 .selector-logo {
-  width: clamp(270px, 30vw, 380px);
-  height: clamp(150px, 16.6vw, 210px);
+  width: clamp(210px, 18vw, 270px);
+  height: clamp(116px, 10vw, 150px);
   position: relative;
   margin-inline: auto;
   overflow: hidden;
-  filter: drop-shadow(0 18px 42px rgba(2, 28, 29, 0.85));
+  filter: drop-shadow(0 16px 36px rgba(2, 28, 29, 0.8));
   transition: transform 400ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
@@ -68,9 +70,9 @@ body {
 .choices {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: clamp(18px, 2.8vw, 36px);
+  gap: clamp(16px, 2.2vw, 28px);
   width: 100%;
-  max-width: 1020px;
+  max-width: 860px;
   perspective: 1200px;
   perspective-origin: 50% 50%;
 }
@@ -143,7 +145,7 @@ body {
 .picture {
   position: relative;
   overflow: hidden;
-  height: clamp(260px, 30vw, 410px);
+  height: clamp(200px, 28vh, 280px);
   background: #092f30;
 }
 
@@ -176,8 +178,8 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  gap: 6px;
-  padding: clamp(16px, 2vw, 24px) clamp(18px, 2.2vw, 26px);
+  gap: 4px;
+  padding: 14px 20px 16px;
   position: relative;
   z-index: 2;
   transform: translateZ(14px);
@@ -186,9 +188,9 @@ body {
 .kind {
   display: inline-flex;
   align-items: center;
-  gap: 7px;
+  gap: 6px;
   font-family: var(--body);
-  font-size: 11px;
+  font-size: 10.5px;
   font-weight: 700;
   letter-spacing: 0.22em;
   text-transform: uppercase;
@@ -198,18 +200,18 @@ body {
 .kind::before {
   content: '';
   display: inline-block;
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
   border-radius: 50%;
   background: var(--accent);
-  box-shadow: 0 0 8px var(--accent);
+  box-shadow: 0 0 6px var(--accent);
 }
 
 .choice h2 {
   font-family: 'Bebas Neue', 'Barlow Condensed', sans-serif;
-  font-size: clamp(26px, 2.6vw, 38px);
+  font-size: clamp(22px, 2.2vw, 28px);
   font-weight: 400;
-  line-height: 1;
+  line-height: 1.02;
   letter-spacing: 0.03em;
   text-transform: uppercase;
   margin: 0;
@@ -227,19 +229,19 @@ body {
 .foot-pill {
   display: inline-flex;
   align-items: center;
-  gap: 14px;
-  padding: 10px 24px;
+  gap: 12px;
+  padding: 7px 20px;
   border-radius: 999px;
   background: rgba(16, 74, 72, 0.45);
   border: 1px solid rgba(185, 201, 197, 0.18);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  box-shadow: 0 10px 28px rgba(2, 28, 29, 0.4);
+  box-shadow: 0 8px 22px rgba(2, 28, 29, 0.4);
 }
 
 .entry-title {
   font-family: var(--body);
-  font-size: clamp(11px, 1.1vw, 13px);
+  font-size: clamp(10.5px, 1vw, 12px);
   font-weight: 600;
   letter-spacing: 0.26em;
   text-transform: uppercase;
@@ -260,6 +262,9 @@ body {
 @media (max-width: 650px) {
   .entry {
     width: calc(100% - 20px);
+    height: auto;
+    min-height: 100svh;
+    max-height: none;
     padding: clamp(22px, 4.5vh, 38px) 0 clamp(18px, 3.5vh, 30px);
     gap: clamp(26px, 4.8vh, 42px);
   }
