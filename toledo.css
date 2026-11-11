@@ -319,16 +319,17 @@ section, .wrap {
    ========================================================================== */
 .hero {
   position: relative;
-  min-height: 820px;
+  min-height: clamp(640px, 84vh, 780px);
   overflow: visible;
   perspective: 1600px;
   background: transparent;
   display: flex;
   align-items: center;
+  padding-block: clamp(20px, 3.5vh, 40px);
 }
 
 .hero-content {
-  min-height: 820px;
+  min-height: auto;
   width: 100%;
   display: flex;
   align-items: center;
@@ -338,8 +339,9 @@ section, .wrap {
 }
 
 .hero-copy {
-  padding-block: var(--s7);
-  width: 52%;
+  padding-block: var(--s5);
+  margin-left: clamp(24px, 6vw, 96px);
+  width: clamp(380px, 44vw, 520px);
   pointer-events: auto;
   position: relative;
   z-index: 4;
@@ -376,9 +378,9 @@ section, .wrap {
 /* Cockpit Flutuante de Vídeo Vertical (Desktop) */
 .hero-film {
   position: absolute;
-  right: max(24px, calc((100% - var(--width)) / 2 + 16px));
-  top: 50%;
-  transform: translateY(-50%) perspective(1200px) rotateY(-5deg) rotateX(2deg);
+  right: max(24px, calc((100% - var(--width)) / 2 + clamp(20px, 3.5vw, 56px)));
+  top: clamp(20px, 3.5vh, 40px);
+  transform: perspective(1200px) rotateY(-5deg) rotateX(2deg);
   transform-origin: center right;
   width: clamp(340px, 28vw, 420px);
   height: clamp(560px, 72vh, 680px);
@@ -420,7 +422,7 @@ section, .wrap {
 }
 
 .hero-film:hover {
-  transform: translateY(-50%) perspective(1200px) rotateY(0deg) rotateX(0deg) scale(1.02);
+  transform: perspective(1200px) rotateY(0deg) rotateX(0deg) scale(1.02);
   box-shadow:
     0 40px 100px rgba(2, 28, 29, 0.95),
     0 0 80px rgba(59, 136, 132, 0.5),
