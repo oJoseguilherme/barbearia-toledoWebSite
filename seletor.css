@@ -20,7 +20,7 @@ body {
 }
 
 .entry {
-  width: min(1060px, calc(100% - 48px));
+  width: min(920px, calc(100% - 48px));
   height: 100svh;
   max-height: 100svh;
   margin: auto;
@@ -71,9 +71,9 @@ body {
 .choices {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: clamp(18px, 2.6vw, 34px);
+  gap: clamp(16px, 2.2vw, 28px);
   width: 100%;
-  max-width: 980px;
+  max-width: 820px;
   perspective: 1200px;
   perspective-origin: 50% 50%;
   margin-top: auto;
