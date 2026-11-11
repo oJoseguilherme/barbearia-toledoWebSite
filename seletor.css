@@ -20,29 +20,31 @@ body {
 }
 
 .entry {
-  width: min(1140px, calc(100% - 48px));
+  width: min(1180px, calc(100% - 48px));
   margin: auto;
-  padding: clamp(20px, 4vh, 48px) 0;
+  padding-top: clamp(12px, 2.5vh, 28px);
+  padding-bottom: clamp(24px, 4vh, 44px);
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: clamp(24px, 3.5vh, 40px);
+  gap: clamp(18px, 2.8vh, 32px);
   position: relative;
 }
 
 /* 1. Topo: Apenas a Logo */
 .entry-head {
   text-align: center;
+  margin-top: -8px;
 }
 
 .selector-logo {
-  width: clamp(220px, 24vw, 310px);
-  height: clamp(122px, 13.3vw, 172px);
+  width: clamp(270px, 30vw, 380px);
+  height: clamp(150px, 16.6vw, 210px);
   position: relative;
   margin-inline: auto;
   overflow: hidden;
-  filter: drop-shadow(0 16px 36px rgba(2, 28, 29, 0.75));
+  filter: drop-shadow(0 18px 42px rgba(2, 28, 29, 0.85));
   transition: transform 400ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
@@ -66,9 +68,9 @@ body {
 .choices {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: clamp(16px, 2.5vw, 32px);
+  gap: clamp(18px, 2.8vw, 36px);
   width: 100%;
-  max-width: 960px;
+  max-width: 1020px;
   perspective: 1400px;
 }
 
@@ -123,7 +125,7 @@ body {
 .picture {
   position: relative;
   overflow: hidden;
-  height: clamp(240px, 28vw, 380px);
+  height: clamp(260px, 30vw, 410px);
   background: #092f30;
 }
 
@@ -239,9 +241,18 @@ body {
 /* Responsividade Mobile e Telas Menores */
 @media (max-width: 650px) {
   .entry {
-    width: calc(100% - 28px);
-    padding: 20px 0;
-    gap: 20px;
+    width: calc(100% - 24px);
+    padding: 16px 0 20px;
+    gap: 16px;
+  }
+
+  .entry-head {
+    margin-top: 0;
+  }
+
+  .selector-logo {
+    width: clamp(240px, 72vw, 300px);
+    height: clamp(133px, 40vw, 166px);
   }
 
   .choices {
@@ -254,7 +265,7 @@ body {
   }
 
   .picture {
-    height: clamp(160px, 44vw, 240px);
+    height: clamp(175px, 46vw, 255px);
   }
 
   .choice-copy {
