@@ -276,15 +276,15 @@ body {
     filter: drop-shadow(0 14px 28px rgba(2, 28, 29, 0.75));
   }
 
-  /* "Escolha sua unidade" reposicionado um pouquinho mais para cima */
+  /* "Escolha sua unidade" posicionado acima dos cards */
   .entry-foot {
     order: 2;
     display: flex;
     justify-content: center;
     align-items: center;
     width: 100%;
-    margin-top: clamp(15px, 2.8vh, 24px);
-    margin-bottom: auto;
+    margin-top: auto;
+    margin-bottom: clamp(14px, 2.6vh, 22px);
     border: none !important;
     border-top: none !important;
     box-shadow: none !important;
@@ -306,7 +306,7 @@ body {
     gap: 12px;
     perspective: 800px;
     perspective-origin: 50% 50%;
-    margin-top: auto;
+    margin-top: 0;
     margin-bottom: clamp(54px, 11.5vh, 92px);
     flex: 0 0 auto;
   }
