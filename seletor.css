@@ -224,7 +224,7 @@ body {
   z-index: -1;
   transform-origin: left center;
   transform: scaleX(0);
-  animation: sweepBg 650ms cubic-bezier(0.22, 1, 0.36, 1) 900ms forwards;
+  animation: sweepBg 850ms cubic-bezier(0.16, 1, 0.3, 1) 1050ms forwards;
 }
 
 .choice h2 {
@@ -318,7 +318,7 @@ body {
     z-index: 1;
   }
 
-  /* Efeito background sweep idêntico ao dos cards, disparando PRIMEIRO como guia visual de UX */
+  /* Efeito background sweep idêntico ao dos cards, lento e envolvente como no design editorial */
   .entry-title::before {
     content: '';
     position: absolute;
@@ -328,7 +328,7 @@ body {
     z-index: -1;
     transform-origin: left center;
     transform: scaleX(0);
-    animation: sweepBg 650ms cubic-bezier(0.22, 1, 0.36, 1) 200ms forwards;
+    animation: sweepBg 1100ms cubic-bezier(0.16, 1, 0.3, 1) 250ms forwards;
   }
 
   .entry-title::after {
