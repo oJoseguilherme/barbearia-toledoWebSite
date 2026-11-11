@@ -268,22 +268,22 @@ body {
     flex: 0 0 auto;
   }
 
-  /* Logo refinada */
+  /* Logo refinada e com mais presenca */
   .selector-logo {
-    width: clamp(170px, 46vw, 205px);
-    height: clamp(94px, 25.5vw, 114px);
-    opacity: 0.88;
+    width: clamp(195px, 53vw, 235px);
+    height: clamp(108px, 29.5vw, 130px);
+    opacity: 0.94;
     filter: drop-shadow(0 12px 24px rgba(2, 28, 29, 0.7));
   }
 
-  /* "Escolha sua unidade" com respiro elegante abaixo da logo */
+  /* "Escolha sua unidade" mais para baixo, com respiro elegante */
   .entry-foot {
     order: 2;
     display: flex;
     justify-content: center;
     align-items: center;
     width: 100%;
-    margin-top: clamp(20px, 3.8vh, 34px);
+    margin-top: clamp(26px, 5vh, 44px);
     margin-bottom: auto;
     border: none !important;
     border-top: none !important;
@@ -294,12 +294,12 @@ body {
   .entry-title {
     font-size: 11px;
     letter-spacing: 0.28em;
-    color: rgba(200, 218, 214, 0.72);
+    color: rgba(200, 218, 214, 0.75);
     text-transform: uppercase;
     font-weight: 500;
   }
 
-  /* Cards elevados com respiro inferior em relacao a base */
+  /* Cards elevados mais para cima com respiro generoso na base */
   .choices {
     order: 3;
     grid-template-columns: 1fr 1fr;
@@ -307,7 +307,7 @@ body {
     perspective: 800px;
     perspective-origin: 50% 50%;
     margin-top: auto;
-    margin-bottom: clamp(24px, 5vh, 44px);
+    margin-bottom: clamp(38px, 8vh, 66px);
     flex: 0 0 auto;
   }
 
@@ -375,8 +375,8 @@ body {
   }
 
   .selector-logo {
-    width: 150px;
-    height: 82px;
+    width: 172px;
+    height: 95px;
   }
 
   .choices {
