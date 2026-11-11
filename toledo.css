@@ -287,16 +287,16 @@ section, .wrap {
   gap: var(--s4);
 }
 
-/* Logo PNG Transparente no Header (Emblema ampliado com enquadramento ativo) */
+/* Logo PNG Transparente no Header (Emblema proporcional e equilibrado) */
 .header-logo {
   display: block;
   position: relative;
-  width: clamp(190px, 18vw, 250px);
-  height: clamp(74px, 6.8vw, 92px);
+  width: clamp(130px, 11vw, 155px);
+  height: clamp(50px, 4.2vw, 58px);
   overflow: hidden;
   text-decoration: none;
   transition: transform 260ms cubic-bezier(0.22, 1, 0.36, 1);
-  filter: drop-shadow(0 6px 20px rgba(2, 28, 29, 0.75));
+  filter: drop-shadow(0 4px 14px rgba(2, 28, 29, 0.75));
   flex-shrink: 0;
 }
 
@@ -1282,8 +1282,8 @@ footer p {
   }
 
   .header-logo {
-    width: clamp(155px, 42vw, 195px);
-    height: clamp(60px, 15vw, 74px);
+    width: clamp(110px, 30vw, 130px);
+    height: clamp(42px, 11vw, 50px);
   }
 
   .menu-button {
