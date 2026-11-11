@@ -24,12 +24,11 @@ body {
   height: 100svh;
   max-height: 100svh;
   margin: auto;
-  padding: clamp(12px, 2.2vh, 24px) 0;
+  padding: clamp(16px, 3vh, 36px) 0 clamp(16px, 2.5vh, 28px);
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
-  gap: clamp(16px, 2.6vh, 28px);
   position: relative;
   box-sizing: border-box;
 }
@@ -37,8 +36,7 @@ body {
 /* 1. Topo: Apenas a Logo */
 .entry-head {
   text-align: center;
-  margin-top: 0;
-  margin-bottom: clamp(8px, 1.8vh, 18px);
+  margin-top: clamp(0px, 1vh, 12px);
 }
 
 .selector-logo {
@@ -76,6 +74,8 @@ body {
   max-width: 950px;
   perspective: 1200px;
   perspective-origin: 50% 50%;
+  margin-top: auto;
+  margin-bottom: clamp(10px, 1.6vh, 18px);
 }
 
 .choice {
@@ -278,6 +278,8 @@ body {
     gap: 12px;
     perspective: 800px;
     perspective-origin: 50% 50%;
+    margin-top: 0;
+    margin-bottom: 0;
   }
 
   .choice:first-child {
