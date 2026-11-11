@@ -232,7 +232,7 @@ body {
   color: var(--ink);
 }
 
-/* 3. Rodapé Tecnológico: "Escolha sua unidade" */
+/* 3. Rodapé Minimalista: "Escolha sua unidade" */
 .entry-foot {
   display: flex;
   justify-content: center;
@@ -240,36 +240,16 @@ body {
   width: 100%;
 }
 
-.foot-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 12px;
-  padding: 7px 20px;
-  border-radius: 999px;
-  background: rgba(16, 74, 72, 0.45);
-  border: 1px solid rgba(185, 201, 197, 0.18);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  box-shadow: 0 8px 22px rgba(2, 28, 29, 0.4);
-}
-
 .entry-title {
   font-family: var(--body);
-  font-size: clamp(10.5px, 1vw, 12px);
-  font-weight: 600;
-  letter-spacing: 0.26em;
+  font-size: clamp(11px, 1.05vw, 12.5px);
+  font-weight: 500;
+  letter-spacing: 0.28em;
   text-transform: uppercase;
-  color: var(--muted);
+  color: rgba(185, 201, 197, 0.6);
   margin: 0;
-}
-
-.pill-dot {
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: var(--accent);
-  box-shadow: 0 0 6px var(--accent);
-  opacity: 0.85;
+  text-align: center;
+  user-select: none;
 }
 
 /* Responsividade Mobile e Telas Menores */
@@ -342,14 +322,9 @@ body {
     line-height: 1.02;
   }
 
-  .foot-pill {
-    padding: 8px 18px;
-    gap: 10px;
-  }
-
   .entry-title {
-    font-size: 10.5px;
-    letter-spacing: 0.2em;
+    font-size: 10px;
+    letter-spacing: 0.22em;
   }
 }
 
