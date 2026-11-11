@@ -1,0 +1,6 @@
+{
+  "package": "gsap",
+  "version": "3.15.1",
+  "source": "https://cdn.jsdelivr.net/npm/gsap@3.15.1/dist/",
+  "license": "https://gsap.com/community/standard-license/"
+}

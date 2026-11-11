@@ -1,0 +1,14 @@
+@font-face {
+  font-family: 'Bebas Neue';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(font-logo-1.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Sancreek';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(font-logo-2.ttf) format('truetype');
+}
