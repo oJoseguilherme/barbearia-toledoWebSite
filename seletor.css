@@ -270,9 +270,9 @@ body {
 
   /* Logo ampliada com presenca marcante */
   .selector-logo {
-    width: clamp(215px, 58vw, 255px);
-    height: clamp(118px, 32vw, 140px);
-    opacity: 0.96;
+    width: clamp(235px, 64vw, 280px);
+    height: clamp(129px, 35vw, 154px);
+    opacity: 0.98;
     filter: drop-shadow(0 14px 28px rgba(2, 28, 29, 0.75));
   }
 
@@ -375,8 +375,8 @@ body {
   }
 
   .selector-logo {
-    width: 185px;
-    height: 102px;
+    width: 200px;
+    height: 110px;
   }
 
   .choices {
