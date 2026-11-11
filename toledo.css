@@ -248,16 +248,28 @@ section, .wrap {
 }
 
 /* ==========================================================================
-   Header Flutuante (Glassmorphism)
+   Header Flutuante Cinematográfico (Transparente -> Glass no Scroll)
    ========================================================================== */
 .site-header {
   position: sticky;
   top: 0;
   z-index: 100;
-  background: rgba(6, 25, 26, 0.75);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border-bottom: 1px solid rgba(185, 201, 197, 0.08);
+  background: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border-bottom: 1px solid transparent;
+  transition: background 320ms cubic-bezier(0.22, 1, 0.36, 1),
+              border-color 320ms ease,
+              backdrop-filter 320ms ease,
+              box-shadow 320ms ease;
+}
+
+.site-header.is-scrolled {
+  background: rgba(6, 25, 26, 0.88);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border-bottom: 1px solid rgba(185, 201, 197, 0.12);
+  box-shadow: 0 10px 32px rgba(2, 28, 29, 0.65);
 }
 
 .header-inner {
@@ -268,17 +280,25 @@ section, .wrap {
   gap: var(--s4);
 }
 
-.wordmark {
-  font: 600 30px / 1 var(--title);
-  letter-spacing: 0.12em;
-  color: var(--ink);
+/* Logo PNG Transparente no Header */
+.header-logo {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+  transition: transform 260ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.wordmark small {
+.header-logo:hover {
+  transform: scale(1.04);
+}
+
+.header-logo img {
+  height: clamp(38px, 4.2vw, 48px);
+  width: auto;
+  aspect-ratio: 1.82 / 1;
+  object-fit: contain;
   display: block;
-  font: 400 10px / 1.8 var(--body);
-  letter-spacing: 0.35em;
-  color: var(--accent);
+  filter: drop-shadow(0 6px 18px rgba(2, 28, 29, 0.75));
 }
 
 .desktop-nav {
@@ -304,14 +324,50 @@ section, .wrap {
   color: var(--ink);
 }
 
+/* Botão Hamburguer Minimalista (Três risquinhos elegantes) */
 .menu-button {
   display: none;
-  min-width: 44px;
-  min-height: 44px;
-  border: 1px solid rgba(185, 201, 197, 0.2);
-  background: rgba(16, 74, 72, 0.4);
+  background: transparent;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+  box-shadow: none;
   color: var(--ink);
-  border-radius: 8px;
+  outline: none;
+}
+
+.menu-bars {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 26px;
+  height: 18px;
+  pointer-events: none;
+}
+
+.menu-bars span {
+  display: block;
+  width: 100%;
+  height: 2px;
+  background-color: var(--ink);
+  border-radius: 2px;
+  transition: transform 260ms cubic-bezier(0.22, 1, 0.36, 1),
+              opacity 200ms ease,
+              background-color 260ms ease;
+}
+
+.menu-button.is-active .menu-bars span:nth-child(1) {
+  transform: translateY(8px) rotate(45deg);
+  background-color: var(--accent);
+}
+
+.menu-button.is-active .menu-bars span:nth-child(2) {
+  opacity: 0;
+}
+
+.menu-button.is-active .menu-bars span:nth-child(3) {
+  transform: translateY(-8px) rotate(-45deg);
+  background-color: var(--accent);
 }
 
 /* ==========================================================================
@@ -319,13 +375,15 @@ section, .wrap {
    ========================================================================== */
 .hero {
   position: relative;
-  min-height: clamp(640px, 84vh, 780px);
+  min-height: clamp(660px, 90vh, 840px);
+  margin-top: -84px;
+  padding-top: calc(84px + clamp(24px, 4vh, 48px));
+  padding-bottom: clamp(24px, 4vh, 48px);
   overflow: visible;
   perspective: 1600px;
   background: transparent;
   display: flex;
   align-items: center;
-  padding-block: clamp(20px, 3.5vh, 40px);
 }
 
 .hero-content {
@@ -339,7 +397,7 @@ section, .wrap {
 }
 
 .hero-copy {
-  padding-block: var(--s5);
+  padding-block: var(--s4);
   margin-left: clamp(24px, 6vw, 96px);
   width: clamp(380px, 44vw, 520px);
   pointer-events: auto;
@@ -348,7 +406,7 @@ section, .wrap {
 }
 
 .hero h1 {
-  margin-top: var(--s4);
+  margin-top: 0;
 }
 
 .hero h1 span {
@@ -379,7 +437,7 @@ section, .wrap {
 .hero-film {
   position: absolute;
   right: max(24px, calc((100% - var(--width)) / 2 + clamp(20px, 3.5vw, 56px)));
-  top: clamp(20px, 3.5vh, 40px);
+  top: calc(84px + clamp(16px, 2.8vh, 32px));
   transform: perspective(1200px) rotateY(-5deg) rotateX(2deg);
   transform-origin: center right;
   width: clamp(340px, 28vw, 420px);
@@ -1047,7 +1105,9 @@ footer p {
   }
 
   .menu-button {
-    display: block;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .desktop-nav {
@@ -1076,7 +1136,8 @@ footer p {
   /* Hero Mobile Cockpit */
   .hero {
     min-height: auto;
-    padding-top: clamp(20px, 3vh, 32px);
+    margin-top: -72px;
+    padding-top: calc(72px + clamp(16px, 2.5vh, 28px));
     padding-bottom: clamp(32px, 5vh, 48px);
     display: flex;
     flex-direction: column;
