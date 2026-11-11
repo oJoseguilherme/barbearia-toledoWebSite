@@ -307,7 +307,7 @@ body {
     perspective: 800px;
     perspective-origin: 50% 50%;
     margin-top: auto;
-    margin-bottom: clamp(38px, 8vh, 66px);
+    margin-bottom: clamp(54px, 11.5vh, 92px);
     flex: 0 0 auto;
   }
 
