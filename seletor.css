@@ -251,19 +251,22 @@ body {
     height: auto;
     min-height: 100svh;
     max-height: none;
-    padding: clamp(24px, 5vh, 42px) 0 clamp(20px, 4vh, 32px);
-    gap: clamp(28px, 5.2vh, 44px);
+    padding: clamp(20px, 4vh, 36px) 0 clamp(18px, 3.5vh, 28px);
+    gap: clamp(22px, 4.2vh, 34px);
     justify-content: flex-start;
   }
 
   .entry-head {
-    margin-top: clamp(6px, 1.5vh, 14px);
-    margin-bottom: clamp(16px, 3vh, 26px);
+    margin-top: clamp(4px, 1vh, 10px);
+    margin-bottom: clamp(10px, 2vh, 18px);
   }
 
+  /* Logo refinada para dar protagonismo total aos cards */
   .selector-logo {
-    width: clamp(200px, 58vw, 245px);
-    height: clamp(110px, 32vw, 136px);
+    width: clamp(170px, 46vw, 205px);
+    height: clamp(94px, 25.5vw, 114px);
+    opacity: 0.88;
+    filter: drop-shadow(0 12px 24px rgba(2, 28, 29, 0.7));
   }
 
   .choices {
@@ -275,16 +278,17 @@ body {
     margin-bottom: 0;
   }
 
+  /* Cards destacados com halo de iluminação e presença 3D */
   .choice:first-child {
     transform: perspective(700px) rotateY(3.5deg);
     transform-origin: center center;
-    box-shadow: 6px 16px 36px rgba(2, 28, 29, 0.65);
+    box-shadow: 6px 18px 40px rgba(2, 28, 29, 0.8), 0 0 24px rgba(59, 136, 132, 0.25);
   }
 
   .choice:last-child {
     transform: perspective(700px) rotateY(-3.5deg);
     transform-origin: center center;
-    box-shadow: -6px 16px 36px rgba(2, 28, 29, 0.65);
+    box-shadow: -6px 18px 40px rgba(2, 28, 29, 0.8), 0 0 24px rgba(59, 136, 132, 0.25);
   }
 
   .choice:active {
@@ -294,10 +298,15 @@ body {
   .choice {
     border-radius: 16px;
     border: none;
+    background: linear-gradient(165deg, rgba(18, 80, 78, 0.88) 0%, rgba(9, 44, 46, 0.98) 100%);
   }
 
   .picture {
-    height: clamp(210px, 58vw, 295px);
+    height: clamp(235px, 64vw, 320px);
+  }
+
+  .picture img {
+    filter: saturate(1.06) brightness(1.03);
   }
 
   .choice-copy {
@@ -307,17 +316,21 @@ body {
 
   .kind {
     font-size: 11px;
-    letter-spacing: 0.18em;
+    letter-spacing: 0.2em;
+    color: var(--accent);
   }
 
   .kind::before {
     width: 6px;
     height: 6px;
+    box-shadow: 0 0 8px var(--accent);
   }
 
   .choice h2 {
-    font-size: clamp(22px, 5.8vw, 30px);
+    font-size: clamp(23px, 6vw, 31px);
     line-height: 1.02;
+    color: #ffffff;
+    font-weight: 500;
   }
 
   .entry-foot {
@@ -333,6 +346,7 @@ body {
   .entry-title {
     font-size: 10px;
     letter-spacing: 0.22em;
+    opacity: 0.7;
   }
 }
 
@@ -341,12 +355,17 @@ body {
     width: calc(100% - 16px);
   }
 
+  .selector-logo {
+    width: 160px;
+    height: 88px;
+  }
+
   .choices {
     gap: 8px;
   }
 
   .picture {
-    height: 185px;
+    height: 200px;
   }
 
   .choice-copy {
