@@ -252,25 +252,31 @@ section, .wrap {
    Header Flutuante Cinematográfico (Transparente -> Glass no Scroll)
    ========================================================================== */
 .site-header {
-  position: sticky;
+  position: fixed;
   top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
   z-index: 100;
-  background: transparent;
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
-  border-bottom: 1px solid transparent;
-  transition: background 320ms cubic-bezier(0.22, 1, 0.36, 1),
-              border-color 320ms ease,
-              backdrop-filter 320ms ease,
-              box-shadow 320ms ease;
+  background: transparent !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border-bottom: 1px solid transparent !important;
+  box-shadow: none !important;
+  transition: background 360ms cubic-bezier(0.22, 1, 0.36, 1),
+              border-color 360ms ease,
+              backdrop-filter 360ms ease,
+              -webkit-backdrop-filter 360ms ease,
+              box-shadow 360ms ease;
+  pointer-events: auto;
 }
 
 .site-header.is-scrolled {
-  background: rgba(6, 25, 26, 0.88);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
-  border-bottom: 1px solid rgba(185, 201, 197, 0.12);
-  box-shadow: 0 10px 32px rgba(2, 28, 29, 0.65);
+  background: rgba(6, 25, 26, 0.84) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  border-bottom: 1px solid rgba(185, 201, 197, 0.12) !important;
+  box-shadow: 0 10px 32px rgba(2, 28, 29, 0.65) !important;
 }
 
 .header-inner {
@@ -478,11 +484,14 @@ section, .wrap {
 /* ==========================================================================
    Hero Cinematográfico & Cockpit Flutuante de Vídeo Vertical
    ========================================================================== */
+#inicio {
+  scroll-margin-top: 0;
+}
+
 .hero {
   position: relative;
   min-height: clamp(660px, 90vh, 840px);
-  margin-top: -84px;
-  padding-top: calc(84px + clamp(24px, 4vh, 48px));
+  padding-top: calc(84px + clamp(18px, 2.5vh, 36px));
   padding-bottom: clamp(24px, 4vh, 48px);
   overflow: visible;
   perspective: 1600px;
@@ -1272,7 +1281,6 @@ footer p {
   /* Hero Mobile Cockpit */
   .hero {
     min-height: auto;
-    margin-top: -72px;
     padding-top: calc(72px + clamp(16px, 2.5vh, 28px));
     padding-bottom: clamp(32px, 5vh, 48px);
     display: flex;
