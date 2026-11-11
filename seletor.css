@@ -2,3 +2,10 @@
 .entry-head h1{font-family:'Bebas Neue','Barlow Condensed',sans-serif;font-weight:400;font-size:clamp(30px,3vw,40px);letter-spacing:.1em;text-transform:uppercase;line-height:1.15}
 @media(max-width:650px){.entry-head h1{font-size:28px;letter-spacing:.08em}}
 @media(max-width:360px){.entry-head h1{font-size:26px}}
+/* More space for the unit facades, with a more compact caption area. */
+.choice{grid-template-columns:1.35fr 1fr}
+.choice-copy{padding:24px}
+.choice h2{font-size:clamp(30px,3vw,42px);margin:16px 0 12px}
+@media(max-width:900px){.choice-copy{padding:20px}.choice h2{font-size:30px}}
+@media(max-width:650px){.choice{grid-template-columns:1fr;grid-template-rows:230px 1fr;min-height:400px}.picture{height:230px}.choice-copy{padding:14px 12px}.choice h2{font-size:26px;min-height:78px;margin:8px 0}.enter{padding-top:8px;min-height:44px}}
+@media(max-width:360px){.choice{grid-template-rows:200px 1fr;min-height:370px}.picture{height:200px}.choice-copy{padding:12px 10px}.choice h2{font-size:24px;min-height:72px}}
