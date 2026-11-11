@@ -292,11 +292,27 @@ body {
   }
 
   .entry-title {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
     font-size: 11px;
     letter-spacing: 0.28em;
-    color: rgba(200, 218, 214, 0.75);
+    color: rgba(215, 230, 227, 0.82);
     text-transform: uppercase;
     font-weight: 500;
+  }
+
+  .entry-title::before,
+  .entry-title::after {
+    content: '';
+    display: inline-block;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 8px var(--accent), 0 0 14px rgba(196, 174, 136, 0.6);
+    opacity: 0.92;
+    flex-shrink: 0;
   }
 
   /* Cards elevados mais para cima com respiro generoso na base */
