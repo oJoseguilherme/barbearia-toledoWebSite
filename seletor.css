@@ -138,7 +138,7 @@ body {
 .picture {
   position: relative;
   overflow: hidden;
-  height: clamp(220px, 31vh, 310px);
+  height: clamp(250px, 35vh, 340px);
   background: #092f30;
 }
 
@@ -172,7 +172,7 @@ body {
 }
 
 .choice[href="filial.html"] .picture img {
-  object-position: 50% 35%;
+  object-position: 40% 18%;
 }
 
 .choice[href="matriz.html"] .picture img {
@@ -248,13 +248,14 @@ body {
     height: auto;
     min-height: 100svh;
     max-height: none;
-    padding: clamp(22px, 4.5vh, 38px) 0 clamp(18px, 3.5vh, 30px);
-    gap: clamp(26px, 4.8vh, 42px);
+    padding: clamp(24px, 5vh, 42px) 0 clamp(20px, 4vh, 32px);
+    gap: clamp(28px, 5.2vh, 44px);
+    justify-content: flex-start;
   }
 
   .entry-head {
-    margin-top: clamp(4px, 1vh, 12px);
-    margin-bottom: clamp(8px, 2vh, 16px);
+    margin-top: clamp(6px, 1.5vh, 14px);
+    margin-bottom: clamp(16px, 3vh, 26px);
   }
 
   .selector-logo {
@@ -274,11 +275,13 @@ body {
   .choice:first-child {
     transform: perspective(700px) rotateY(3.5deg);
     transform-origin: center center;
+    box-shadow: 6px 16px 36px rgba(2, 28, 29, 0.65);
   }
 
   .choice:last-child {
     transform: perspective(700px) rotateY(-3.5deg);
     transform-origin: center center;
+    box-shadow: -6px 16px 36px rgba(2, 28, 29, 0.65);
   }
 
   .choice:active {
@@ -286,7 +289,8 @@ body {
   }
 
   .choice {
-    border-radius: 14px;
+    border-radius: 16px;
+    border: none;
   }
 
   .picture {
