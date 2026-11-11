@@ -227,6 +227,9 @@ body {
 /* 3. Rodapé: "Escolha sua unidade" (Oculto no desktop, ativo no mobile) */
 .entry-foot {
   display: none;
+  border: none !important;
+  border-top: none !important;
+  box-shadow: none !important;
 }
 
 .entry-title {
@@ -322,6 +325,9 @@ body {
     justify-content: center;
     align-items: center;
     width: 100%;
+    border: none !important;
+    border-top: none !important;
+    box-shadow: none !important;
   }
 
   .entry-title {
