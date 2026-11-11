@@ -2,8 +2,12 @@
 (()=>{'use strict';document.documentElement.classList.add('js');document.body.classList.add('js');
 const reduce=matchMedia('(prefers-reduced-motion: reduce)');
 document.querySelectorAll('.choice').forEach(card=>{card.addEventListener('pointermove',e=>{if(e.pointerType!=='mouse'||reduce.matches)return;const b=card.getBoundingClientRect(),x=(e.clientX-b.left)/b.width-.5,y=(e.clientY-b.top)/b.height-.5;card.style.transform=`rotateX(${-y*4}deg) rotateY(${x*4}deg) translateY(-5px) scale(1.008)`});card.addEventListener('pointerleave',()=>card.style.transform='')});
-const menuButton=document.querySelector('.menu-button'),menu=document.querySelector('#menu');
-if(menuButton&&menu){const close=()=>{menu.classList.remove('open');menuButton.setAttribute('aria-expanded','false');menuButton.classList.remove('is-active')};menuButton.addEventListener('click',()=>{const open=menu.classList.toggle('open');menuButton.setAttribute('aria-expanded',String(open));menuButton.classList.toggle('is-active',open)});menu.querySelectorAll('a').forEach(a=>a.addEventListener('click',close));document.addEventListener('keydown',e=>{if(e.key==='Escape'&&menu.classList.contains('open')){close();menuButton.focus()}})}
+const menuButton=document.querySelector('.menu-button'),drawer=document.querySelector('.side-drawer'),drawerClose=document.querySelector('.drawer-close'),backdrop=document.querySelector('.drawer-backdrop');
+function toggleDrawer(open){if(!drawer)return;const isOpen=typeof open==='boolean'?open:!drawer.classList.contains('open');drawer.classList.toggle('open',isOpen);if(backdrop)backdrop.classList.toggle('active',isOpen);if(menuButton){menuButton.classList.toggle('is-active',isOpen);menuButton.setAttribute('aria-expanded',String(isOpen));}document.body.style.overflow=isOpen?'hidden':'';}
+if(menuButton)menuButton.addEventListener('click',()=>toggleDrawer());
+if(drawerClose)drawerClose.addEventListener('click',()=>toggleDrawer(false));
+if(backdrop)backdrop.addEventListener('click',()=>toggleDrawer(false));
+if(drawer){drawer.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>toggleDrawer(false)));document.addEventListener('keydown',e=>{if(e.key==='Escape'&&drawer.classList.contains('open')){toggleDrawer(false);menuButton?.focus();}});}
 const header=document.querySelector('.site-header');
 if(header){const onScroll=()=>{header.classList.toggle('is-scrolled',window.scrollY>20)};window.addEventListener('scroll',onScroll,{passive:true});onScroll();}
 const video=document.querySelector('#hero-video'),videoButton=document.querySelector('.video-control');

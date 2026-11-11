@@ -293,7 +293,7 @@ section, .wrap {
 }
 
 .header-logo img {
-  height: clamp(38px, 4.2vw, 48px);
+  height: clamp(52px, 5.8vw, 70px);
   width: auto;
   aspect-ratio: 1.82 / 1;
   object-fit: contain;
@@ -301,32 +301,11 @@ section, .wrap {
   filter: drop-shadow(0 6px 18px rgba(2, 28, 29, 0.75));
 }
 
-.desktop-nav {
-  display: flex;
-  gap: var(--s5);
-  align-items: center;
-}
-
-.desktop-nav > a {
+/* Botão Hamburguer Minimalista (Três risquinhos elegantes - visível sempre) */
+.menu-button {
   display: inline-flex;
   align-items: center;
-  min-height: 44px;
-  transition: color 200ms;
-}
-
-.desktop-nav > a:not(.button) {
-  font-size: 13px;
-  letter-spacing: 0.05em;
-  color: var(--muted);
-}
-
-.desktop-nav > a:not(.button):hover {
-  color: var(--ink);
-}
-
-/* Botão Hamburguer Minimalista (Três risquinhos elegantes) */
-.menu-button {
-  display: none;
+  justify-content: center;
   background: transparent;
   border: none;
   padding: 10px;
@@ -368,6 +347,131 @@ section, .wrap {
 .menu-button.is-active .menu-bars span:nth-child(3) {
   transform: translateY(-8px) rotate(-45deg);
   background-color: var(--accent);
+}
+
+/* Barra Lateral Flutuante (Off-canvas Drawer) */
+.side-drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: min(380px, 86vw);
+  height: 100vh;
+  height: 100svh;
+  background: rgba(6, 25, 26, 0.95);
+  backdrop-filter: blur(28px);
+  -webkit-backdrop-filter: blur(28px);
+  border-left: 1px solid rgba(185, 201, 197, 0.16);
+  box-shadow: -20px 0 60px rgba(2, 28, 29, 0.85);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: clamp(28px, 4.5vh, 44px) clamp(24px, 4vw, 36px);
+  transform: translateX(105%);
+  transition: transform 420ms cubic-bezier(0.16, 1, 0.3, 1), visibility 420ms;
+  visibility: hidden;
+  box-sizing: border-box;
+}
+
+.side-drawer.open {
+  transform: translateX(0);
+  visibility: visible;
+}
+
+.drawer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 20px;
+  border-bottom: 1px solid rgba(185, 201, 197, 0.1);
+}
+
+.drawer-title {
+  font-family: var(--title);
+  font-size: 20px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.drawer-close {
+  background: transparent;
+  border: none;
+  color: var(--ink);
+  font-size: 22px;
+  line-height: 1;
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: color 200ms ease, transform 200ms ease;
+}
+
+.drawer-close:hover {
+  color: var(--accent);
+  transform: scale(1.1);
+}
+
+.drawer-links {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  margin-block: auto;
+  padding-block: 24px;
+}
+
+.drawer-links a {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-family: var(--title);
+  font-size: clamp(24px, 3.2vw, 32px);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink);
+  text-decoration: none;
+  transition: color 200ms ease, transform 200ms ease;
+}
+
+.drawer-links a:hover {
+  color: var(--accent);
+  transform: translateX(6px);
+}
+
+.nav-num {
+  font-family: var(--body);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  color: var(--accent);
+  opacity: 0.8;
+}
+
+.drawer-foot {
+  padding-top: 20px;
+  border-top: 1px solid rgba(185, 201, 197, 0.1);
+}
+
+.drawer-foot .button {
+  width: 100%;
+  justify-content: center;
+}
+
+.drawer-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(2, 20, 21, 0.65);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 999;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 350ms ease;
+}
+
+.drawer-backdrop.active {
+  opacity: 1;
+  pointer-events: auto;
 }
 
 /* ==========================================================================
@@ -433,15 +537,43 @@ section, .wrap {
   color: rgba(185, 201, 197, 0.6);
 }
 
+@keyframes heroFilmFlyAndExpand {
+  0% {
+    opacity: 0;
+    transform: perspective(1200px) translateX(min(560px, 46vw)) scale(0.68) rotateY(-14deg) rotateX(5deg);
+  }
+  30% {
+    opacity: 0.9;
+  }
+  100% {
+    opacity: 1;
+    transform: perspective(1200px) translateX(0) scale(1) rotateY(-5deg) rotateX(2deg);
+  }
+}
+
+@keyframes heroFilmFlyAndExpandMobile {
+  0% {
+    opacity: 0;
+    transform: translateX(min(320px, 85vw)) scale(0.72);
+  }
+  30% {
+    opacity: 0.9;
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
 /* Cockpit Flutuante de Vídeo Vertical (Desktop) */
 .hero-film {
   position: absolute;
-  right: max(24px, calc((100% - var(--width)) / 2 + clamp(20px, 3.5vw, 56px)));
-  top: calc(84px + clamp(16px, 2.8vh, 32px));
+  right: max(24px, calc((100% - var(--width)) / 2 + clamp(12px, 2.5vw, 40px)));
+  top: calc(84px + clamp(10px, 1.8vh, 24px));
   transform: perspective(1200px) rotateY(-5deg) rotateX(2deg);
   transform-origin: center right;
-  width: clamp(340px, 28vw, 420px);
-  height: clamp(560px, 72vh, 680px);
+  width: clamp(390px, 33vw, 490px);
+  height: clamp(630px, 80vh, 780px);
   aspect-ratio: 9 / 16;
   border-radius: 28px;
   border: 1px solid rgba(196, 174, 136, 0.28);
@@ -451,9 +583,10 @@ section, .wrap {
     0 0 60px rgba(59, 136, 132, 0.35),
     inset 0 1px 0 rgba(255, 255, 255, 0.15);
   overflow: hidden;
-  will-change: transform;
+  will-change: transform, opacity;
   z-index: 3;
   pointer-events: auto;
+  animation: heroFilmFlyAndExpand 1400ms cubic-bezier(0.16, 1, 0.3, 1) 180ms both;
   transition: transform 500ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 500ms;
 }
 
@@ -480,7 +613,7 @@ section, .wrap {
 }
 
 .hero-film:hover {
-  transform: perspective(1200px) rotateY(0deg) rotateX(0deg) scale(1.02);
+  transform: perspective(1200px) translateX(0) rotateY(0deg) rotateX(0deg) scale(1.02);
   box-shadow:
     0 40px 100px rgba(2, 28, 29, 0.95),
     0 0 80px rgba(59, 136, 132, 0.5),
@@ -1110,29 +1243,6 @@ footer p {
     justify-content: center;
   }
 
-  .desktop-nav {
-    display: flex;
-    position: absolute;
-    top: 72px;
-    left: 0;
-    right: 0;
-    flex-direction: column;
-    align-items: stretch;
-    padding: var(--s4);
-    background: rgba(6, 25, 26, 0.95);
-    backdrop-filter: blur(20px);
-    border-bottom: 1px solid rgba(185, 201, 197, 0.15);
-    gap: var(--s1);
-  }
-
-  .js .desktop-nav:not(.open) {
-    display: none;
-  }
-
-  .desktop-nav > a {
-    padding: var(--s2);
-  }
-
   /* Hero Mobile Cockpit */
   .hero {
     min-height: auto;
@@ -1153,19 +1263,20 @@ footer p {
     z-index: 2;
   }
 
-  /* No mobile, o vídeo flutuante vertical vem logo em destaque no topo do conteúdo */
+  /* No mobile, o vídeo flutuante vertical vem logo em destaque no topo do conteúdo com animação suave */
   .hero-film {
     position: relative;
     inset: auto;
     right: auto;
     top: auto;
     transform: none;
-    width: min(100%, 360px);
-    height: clamp(440px, 62vh, 520px);
+    width: min(100%, 370px);
+    height: clamp(460px, 66vh, 550px);
     margin: 0 auto clamp(24px, 4vh, 36px);
     border-radius: 24px;
     border: 1px solid rgba(196, 174, 136, 0.28);
     box-shadow: 0 20px 48px rgba(2, 28, 29, 0.85), 0 0 40px rgba(59, 136, 132, 0.3);
+    animation: heroFilmFlyAndExpandMobile 1300ms cubic-bezier(0.16, 1, 0.3, 1) 180ms both;
   }
 
   .hero-film::after {
