@@ -20,3 +20,25 @@
  .choice h2{min-height:0;margin:8px 0}
  .enter{margin-top:8px;padding-top:8px;min-height:44px}
 }
+/* Ajuste mobile: duas unidades visíveis sem rolagem, com títulos um pouco maiores. */
+@media(max-width:650px){
+ .entry{justify-content:center;padding:12px 0;gap:14px}
+ .entry-head h1{font-size:23px;margin-top:8px}
+ .choices{grid-template-columns:1fr 1fr;gap:10px}
+ .choice{grid-template-columns:1fr;grid-template-rows:112px auto;min-height:0;height:220px}
+ .picture{height:112px;min-height:0;border-radius:8px 8px 0 0}
+ .picture img{position:absolute;width:100%;height:100%;object-fit:cover}
+ .choice-copy{padding:10px 9px;justify-content:flex-start;transform:translateZ(12px)}
+ .choice h2{font-size:24px;line-height:1.02;min-height:0;margin:8px 0 0}
+ .choice .kind{font-size:10px}
+ .place{font-size:11px}
+ .enter{display:none}
+}
+@media(max-width:360px){
+ .entry{width:calc(100% - 24px);gap:12px}
+ .choices{gap:8px}
+ .choice{grid-template-rows:96px auto;height:206px}
+ .picture{height:96px}
+ .choice-copy{padding:9px 7px}
+ .choice h2{font-size:22px;margin-top:7px}
+}
