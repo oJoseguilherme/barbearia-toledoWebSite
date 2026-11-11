@@ -21,3 +21,4 @@ Website estático responsivo da Barbearia Toledo (Palmas - TO), incluindo págin
 Compatível diretamente com **GitHub Pages**, **Cloudflare Pages**, **Netlify** ou **Vercel** sem necessidade de build steps:
 - **Build command**: N/A (em branco)
 - **Output directory**: `/` (raiz)
+
