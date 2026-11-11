@@ -137,26 +137,40 @@ section, .wrap {
   padding-block: clamp(64px, 8vw, 120px);
 }
 
-/* Tipografia auxiliar & Labels */
+@keyframes sweepBg {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* Tipografia auxiliar & Labels (Estilo editorial minimalista com sweep) */
 .label {
+  position: relative;
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  padding: 4px 10px;
   font-size: var(--label);
   font-weight: 700;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.22em;
   text-transform: uppercase;
   color: var(--accent);
+  z-index: 1;
+  width: fit-content;
 }
 
 .label::before {
   content: '';
-  display: inline-block;
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: var(--accent);
-  box-shadow: 0 0 6px var(--accent);
+  position: absolute;
+  inset: 0;
+  background: rgba(196, 174, 136, 0.18);
+  border-radius: 4px;
+  z-index: -1;
+  transform-origin: left center;
+  transform: scaleX(0);
+  animation: sweepBg 950ms cubic-bezier(0.16, 1, 0.3, 1) 250ms forwards;
 }
 
 .muted {
@@ -301,18 +315,21 @@ section, .wrap {
 }
 
 /* ==========================================================================
-   Hero Cinematográfico & Vídeo Flutuante
+   Hero Cinematográfico & Cockpit Flutuante de Vídeo Vertical
    ========================================================================== */
 .hero {
   position: relative;
-  min-height: 800px;
+  min-height: 820px;
   overflow: visible;
   perspective: 1600px;
   background: transparent;
+  display: flex;
+  align-items: center;
 }
 
 .hero-content {
-  min-height: 800px;
+  min-height: 820px;
+  width: 100%;
   display: flex;
   align-items: center;
   position: relative;
@@ -322,8 +339,10 @@ section, .wrap {
 
 .hero-copy {
   padding-block: var(--s7);
-  width: 58%;
+  width: 52%;
   pointer-events: auto;
+  position: relative;
+  z-index: 4;
 }
 
 .hero h1 {
@@ -337,7 +356,7 @@ section, .wrap {
 .hero-copy > p:not(.label) {
   margin-top: var(--s4);
   color: var(--muted);
-  font-size: clamp(16px, 1.4vw, 20px);
+  font-size: clamp(16px, 1.35vw, 20px);
   line-height: 1.6;
 }
 
@@ -354,16 +373,59 @@ section, .wrap {
   color: rgba(185, 201, 197, 0.6);
 }
 
-/* Vídeo Flutuante em 3D */
+/* Cockpit Flutuante de Vídeo Vertical (Desktop) */
 .hero-film {
   position: absolute;
-  inset: 40px 32px 40px auto;
-  width: 40%;
-  border-radius: 20px;
-  border: 1px solid rgba(185, 201, 197, 0.2);
-  box-shadow: 0 24px 64px rgba(2, 28, 29, 0.7), 0 0 32px var(--teal-glow);
+  right: max(24px, calc((100% - var(--width)) / 2 + 16px));
+  top: 50%;
+  transform: translateY(-50%) perspective(1200px) rotateY(-5deg) rotateX(2deg);
+  transform-origin: center right;
+  width: clamp(340px, 28vw, 420px);
+  height: clamp(560px, 72vh, 680px);
+  aspect-ratio: 9 / 16;
+  border-radius: 28px;
+  border: 1px solid rgba(196, 174, 136, 0.28);
+  background: #061e20;
+  box-shadow:
+    0 32px 80px rgba(2, 28, 29, 0.85),
+    0 0 60px rgba(59, 136, 132, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
   overflow: hidden;
   will-change: transform;
+  z-index: 3;
+  pointer-events: auto;
+  transition: transform 500ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 500ms;
+}
+
+/* Ambient Glow volumétrico pulsante atrás do vídeo vertical */
+.hero-film::before {
+  content: '';
+  position: absolute;
+  inset: -20px;
+  background: radial-gradient(circle at 60% 40%, rgba(59, 136, 132, 0.45) 0%, rgba(196, 174, 136, 0.18) 50%, transparent 75%);
+  filter: blur(28px);
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* Moldura de vidro / reflexo cinematográfico */
+.hero-film::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 27px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, transparent 40%, rgba(2, 28, 29, 0.5) 100%);
+  pointer-events: none;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.hero-film:hover {
+  transform: translateY(-50%) perspective(1200px) rotateY(0deg) rotateX(0deg) scale(1.02);
+  box-shadow:
+    0 40px 100px rgba(2, 28, 29, 0.95),
+    0 0 80px rgba(59, 136, 132, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  border-color: rgba(196, 174, 136, 0.55);
 }
 
 .hero-film video {
@@ -371,30 +433,33 @@ section, .wrap {
   height: 100%;
   object-fit: cover;
   object-position: center;
-  border-radius: 20px;
+  border-radius: 26px;
+  display: block;
 }
 
 .video-control {
   position: absolute;
-  right: 16px;
-  bottom: 16px;
-  z-index: 3;
-  background: rgba(6, 25, 26, 0.75);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  right: 18px;
+  bottom: 18px;
+  z-index: 5;
+  background: rgba(6, 25, 26, 0.82);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
   color: var(--ink);
-  border: 1px solid rgba(185, 201, 197, 0.25);
+  border: 1px solid rgba(185, 201, 197, 0.3);
   border-radius: 999px;
-  min-height: 40px;
-  padding: 8px 18px;
+  min-height: 42px;
+  padding: 8px 20px;
   font-size: 12px;
-  letter-spacing: 0.05em;
-  transition: background 200ms, border-color 200ms;
+  letter-spacing: 0.06em;
+  box-shadow: 0 8px 20px rgba(2, 28, 29, 0.6);
+  transition: background 200ms, border-color 200ms, transform 200ms;
 }
 
 .video-control:hover {
-  background: rgba(16, 74, 72, 0.85);
+  background: rgba(16, 74, 72, 0.95);
   border-color: var(--accent);
+  transform: scale(1.04);
 }
 
 /* Barra inferior do Hero (Sem divisória brusca) */
@@ -1006,39 +1071,75 @@ footer p {
     padding: var(--s2);
   }
 
-  /* Hero Mobile */
+  /* Hero Mobile Cockpit */
   .hero {
-    min-height: 820px;
+    min-height: auto;
+    padding-top: clamp(20px, 3vh, 32px);
+    padding-bottom: clamp(32px, 5vh, 48px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
 
   .hero-content {
-    min-height: 820px;
-    align-items: flex-end;
+    min-height: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    z-index: 2;
   }
 
+  /* No mobile, o vídeo flutuante vertical vem logo em destaque no topo do conteúdo */
   .hero-film {
-    inset: 20px 16px auto;
-    width: calc(100% - 32px);
-    height: 480px;
-    border-radius: 18px;
+    position: relative;
+    inset: auto;
+    right: auto;
+    top: auto;
+    transform: none;
+    width: min(100%, 360px);
+    height: clamp(440px, 62vh, 520px);
+    margin: 0 auto clamp(24px, 4vh, 36px);
+    border-radius: 24px;
+    border: 1px solid rgba(196, 174, 136, 0.28);
+    box-shadow: 0 20px 48px rgba(2, 28, 29, 0.85), 0 0 40px rgba(59, 136, 132, 0.3);
+  }
+
+  .hero-film::after {
+    border-radius: 23px;
   }
 
   .hero-film video {
-    border-radius: 18px;
+    border-radius: 23px;
   }
 
   .hero-copy {
     width: 100%;
-    padding: 0 0 28px;
+    padding: 0;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
 
   .hero-copy .label {
-    margin-top: 510px;
+    margin-top: 0;
   }
 
   .hero-copy h1 {
     font-size: var(--big);
     margin-top: 14px;
+    text-align: center;
+  }
+
+  .hero-copy > p:not(.label) {
+    text-align: center;
+    max-width: 380px;
+    margin-inline: auto;
+  }
+
+  .hero .button {
+    margin-inline: auto;
   }
 
   .services-grid, .story-grid, .contact-grid {
@@ -1099,15 +1200,8 @@ footer p {
 
 @media (max-width: 480px) {
   .hero-film {
-    height: 420px;
-  }
-
-  .hero-copy .label {
-    margin-top: 450px;
-  }
-
-  .hero, .hero-content {
-    min-height: 760px;
+    width: min(100%, 320px);
+    height: clamp(390px, 58vh, 460px);
   }
 
   .portrait-carousel.is-ready .portrait-viewport {
