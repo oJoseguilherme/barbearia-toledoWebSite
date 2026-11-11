@@ -45,6 +45,7 @@
 html {
   scroll-behavior: smooth;
   scroll-padding-top: 96px;
+  overflow-x: clip;
 }
 
 body {
@@ -540,12 +541,25 @@ section, .wrap {
 @keyframes heroFilmFlyAndExpand {
   0% {
     opacity: 0;
-    transform: perspective(1200px) translateX(min(560px, 46vw)) scale(0.68) rotateY(-14deg) rotateX(5deg);
+    transform: perspective(1200px) translateX(min(680px, 52vw)) scale(0.65) rotateY(-14deg) rotateX(4deg);
   }
-  30% {
-    opacity: 0.9;
+  16% {
+    opacity: 1;
+  }
+  54% {
+    /* Chega exatamente na sua posição horizontal, mantendo-se pequeno */
+    transform: perspective(1200px) translateX(0) scale(0.65) rotateY(-8deg) rotateX(3deg);
+  }
+  62% {
+    /* Momento de impacto: parou pequeno no enquadramento */
+    transform: perspective(1200px) translateX(0) scale(0.66) rotateY(-7deg) rotateX(2.5deg);
+  }
+  86% {
+    /* Parou, cresceu! Expansão com imponência e presença */
+    transform: perspective(1200px) translateX(0) scale(1.02) rotateY(-4.5deg) rotateX(1.8deg);
   }
   100% {
+    /* Assentamento aveludado no tamanho final */
     opacity: 1;
     transform: perspective(1200px) translateX(0) scale(1) rotateY(-5deg) rotateX(2deg);
   }
@@ -554,10 +568,22 @@ section, .wrap {
 @keyframes heroFilmFlyAndExpandMobile {
   0% {
     opacity: 0;
-    transform: translateX(min(320px, 85vw)) scale(0.72);
+    transform: translateX(min(340px, 88vw)) scale(0.65);
   }
-  30% {
-    opacity: 0.9;
+  16% {
+    opacity: 1;
+  }
+  54% {
+    /* Chega ao centro da tela mantendo-se pequeno */
+    transform: translateX(0) scale(0.65);
+  }
+  62% {
+    /* Parou pequeno no centro */
+    transform: translateX(0) scale(0.66);
+  }
+  86% {
+    /* Parou, cresceu! */
+    transform: translateX(0) scale(1.025);
   }
   100% {
     opacity: 1;
@@ -571,7 +597,7 @@ section, .wrap {
   right: max(24px, calc((100% - var(--width)) / 2 + clamp(12px, 2.5vw, 40px)));
   top: calc(84px + clamp(10px, 1.8vh, 24px));
   transform: perspective(1200px) rotateY(-5deg) rotateX(2deg);
-  transform-origin: center right;
+  transform-origin: center center;
   width: clamp(390px, 33vw, 490px);
   height: clamp(630px, 80vh, 780px);
   aspect-ratio: 9 / 16;
@@ -586,7 +612,7 @@ section, .wrap {
   will-change: transform, opacity;
   z-index: 3;
   pointer-events: auto;
-  animation: heroFilmFlyAndExpand 1400ms cubic-bezier(0.16, 1, 0.3, 1) 180ms both;
+  animation: heroFilmFlyAndExpand 1600ms cubic-bezier(0.16, 1, 0.3, 1) 180ms both;
   transition: transform 500ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 500ms;
 }
 
@@ -1252,6 +1278,7 @@ footer p {
     display: flex;
     flex-direction: column;
     align-items: center;
+    overflow-x: clip;
   }
 
   .hero-content {
@@ -1263,20 +1290,21 @@ footer p {
     z-index: 2;
   }
 
-  /* No mobile, o vídeo flutuante vertical vem logo em destaque no topo do conteúdo com animação suave */
+  /* No mobile, o vídeo flutuante vertical vem deslizando pequeno e cresce ao parar no centro */
   .hero-film {
     position: relative;
     inset: auto;
     right: auto;
     top: auto;
     transform: none;
+    transform-origin: center center;
     width: min(100%, 370px);
     height: clamp(460px, 66vh, 550px);
     margin: 0 auto clamp(24px, 4vh, 36px);
     border-radius: 24px;
     border: 1px solid rgba(196, 174, 136, 0.28);
     box-shadow: 0 20px 48px rgba(2, 28, 29, 0.85), 0 0 40px rgba(59, 136, 132, 0.3);
-    animation: heroFilmFlyAndExpandMobile 1300ms cubic-bezier(0.16, 1, 0.3, 1) 180ms both;
+    animation: heroFilmFlyAndExpandMobile 1600ms cubic-bezier(0.16, 1, 0.3, 1) 180ms both;
   }
 
   .hero-film::after {
