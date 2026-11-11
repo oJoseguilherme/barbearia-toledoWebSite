@@ -263,27 +263,27 @@ body {
 
   .entry-head {
     order: 1;
-    margin-top: clamp(4px, 1vh, 12px);
+    margin-top: 0;
     margin-bottom: 0;
     flex: 0 0 auto;
   }
 
-  /* Logo refinada e com mais presenca */
+  /* Logo ampliada com presenca marcante */
   .selector-logo {
-    width: clamp(195px, 53vw, 235px);
-    height: clamp(108px, 29.5vw, 130px);
-    opacity: 0.94;
-    filter: drop-shadow(0 12px 24px rgba(2, 28, 29, 0.7));
+    width: clamp(215px, 58vw, 255px);
+    height: clamp(118px, 32vw, 140px);
+    opacity: 0.96;
+    filter: drop-shadow(0 14px 28px rgba(2, 28, 29, 0.75));
   }
 
-  /* "Escolha sua unidade" mais para baixo, com respiro elegante */
+  /* "Escolha sua unidade" reposicionado um pouquinho mais para cima */
   .entry-foot {
     order: 2;
     display: flex;
     justify-content: center;
     align-items: center;
     width: 100%;
-    margin-top: clamp(26px, 5vh, 44px);
+    margin-top: clamp(15px, 2.8vh, 24px);
     margin-bottom: auto;
     border: none !important;
     border-top: none !important;
@@ -375,8 +375,8 @@ body {
   }
 
   .selector-logo {
-    width: 172px;
-    height: 95px;
+    width: 185px;
+    height: 102px;
   }
 
   .choices {
