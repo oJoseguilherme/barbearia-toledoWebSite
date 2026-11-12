@@ -1358,26 +1358,61 @@ section, .wrap {
 
 @media (max-width: 600px) {
   .works-pinned-stage {
-    padding: clamp(16px, 2vh, 24px) 16px;
-    justify-content: space-evenly;
+    min-height: 100svh;
+    height: 100svh;
+    padding-top: calc(72px + clamp(6px, 1.2vh, 14px));
+    padding-bottom: clamp(14px, 2.2vh, 22px);
+    padding-inline: 16px;
+    justify-content: space-between;
+  }
+  .works-header {
+    margin-bottom: clamp(6px, 1vh, 12px);
   }
   .works-deck-stack {
-    width: clamp(310px, 90vw, 380px);
+    width: min(calc(100vw - 32px), 360px);
     aspect-ratio: 3.5 / 4.5;
     height: auto;
-    max-height: clamp(440px, 62vh, 520px);
+    max-height: calc(100svh - 215px);
   }
   .works-line {
-    font-size: clamp(18px, 5.2vw, 24px);
+    font-size: clamp(16px, 4.8vw, 22px);
+    line-height: 1.15;
   }
   .works-sweep {
-    font-size: clamp(38px, 11vw, 54px) !important;
+    font-size: clamp(34px, 9.8vw, 46px) !important;
+  }
+  .works-card-clean-label {
+    bottom: 14px;
+    padding: 6px 16px;
+    gap: 8px;
   }
   .works-service-title {
-    font-size: 11.5px;
+    font-size: 11px;
+    letter-spacing: 0.1em;
   }
   .works-compare-hint {
-    font-size: 9px;
+    font-size: 8.5px;
+    padding-left: 8px;
+  }
+
+  /* Delays acelerados no mobile para resposta imediata ao scroll */
+  .works-section.is-inview .works-line.works-line-1 {
+    animation-delay: 80ms;
+  }
+  .works-section.is-inview .works-line.works-line-2 {
+    animation-delay: 260ms;
+  }
+  .works-section.is-inview .works-line-brand {
+    animation-delay: 460ms;
+  }
+  .works-section.is-inview .works-sweep::before {
+    animation-delay: 680ms;
+  }
+  .works-section.is-inview .works-sweep::after {
+    animation-delay: 680ms;
+  }
+  .works-section.is-inview .works-underline {
+    animation-delay: 900ms;
   }
 }
 

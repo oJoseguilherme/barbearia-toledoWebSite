@@ -101,7 +101,8 @@ function initWorksDeck(section) {
   const pinnedStage = section.querySelector('.works-pinned-stage');
 
   if (window.gsap && window.ScrollTrigger && pinnedStage) {
-    const scrollPerCard = 800;
+    const isMobile = window.innerWidth <= 600;
+    const scrollPerCard = isMobile ? 540 : 800;
     const totalScroll = count * scrollPerCard;
 
     worksST = ScrollTrigger.create({
@@ -109,7 +110,7 @@ function initWorksDeck(section) {
       pin: pinnedStage,
       start: 'top top',
       end: () => `+=${totalScroll}`,
-      scrub: 0.45,
+      scrub: isMobile ? 0.28 : 0.45,
       anticipatePin: 1,
       invalidateOnRefresh: true,
       onUpdate: (self) => {
