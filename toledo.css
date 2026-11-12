@@ -1859,15 +1859,17 @@ footer p {
   }
 
   .hero-copy {
-    width: min(calc(100% - 40px), 380px);
+    width: min(calc(100% - 24px), 430px);
     min-height: auto;
-    padding-inline: clamp(14px, 4vw, 24px);
+    padding-left: clamp(14px, 4vw, 24px);
+    padding-right: 8px;
     padding-block: 0;
     text-align: left;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    margin-inline: auto;
+    margin-left: auto;
+    margin-right: max(8px, calc((100% - 430px) / 2));
     margin-top: 0;
   }
 
@@ -1884,15 +1886,15 @@ footer p {
   .hero-title {
     align-items: flex-start;
     text-align: left;
-    gap: clamp(24px, 4vh, 34px);
+    gap: clamp(26px, 4.5vh, 38px);
     width: 100%;
   }
 
   .hero-auxiliary {
-    font-size: clamp(36px, 9.8vw, 48px);
-    line-height: 1.02;
-    letter-spacing: -0.025em;
-    gap: 10px;
+    font-size: clamp(42px, 11.5vw, 56px);
+    line-height: 0.98;
+    letter-spacing: -0.03em;
+    gap: 8px;
     align-items: flex-start;
     text-align: left;
     color: #ffffff !important;
@@ -1900,12 +1902,12 @@ footer p {
   }
 
   .hero-line.line-brand {
-    margin-left: clamp(20px, 6vw, 40px);
+    margin-left: clamp(28px, 9vw, 64px);
   }
 
   .brand-sweep {
-    font-size: clamp(58px, 15.5vw, 78px);
-    line-height: 0.9;
+    font-size: clamp(70px, 18.5vw, 96px);
+    line-height: 0.88;
     letter-spacing: 0.05em;
     padding-bottom: 8px;
     padding-inline: 0;
@@ -1914,14 +1916,14 @@ footer p {
   .hero-cta {
     align-self: flex-end;
     margin-left: auto;
-    margin-right: -2px;
-    margin-top: clamp(74px, 13vh, 115px) !important;
+    margin-right: 2px;
+    margin-top: clamp(80px, 14vh, 125px) !important;
     margin-bottom: clamp(28px, 5vh, 52px);
-    padding: 5px 12px;
-    font-size: 10px;
-    letter-spacing: 0.08em;
-    background: rgba(6, 25, 26, 0.45);
-    border: 1px solid rgba(196, 174, 136, 0.25);
+    padding: 4px 10px;
+    font-size: 9.5px;
+    letter-spacing: 0.09em;
+    background: rgba(5, 20, 22, 0.45);
+    border: 1px solid rgba(196, 174, 136, 0.22);
     border-radius: 999px;
   }
 
