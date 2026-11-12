@@ -19,18 +19,20 @@ if(video){if(videoButton){let manualPause=false;videoButton.addEventListener('cl
 // ==========================================================================
 // Deck 3D de Transformações Antes & Depois (Scroll-Driven Pinning)
 // ==========================================================================
-function initWorksCarousel(section) {
+function initWorksShowcase(section) {
   if (!section) return;
-  const carousel = section.querySelector('.works-carousel');
-  if (!carousel) return;
-  const items = [...carousel.querySelectorAll('.works-item')];
-  const count = items.length;
-  if (!count) return;
+  const menu = section.querySelector('.showcase-menu');
+  const frame = section.querySelector('#showcase-frame');
+  const img = section.querySelector('#showcase-img');
+  const badge = section.querySelector('#showcase-badge');
+  const badgeText = section.querySelector('#badge-text');
+  const toggleBtn = section.querySelector('#showcase-toggle');
+  const toggleLabel = section.querySelector('#toggle-label');
+  if (!menu || !frame || !img) return;
 
-  const status = carousel.querySelector('.works-status');
-  const names = items.map(it => it.dataset.service || it.querySelector('h3').textContent.trim());
+  const items = [...menu.querySelectorAll('.showcase-item')];
 
-  // Ativa a animação do título ao entrar no campo de visão (sem travar scroll)
+  // Ativa a animação do título ao entrar no campo de visão
   if (window.ScrollTrigger) {
     ScrollTrigger.create({
       trigger: section,
@@ -42,263 +44,106 @@ function initWorksCarousel(section) {
     section.classList.add('is-inview');
   }
 
-  const mod = (n, m) => ((n % m) + m) % m;
-  const state = { phase: 0 };
-  let busy = false;
-  let active = 0;
+  const procedures = [
+    { name: 'Visagismo Masculino', after: 'imagens/VisagismoDepois.png', before: 'imagens/VisagismoAntes.png' },
+    { name: 'Alisamento Capilar', after: 'imagens/AlisamentoCapilarDepois.png', before: 'imagens/AlisamentoCapilarAntes.png' },
+    { name: 'Barboterapia', after: 'imagens/BarbaDepois.png', before: 'imagens/BarbaAntes.png' },
+    { name: 'Corte na Tesoura', after: 'imagens/corteTesouraDepois.png', before: 'imagens/corteTesouraAntes.png' },
+    { name: 'Corte Clássico', after: 'imagens/CorteClassicoDepois.png', before: 'imagens/CorteClassicoAntes.png' }
+  ];
 
-  // Estado das fotos de cada card: já inicia mostrando o DEPOIS
-  const cardStates = items.map(item => {
-    const afterLayer = item.querySelector('.photo-after');
-    const beforeLayer = item.querySelector('.photo-before');
+  let currentIndex = 0;
+  let isShowingBefore = false;
 
-    // DEPOIS na frente, ANTES atrás
-    if (window.gsap) {
-      gsap.set(afterLayer, { z: 12, x: 0, y: 0, rotation: 0, scale: 1, filter: 'brightness(1)' });
-      gsap.set(beforeLayer, { z: -12, x: 8, y: -6, rotation: 2.5, scale: 0.96, filter: 'brightness(0.72)' });
+  function updateDisplay(animate = true) {
+    const proc = procedures[currentIndex];
+    const src = isShowingBefore ? proc.before : proc.after;
+
+    if (badge && badgeText) {
+      badgeText.textContent = isShowingBefore ? 'Antes' : 'Depois';
+      badge.classList.toggle('is-after', !isShowingBefore);
+      badge.classList.toggle('is-before', isShowingBefore);
     }
 
-    return {
-      item,
-      after: afterLayer,
-      before: beforeLayer,
-      isShowingBefore: false,
-      animating: false
-    };
-  });
-
-  // Alternância suave entre DEPOIS e ANTES ao clicar na imagem central
-  function togglePhoto(index, duration = 0.6) {
-    const cs = cardStates[index];
-    if (!cs || cs.animating) return;
-
-    cs.animating = true;
-    const toBefore = !cs.isShowingBefore;
-    cs.isShowingBefore = toBefore;
-
-    if (!window.gsap || reduce.matches) {
-      if (toBefore) {
-        cs.after.style.zIndex = '1';
-        cs.before.style.zIndex = '12';
-        cs.after.style.filter = 'brightness(0.72)';
-        cs.before.style.filter = 'brightness(1)';
-      } else {
-        cs.before.style.zIndex = '1';
-        cs.after.style.zIndex = '12';
-        cs.before.style.filter = 'brightness(0.72)';
-        cs.after.style.filter = 'brightness(1)';
-      }
-      cs.animating = false;
-      return;
+    if (toggleLabel) {
+      toggleLabel.textContent = isShowingBefore ? 'Ver Depois' : 'Ver Antes';
     }
 
-    if (toBefore) {
-      // Mostra o ANTES: o DEPOIS vai para trás e o ANTES vem para a frente
-      const tl = gsap.timeline({
-        onComplete: () => { cs.animating = false; }
+    if (animate && window.gsap) {
+      gsap.to(img, {
+        opacity: 0.35,
+        scale: 0.98,
+        duration: 0.15,
+        ease: 'power1.out',
+        onComplete: () => {
+          img.src = src;
+          img.alt = `${proc.name}: ${isShowingBefore ? 'Antes' : 'Depois'}`;
+
+          // Calibrações específicas de enquadramento
+          if (currentIndex === 2 && isShowingBefore) {
+            img.style.objectPosition = 'center 8%';
+          } else if (currentIndex === 2 && !isShowingBefore) {
+            img.style.objectPosition = 'center 16%';
+          } else if (currentIndex === 4) {
+            img.style.objectPosition = 'center 10%';
+          } else {
+            img.style.objectPosition = 'center 20%';
+          }
+
+          gsap.to(img, {
+            opacity: 1,
+            scale: 1,
+            duration: 0.28,
+            ease: 'power2.out'
+          });
+        }
       });
-
-      tl.to(cs.after, {
-        y: -24,
-        x: -72,
-        rotation: -6,
-        scale: 1.02,
-        duration: duration * 0.42,
-        ease: 'power2.out'
-      })
-      .set(cs.after, { z: -12 })
-      .to(cs.after, {
-        y: -6,
-        x: -8,
-        rotation: -2.5,
-        scale: 0.96,
-        filter: 'brightness(0.72)',
-        duration: duration * 0.58,
-        ease: 'power2.inOut'
-      }, '-=0.04');
-
-      tl.set(cs.before, { z: 12 }, '<')
-      .to(cs.before, {
-        y: 0,
-        x: 0,
-        rotation: 0,
-        scale: 1,
-        filter: 'brightness(1)',
-        duration: duration * 0.75,
-        ease: 'power2.out'
-      }, '<');
-
     } else {
-      // Volta para o DEPOIS: o ANTES vai para trás e o DEPOIS vem para a frente
-      const tl = gsap.timeline({
-        onComplete: () => { cs.animating = false; }
-      });
-
-      tl.to(cs.before, {
-        y: -24,
-        x: 72,
-        rotation: 6,
-        scale: 1.02,
-        duration: duration * 0.42,
-        ease: 'power2.out'
-      })
-      .set(cs.before, { z: -12 })
-      .to(cs.before, {
-        y: -6,
-        x: 8,
-        rotation: 2.5,
-        scale: 0.96,
-        filter: 'brightness(0.72)',
-        duration: duration * 0.58,
-        ease: 'power2.inOut'
-      }, '-=0.04');
-
-      tl.set(cs.after, { z: 12 }, '<')
-      .to(cs.after, {
-        y: 0,
-        x: 0,
-        rotation: 0,
-        scale: 1,
-        filter: 'brightness(1)',
-        duration: duration * 0.75,
-        ease: 'power2.out'
-      }, '<');
+      img.src = src;
     }
   }
 
-  // Renderização 3D Reto & Flutuante do Carrossel Livre
-  function render() {
-    if (!window.gsap) return;
-    const width = carousel.offsetWidth || window.innerWidth;
-    const desktop = width >= 1050;
-    const tablet = width >= 640;
-    const step = desktop ? Math.min(480, width * 0.36) : tablet ? 360 : Math.min(300, width * 0.84);
-
-    items.forEach((item, i) => {
-      const d = mod(i - state.phase + count / 2, count) - count / 2;
-      const absD = Math.abs(d);
-
-      const x = d * step;
-      const z = -absD * 55;
-      const scale = Math.max(0.76, 1 - Math.min(absD * 0.09, 0.24));
-      const opacity = Math.max(0, Math.min(1, 1 - (absD - 0.72) * 1.25));
-      const isCur = absD < 0.38;
-
-      gsap.set(item, {
-        x: x,
-        y: 0,
-        z: z,
-        rotationY: 0,
-        scale: scale,
-        opacity: opacity,
-        zIndex: Math.round(150 - absD * 20),
-        visibility: opacity < 0.01 ? 'hidden' : 'visible'
-      });
-
-      item.classList.toggle('is-current', isCur);
-      item.setAttribute('aria-hidden', String(!isCur));
-    });
-  }
-
-  function announce() {
-    active = mod(Math.round(state.phase), count);
-    if (status) {
-      status.textContent = `${names[active]}`;
-    }
-  }
-
-  function navigate(direction) {
-    if (busy) return;
-    busy = true;
-
-    if (!window.gsap || reduce.matches) {
-      state.phase = mod(state.phase + direction, count);
-      render();
-      announce();
-      busy = false;
-      return;
-    }
-
-    gsap.to(state, {
-      phase: state.phase + direction,
-      duration: 0.65,
-      ease: 'power2.inOut',
-      onUpdate: render,
-      onComplete: () => {
-        state.phase = mod(state.phase, count);
-        render();
-        announce();
-        busy = false;
-      }
-    });
-  }
-
-  // Eventos de clique nas fotos e cards
-  items.forEach((item, i) => {
+  // Clique nos itens do menu
+  items.forEach((item, index) => {
     item.addEventListener('click', () => {
-      const d = mod(i - state.phase + count / 2, count) - count / 2;
-      if (Math.abs(d) < 0.38) {
-        // Clica na imagem que está no centro: alterna entre DEPOIS e ANTES
-        togglePhoto(i);
-      } else {
-        // Clica no card lateral: navega para ele
-        navigate(Math.sign(d));
-      }
+      if (currentIndex === index) return;
+      currentIndex = index;
+      isShowingBefore = false; // Ao trocar de serviço, sempre começa no DEPOIS
+
+      items.forEach((it, i) => {
+        const active = i === currentIndex;
+        it.classList.toggle('is-active', active);
+        it.setAttribute('aria-selected', String(active));
+      });
+
+      updateDisplay(true);
     });
   });
 
-  // Pequenas setas de navegação embaixo
-  const prevBtn = carousel.querySelector('[data-works-prev]');
-  const nextBtn = carousel.querySelector('[data-works-next]');
-  if (prevBtn) prevBtn.addEventListener('click', () => navigate(-1));
-  if (nextBtn) nextBtn.addEventListener('click', () => navigate(1));
+  // Alternar Antes/Depois ao clicar no botão ou na própria foto
+  function toggleBeforeAfter(e) {
+    if (e) e.stopPropagation();
+    isShowingBefore = !isShowingBefore;
+    updateDisplay(true);
+  }
 
-  // Teclado
-  carousel.addEventListener('keydown', (e) => {
-    if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
-      e.preventDefault();
-      navigate(e.key === 'ArrowRight' ? 1 : -1);
+  if (toggleBtn) toggleBtn.addEventListener('click', toggleBeforeAfter);
+  frame.addEventListener('click', (e) => {
+    if (e.target !== toggleBtn && !toggleBtn.contains(e.target)) {
+      toggleBeforeAfter(e);
     }
   });
 
-  // Touch & Swipe
-  let down = null;
-  const viewport = carousel.querySelector('.works-viewport');
-  if (viewport) {
-    viewport.addEventListener('pointerdown', (e) => {
-      if (e.pointerType === 'mouse' && e.button !== 0) return;
-      down = { x: e.clientX, y: e.clientY, id: e.pointerId };
-      viewport.setPointerCapture(e.pointerId);
-    });
-
-    viewport.addEventListener('pointerup', (e) => {
-      if (!down || e.pointerId !== down.id) return;
-      const dx = e.clientX - down.x;
-      const dy = e.clientY - down.y;
-      down = null;
-      try { viewport.releasePointerCapture(e.pointerId); } catch (_) {}
-      if (Math.abs(dx) > 36 && Math.abs(dx) > Math.abs(dy)) {
-        navigate(dx < 0 ? 1 : -1);
-      }
-    });
-
-    viewport.addEventListener('pointercancel', (e) => {
-      down = null;
-      try { viewport.releasePointerCapture(e.pointerId); } catch (_) {}
-    });
-  }
-
-  // Inicialização 3D e Resize
-  if (window.gsap) {
-    gsap.set(items, { xPercent: -50, yPercent: -50, transformPerspective: 1600 });
-  }
-  render();
-  announce();
-
-  window.addEventListener('resize', render);
+  // Teclado no quadro da foto
+  frame.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      toggleBeforeAfter();
+    }
+  });
 }
 
-document.querySelectorAll('#trabalhos').forEach(initWorksCarousel);
+document.querySelectorAll('#trabalhos').forEach(initWorksShowcase);
 
 function initPortraits(region){
  const stage=region.querySelector('.portrait-stage'),cards=[...stage.querySelectorAll('.team-card')],status=region.querySelector('.portrait-status');const count=cards.length;
