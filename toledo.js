@@ -101,8 +101,8 @@ function initWorksDeck(section) {
   const pinnedStage = section.querySelector('.works-pinned-stage');
 
   if (window.gsap && window.ScrollTrigger && pinnedStage) {
-    const isMobile = window.innerWidth <= 600;
-    const scrollPerCard = isMobile ? 540 : 800;
+    const isMobile = window.innerWidth <= 760;
+    const scrollPerCard = isMobile ? 850 : 800;
     const totalScroll = count * scrollPerCard;
 
     worksST = ScrollTrigger.create({
@@ -110,8 +110,10 @@ function initWorksDeck(section) {
       pin: pinnedStage,
       start: 'top top',
       end: () => `+=${totalScroll}`,
-      scrub: isMobile ? 0.28 : 0.45,
+      scrub: isMobile ? 0.35 : 0.45,
       anticipatePin: 1,
+      preventOverlaps: true,
+      fastScrollEnd: true,
       invalidateOnRefresh: true,
       onUpdate: (self) => {
         const p = self.progress; // 0.0 a 1.0
@@ -145,22 +147,19 @@ function initWorksDeck(section) {
             } else {
               // Cadência de onda: Início (Antes) -> Onda suave -> Pausa (Depois) -> Throw
               if (localProgress < 0.08) {
-                // Momento inicial contemplando o Antes
                 setWipe(c, 0);
                 setCardPose(c, 0, 0, 0, 0, 1, 1);
               } else if (localProgress <= 0.58) {
-                // A onda passa suavemente (rápido, devagar, curva de onda orgânica)
                 const t = (localProgress - 0.08) / 0.50;
                 const wave = 0.5 - 0.5 * Math.cos(Math.PI * t);
                 setWipe(c, wave * 100);
                 setCardPose(c, 0, 0, 0, 0, 1, 1);
               } else if (localProgress <= 0.76) {
-                // "Pausou, pausou, pausou, passou a onda e acalmou":
-                // O Depois fica 100% visível, nítido e estático para contemplação com calma
+                // Pausou, acalmou: o resultado fica nítido e estático para contemplação
                 setWipe(c, 100);
                 setCardPose(c, 0, 0, 0, 0, 1, 1);
               } else {
-                // Throw tridimensional para trás após a pausa contemplativa
+                // Throw tridimensional suave para trás
                 setWipe(c, 100);
                 const throwProg = (localProgress - 0.76) / 0.24; // 0.0 a 1.0
                 const stackWidth = stack.offsetWidth || 480;
@@ -191,7 +190,7 @@ function initWorksDeck(section) {
               }
             }
           } else {
-            // Cards posteriores na pilha: avançam durante a fase do throw
+            // Cards posteriores na pilha: sobem de forma controlada
             let relativeDepth = i - currentCardIdx;
             if (localProgress > 0.76 && currentCardIdx < count - 1) {
               const advanceProg = (localProgress - 0.76) / 0.24;
@@ -220,28 +219,6 @@ function initWorksDeck(section) {
       renderFallback();
     });
   }
-
-  // Interação por toque no mobile (avanço por swipe)
-  let touchStartX = 0;
-  let touchStartY = 0;
-  stack.addEventListener('touchstart', (e) => {
-    touchStartX = e.touches[0].clientX;
-    touchStartY = e.touches[0].clientY;
-  }, { passive: true });
-  stack.addEventListener('touchend', (e) => {
-    const dx = e.changedTouches[0].clientX - touchStartX;
-    const dy = e.changedTouches[0].clientY - touchStartY;
-    if (Math.abs(dx) > 42 && Math.abs(dx) > Math.abs(dy) * 1.25) {
-      if (worksST) {
-        const p = worksST.progress;
-        const currentCard = Math.floor(p * count);
-        const dir = dx < 0 ? 1 : -1;
-        const target = Math.max(0, Math.min(count - 1, currentCard + dir));
-        const targetP = (target + 0.05) / count;
-        window.scrollTo({ top: worksST.start + targetP * (count * 750), behavior: 'smooth' });
-      }
-    }
-  }, { passive: true });
 }
 
 document.querySelectorAll('#trabalhos').forEach(initWorksDeck);
