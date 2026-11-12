@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simulador de Propostas · Barbearia Toledo</title>
+  <style>
+    :root {
+      --bg: #06191a;
+      --deep: #082325;
+      --surface: rgba(14, 61, 63, 0.55);
+      --ink: #f4f1ea;
+      --muted: #b9c9c5;
+      --accent: #c4ae88;
+      --teal-glow: rgba(59, 136, 132, 0.25);
+      --font-title: 'Barlow Condensed', 'Arial Narrow', sans-serif;
+      --font-body: 'Manrope', system-ui, sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: #041213;
+      color: var(--ink);
+      font-family: var(--font-body);
+      padding: 24px 16px 80px;
+    }
+
+    .top-bar {
+      max-width: 1100px;
+      margin: 0 auto 30px;
+      text-align: center;
+    }
+    .top-bar h1 {
+      font-family: var(--font-title);
+      font-size: clamp(28px, 4vw, 42px);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #fff;
+    }
+    .top-bar p {
+      color: var(--muted);
+      font-size: 14px;
+      margin-top: 6px;
+    }
+
+    /* Abas de Navegação das 3 Propostas */
+    .tabs-nav {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 20px;
+      flex-wrap: wrap;
+    }
+    .tab-btn {
+      background: rgba(14, 61, 63, 0.4);
+      border: 1px solid rgba(196, 174, 136, 0.3);
+      color: var(--muted);
+      padding: 10px 20px;
+      border-radius: 999px;
+      font-family: var(--font-title);
+      font-size: 15px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+    .tab-btn.active, .tab-btn:hover {
+      background: var(--accent);
+      color: #051a1b;
+      font-weight: 700;
+      border-color: #fff;
+      box-shadow: 0 0 20px rgba(196, 174, 136, 0.4);
+    }
+
+    /* Container de Demonstração */
+    .preview-box {
+      max-width: 1140px;
+      margin: 0 auto;
+      background: #06191a;
+      border: 1px solid rgba(196, 174, 136, 0.25);
+      border-radius: 24px;
+      padding: clamp(20px, 4vw, 48px);
+      box-shadow: 0 30px 80px rgba(0,0,0,0.8), 0 0 50px rgba(59, 136, 132, 0.15);
+      min-height: 580px;
+    }
+
+    .proposal-view { display: none; }
+    .proposal-view.active { display: block; animation: fadeIn 0.4s ease forwards; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .section-tag {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 8px;
+    }
+    .section-title {
+      font-family: var(--font-title);
+      font-size: clamp(24px, 3.5vw, 38px);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #fff;
+      margin-bottom: 28px;
+    }
+
+    /* ==========================================================================
+       PROPOSTA 1: SHOWCASE EDITORIAL SPLIT
+       ========================================================================== */
+    .split-layout {
+      display: grid;
+      grid-template-columns: 1fr 1.25fr;
+      gap: 36px;
+      align-items: center;
+    }
+    .service-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .service-item {
+      padding: 16px 20px;
+      border-radius: 16px;
+      background: rgba(8, 35, 37, 0.6);
+      border: 1px solid rgba(185, 201, 197, 0.1);
+      cursor: pointer;
+      transition: all 0.25s ease;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .service-item:hover, .service-item.active {
+      background: rgba(14, 61, 63, 0.9);
+      border-color: rgba(196, 174, 136, 0.6);
+      transform: translateX(6px);
+      box-shadow: 0 10px 24px rgba(0,0,0,0.5);
+    }
+    .service-item h4 {
+      font-family: var(--font-title);
+      font-size: 20px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #fff;
+    }
+    .service-item p {
+      font-size: 12.5px;
+      color: var(--muted);
+      margin-top: 3px;
+    }
+    .service-item .indicator {
+      color: var(--accent);
+      font-size: 18px;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    .service-item.active .indicator { opacity: 1; }
+
+    .split-frame {
+      position: relative;
+      aspect-ratio: 3.5 / 4.2;
+      border-radius: 24px;
+      overflow: hidden;
+      border: 1px solid rgba(196, 174, 136, 0.35);
+      box-shadow: 0 24px 60px rgba(0,0,0,0.7), 0 0 40px rgba(59, 136, 132, 0.2);
+    }
+    .split-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center 20%;
+      display: block;
+      transition: opacity 0.35s ease;
+    }
+    .split-toggle-btn {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      background: rgba(4, 20, 22, 0.85);
+      border: 1px solid rgba(196, 174, 136, 0.5);
+      color: #fff;
+      padding: 8px 18px;
+      border-radius: 999px;
+      font-family: var(--font-title);
+      font-size: 12.5px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      cursor: pointer;
+      backdrop-filter: blur(10px);
+      transition: all 0.2s;
+    }
+    .split-toggle-btn:hover {
+      background: var(--accent);
+      color: #000;
+    }
+
+    /* ==========================================================================
+       PROPOSTA 2: LOOKBOOK MURAL EDITORIAL
+       ========================================================================== */
+    .lookbook-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+    .lookbook-card {
+      position: relative;
+      border-radius: 20px;
+      overflow: hidden;
+      aspect-ratio: 3.4 / 4.4;
+      border: 1px solid rgba(196, 174, 136, 0.2);
+      box-shadow: 0 16px 40px rgba(0,0,0,0.6);
+      cursor: pointer;
+      transition: transform 0.3s ease, border-color 0.3s ease;
+    }
+    .lookbook-card:hover {
+      transform: translateY(-6px);
+      border-color: rgba(196, 174, 136, 0.7);
+    }
+    .lookbook-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.4s ease;
+    }
+    .lookbook-card:hover img {
+      transform: scale(1.04);
+    }
+    .lookbook-label {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 24px 16px 14px;
+      background: linear-gradient(0deg, rgba(3,18,20,0.95) 0%, transparent 100%);
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+    .lookbook-label h5 {
+      font-family: var(--font-title);
+      font-size: 18px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #fff;
+    }
+    .lookbook-badge {
+      font-size: 10px;
+      color: var(--accent);
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    /* ==========================================================================
+       PROPOSTA 3: FILMSTRIP / FAIXA CINEMATOGRÁFICA
+       ========================================================================== */
+    .filmstrip-scroller {
+      display: flex;
+      gap: 22px;
+      overflow-x: auto;
+      padding: 10px 4px 24px;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: thin;
+      scrollbar-color: var(--accent) transparent;
+    }
+    .filmstrip-item {
+      flex: 0 0 280px;
+      scroll-snap-align: start;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      cursor: pointer;
+    }
+    .filmstrip-photo {
+      aspect-ratio: 3.4 / 4.4;
+      border-radius: 20px;
+      overflow: hidden;
+      border: 1px solid rgba(196, 174, 136, 0.25);
+      box-shadow: 0 16px 36px rgba(0,0,0,0.65);
+      position: relative;
+    }
+    .filmstrip-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.3s;
+    }
+    .filmstrip-item:hover .filmstrip-photo img {
+      transform: scale(1.03);
+    }
+    .filmstrip-info h5 {
+      font-family: var(--font-title);
+      font-size: 19px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #fff;
+    }
+    .filmstrip-info span {
+      font-size: 11.5px;
+      color: var(--accent);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    /* Destaques das Propostas */
+    .proposal-details {
+      margin-top: 32px;
+      padding-top: 24px;
+      border-top: 1px solid rgba(185, 201, 197, 0.12);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+    .detail-card {
+      background: rgba(8, 35, 37, 0.4);
+      padding: 16px 20px;
+      border-radius: 14px;
+      border-left: 3px solid var(--accent);
+    }
+    .detail-card strong {
+      font-size: 13.5px;
+      color: #fff;
+      display: block;
+      margin-bottom: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .detail-card p {
+      font-size: 12.5px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    @media (max-width: 850px) {
+      .split-layout { grid-template-columns: 1fr; }
+      .lookbook-grid { grid-template-columns: 1fr 1fr; }
+      .proposal-details { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 550px) {
+      .lookbook-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="top-bar">
+    <p class="section-tag">Barbearia Toledo · Estudo de Direção</p>
+    <h1>3 Formas de Apresentar os Resultados</h1>
+    <p>Clique nas abas abaixo para ver cada proposta funcionando na prática e comparar:</p>
+
+    <div class="tabs-nav">
+      <button class="tab-btn active" onclick="showTab(1)">1. Showcase Editorial (Split)</button>
+      <button class="tab-btn" onclick="showTab(2)">2. Lookbook (Mural de Cortes)</button>
+      <button class="tab-btn" onclick="showTab(3)">3. Filmstrip (Película Tátil)</button>
+    </div>
+  </div>
+
+  <div class="preview-box">
+
+    <!-- =====================================================================
+         ABA 1: SHOWCASE EDITORIAL (SPLIT)
+         ===================================================================== -->
+    <div id="tab1" class="proposal-view active">
+      <div class="section-tag">Proposta 1 · A mais recomendada</div>
+      <h2 class="section-title">O cuidado aparece no Resultado</h2>
+
+      <div class="split-layout">
+        <div class="service-list">
+          <div class="service-item active" onclick="selectService(0, this)">
+            <div>
+              <h4>Visagismo Masculino</h4>
+              <p>Harmonização facial e valorização dos traços</p>
+            </div>
+            <span class="indicator">→</span>
+          </div>
+          <div class="service-item" onclick="selectService(1, this)">
+            <div>
+              <h4>Alisamento Capilar</h4>
+              <p>Textura controlada e alinhamento natural</p>
+            </div>
+            <span class="indicator">→</span>
+          </div>
+          <div class="service-item" onclick="selectService(2, this)">
+            <div>
+              <h4>Barboterapia</h4>
+              <p>Desenho de barba com toalha quente e alinhamento</p>
+            </div>
+            <span class="indicator">→</span>
+          </div>
+          <div class="service-item" onclick="selectService(3, this)">
+            <div>
+              <h4>Corte na Tesoura</h4>
+              <p>Acabamento artesanal e caimento clássico</p>
+            </div>
+            <span class="indicator">→</span>
+          </div>
+          <div class="service-item" onclick="selectService(4, this)">
+            <div>
+              <h4>Corte Clássico</h4>
+              <p>Degradê limpo e precisão milimétrica</p>
+            </div>
+            <span class="indicator">→</span>
+          </div>
+        </div>
+
+        <div class="split-frame">
+          <img id="splitImg" src="imagens/VisagismoDepois.png" alt="Resultado de Visagismo">
+          <button class="split-toggle-btn" onclick="toggleSplitBeforeAfter()">⇄ Ver Antes</button>
+        </div>
+      </div>
+
+      <div class="proposal-details">
+        <div class="detail-card">
+          <strong>Por que funciona:</strong>
+          <p>Não usa cards nem carrossel! Cria um contraste total com a seção dos barbeiros logo abaixo, parecendo uma central de serviços tecnológica de alto luxo.</p>
+        </div>
+        <div class="detail-card">
+          <strong>Como o cliente mexe:</strong>
+          <p>Basta clicar no serviço da esquerda e a foto da direita atualiza suavemente na hora. Super fácil, limpo e sem poluição.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- =====================================================================
+         ABA 2: LOOKBOOK (MURAL DE CORTES)
+         ===================================================================== -->
+    <div id="tab2" class="proposal-view">
+      <div class="section-tag">Proposta 2 · Abundância Imediata</div>
+      <h2 class="section-title">O cuidado aparece no Resultado</h2>
+
+      <div class="lookbook-grid">
+        <div class="lookbook-card" onclick="alert('Ao clicar, abre o comparativo Antes/Depois do Visagismo')">
+          <img src="imagens/VisagismoDepois.png" alt="Visagismo">
+          <div class="lookbook-label">
+            <h5>Visagismo Masculino</h5>
+            <span class="lookbook-badge">Ver Antes ⇄</span>
+          </div>
+        </div>
+
+        <div class="lookbook-card" onclick="alert('Ao clicar, abre o comparativo Antes/Depois do Alisamento')">
+          <img src="imagens/AlisamentoCapilarDepois.png" alt="Alisamento">
+          <div class="lookbook-label">
+            <h5>Alisamento Capilar</h5>
+            <span class="lookbook-badge">Ver Antes ⇄</span>
+          </div>
+        </div>
+
+        <div class="lookbook-card" onclick="alert('Ao clicar, abre o comparativo Antes/Depois da Barboterapia')">
+          <img src="imagens/BarbaDepois.png" alt="Barboterapia">
+          <div class="lookbook-label">
+            <h5>Barboterapia</h5>
+            <span class="lookbook-badge">Ver Antes ⇄</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="proposal-details">
+        <div class="detail-card">
+          <strong>Por que funciona:</strong>
+          <p>O cliente bate o olho e já vê vários cortes incríveis prontos de uma vez só, passando imediatamente a sensação de "tem muito trabalho bom".</p>
+        </div>
+        <div class="detail-card">
+          <strong>Como o cliente mexe:</strong>
+          <p>Sem setinhas. O cliente apenas rola a página e vê as fotos dispostas em um lindo mural estético como em uma revista de estilo.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- =====================================================================
+         ABA 3: FILMSTRIP (PELÍCULA TÁTIL)
+         ===================================================================== -->
+    <div id="tab3" class="proposal-view">
+      <div class="section-tag">Proposta 3 · Simples & Cinema</div>
+      <h2 class="section-title">O cuidado aparece no Resultado</h2>
+
+      <div class="filmstrip-scroller">
+        <div class="filmstrip-item">
+          <div class="filmstrip-photo"><img src="imagens/VisagismoDepois.png" alt="Visagismo"></div>
+          <div class="filmstrip-info">
+            <h5>Visagismo Masculino</h5>
+            <span>Harmonização facial</span>
+          </div>
+        </div>
+        <div class="filmstrip-item">
+          <div class="filmstrip-photo"><img src="imagens/AlisamentoCapilarDepois.png" alt="Alisamento"></div>
+          <div class="filmstrip-info">
+            <h5>Alisamento Capilar</h5>
+            <span>Alinhamento natural</span>
+          </div>
+        </div>
+        <div class="filmstrip-item">
+          <div class="filmstrip-photo"><img src="imagens/BarbaDepois.png" alt="Barboterapia"></div>
+          <div class="filmstrip-info">
+            <h5>Barboterapia</h5>
+            <span>Desenho & toalha quente</span>
+          </div>
+        </div>
+        <div class="filmstrip-item">
+          <div class="filmstrip-photo"><img src="imagens/corteTesouraDepois.png" alt="Corte Tesoura"></div>
+          <div class="filmstrip-info">
+            <h5>Corte na Tesoura</h5>
+            <span>Caimento clássico</span>
+          </div>
+        </div>
+        <div class="filmstrip-item">
+          <div class="filmstrip-photo"><img src="imagens/CorteClassicoDepois.png" alt="Corte Clássico"></div>
+          <div class="filmstrip-info">
+            <h5>Corte Clássico</h5>
+            <span>Degradê de precisão</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="proposal-details">
+        <div class="detail-card">
+          <strong>Por que funciona:</strong>
+          <p>É uma tira horizontal contínua e tátil, como rolar fotos em uma galeria nativa do iPhone ou Instagram, super leve e veloz.</p>
+        </div>
+        <div class="detail-card">
+          <strong>Como o cliente mexe:</strong>
+          <p>Desliza com o dedo livremente no celular ou arrasta com o mouse no PC sem animações pesadas ou travas.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    const services = [
+      { after: "imagens/VisagismoDepois.png", before: "imagens/VisagismoAntes.png", name: "Visagismo Masculino" },
+      { after: "imagens/AlisamentoCapilarDepois.png", before: "imagens/AlisamentoCapilarAntes.png", name: "Alisamento Capilar" },
+      { after: "imagens/BarbaDepois.png", before: "imagens/BarbaAntes.png", name: "Barboterapia" },
+      { after: "imagens/corteTesouraDepois.png", before: "imagens/corteTesouraAntes.png", name: "Corte na Tesoura" },
+      { after: "imagens/CorteClassicoDepois.png", before: "imagens/CorteClassicoAntes.png", name: "Corte Clássico" }
+    ];
+
+    let currentServiceIdx = 0;
+    let showingBefore = false;
+
+    function showTab(num) {
+      document.querySelectorAll('.tab-btn').forEach((btn, idx) => {
+        btn.classList.toggle('active', idx === num - 1);
+      });
+      document.querySelectorAll('.proposal-view').forEach((view, idx) => {
+        view.classList.toggle('active', idx === num - 1);
+      });
+    }
+
+    function selectService(idx, el) {
+      currentServiceIdx = idx;
+      showingBefore = false;
+      document.querySelectorAll('.service-item').forEach(item => item.classList.remove('active'));
+      el.classList.add('active');
+      const img = document.getElementById('splitImg');
+      img.style.opacity = '0.3';
+      setTimeout(() => {
+        img.src = services[idx].after;
+        img.style.opacity = '1';
+        document.querySelector('.split-toggle-btn').textContent = '⇄ Ver Antes';
+      }, 150);
+    }
+
+    function toggleSplitBeforeAfter() {
+      showingBefore = !showingBefore;
+      const img = document.getElementById('splitImg');
+      const btn = document.querySelector('.split-toggle-btn');
+      img.style.opacity = '0.4';
+      setTimeout(() => {
+        img.src = showingBefore ? services[currentServiceIdx].before : services[currentServiceIdx].after;
+        img.style.opacity = '1';
+        btn.textContent = showingBefore ? '⇄ Ver Depois' : '⇄ Ver Antes';
+      }, 150);
+    }
+  </script>
+</body>
+</html>
