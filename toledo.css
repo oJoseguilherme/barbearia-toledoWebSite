@@ -1082,148 +1082,393 @@ section, .wrap {
 }
 
 /* ==========================================================================
-   Serviços & Galeria (Cards Flutuantes em Dark Glass)
+   Deck 3D de Transformações Antes & Depois (Scroll-Driven Pinning)
    ========================================================================== */
-.services {
+.works-section {
+  position: relative;
   background: transparent;
+  padding: 0;
+  width: 100%;
 }
 
-.services-grid {
-  display: grid;
-  grid-template-columns: 1fr 1.4fr;
-  gap: 80px;
-  align-items: start;
-}
-
-.services-intro p {
-  margin-top: var(--s4);
-  color: var(--muted);
-  font-size: clamp(16px, 1.2vw, 18px);
-}
-
-.service-row {
-  border: 1px solid rgba(185, 201, 197, 0.16) !important;
-  border-radius: var(--radius);
-  background: linear-gradient(145deg, rgba(16, 74, 72, 0.5) 0%, rgba(9, 44, 46, 0.75) 100%);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  padding: 24px 32px;
-  margin-bottom: 16px;
-  box-shadow: 0 16px 40px rgba(2, 28, 29, 0.35);
-  display: grid;
-  grid-template-columns: 36px 1fr;
-  gap: var(--s4);
-  align-items: start;
-  transition: transform 280ms cubic-bezier(0.22, 1, 0.36, 1),
-              border-color 280ms,
-              box-shadow 280ms;
-}
-
-.service-row:hover {
-  transform: translateY(-4px);
-  border-color: rgba(196, 174, 136, 0.45) !important;
-  box-shadow: 0 20px 48px rgba(2, 28, 29, 0.55), 0 0 24px rgba(59, 136, 132, 0.2);
-}
-
-.service-row > span {
-  font-family: var(--title);
-  font-size: 20px;
-  font-weight: 600;
-  color: var(--accent);
-  padding-top: 2px;
-}
-
-.service-row h3 {
-  font-size: 24px;
-  margin-bottom: 6px;
-}
-
-.service-row p {
-  color: var(--muted);
-  margin: 0;
-  font-size: 14px;
-}
-
-/* Galeria de Trabalhos */
-.gallery-wrap {
-  margin-top: 80px;
-}
-
-.gallery-top {
+.works-pinned-stage {
+  min-height: 100vh;
+  width: 100%;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: var(--s4);
-  margin-bottom: var(--s4);
-}
-
-.gallery-top h3 {
-  font-size: clamp(26px, 3vw, 36px);
-}
-
-.controls {
-  display: flex;
-  gap: var(--s2);
-}
-
-.controls button {
-  height: 44px;
-  width: 44px;
-  border: 1px solid rgba(185, 201, 197, 0.2);
-  background: rgba(16, 74, 72, 0.5);
-  color: var(--ink);
-  border-radius: 50%;
-  font-size: 18px;
-  display: inline-flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  backdrop-filter: blur(8px);
-  transition: transform 200ms, background 200ms, border-color 200ms;
+  padding: clamp(24px, 4vh, 48px) 20px;
+  position: relative;
+  overflow: hidden;
+  box-sizing: border-box;
 }
 
-.controls button:hover {
-  transform: translateY(-2px);
-  background: rgba(59, 136, 132, 0.4);
+.works-header {
+  text-align: center;
+  max-width: 680px;
+  margin: 0 auto clamp(16px, 2.5vh, 28px);
+  position: relative;
+  z-index: 5;
+}
+
+.works-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin: 0 0 6px;
+  display: block;
+}
+
+.works-heading {
+  font-family: var(--title);
+  font-size: clamp(28px, 4.2vw, 46px);
+  line-height: 1.15;
+  color: #ffffff;
+  margin: 0 0 8px;
+  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+}
+
+.works-subtext {
+  font-size: clamp(13px, 1.1vw, 15px);
+  color: var(--muted);
+  margin: 0;
+  letter-spacing: 0.02em;
+}
+
+/* O Palco do Deck 3D */
+.works-deck-viewport {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 900px;
+  perspective: 1600px;
+  z-index: 6;
+}
+
+.works-deck-stack {
+  position: relative;
+  width: clamp(330px, 31vw, 420px);
+  height: clamp(470px, 56vh, 580px);
+  perspective: 1400px;
+  transform-style: preserve-3d;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: pan-y;
+}
+
+/* Cards na Pilha 3D */
+.works-card {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 26px;
+  transform-origin: center 88%;
+  transform-style: preserve-3d;
+  will-change: transform, opacity, filter;
+  transition: box-shadow 300ms ease;
+  cursor: grab;
+}
+
+.works-card:active {
+  cursor: grabbing;
+}
+
+.works-card-frame {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 24px;
+  overflow: hidden;
+  background: #061e20;
+  border: 1px solid rgba(196, 174, 136, 0.32);
+  box-shadow:
+    0 32px 70px rgba(2, 28, 29, 0.9),
+    0 0 50px rgba(59, 136, 132, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+/* Camadas de Imagem: Antes e Depois */
+.works-layer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.works-layer img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  display: block;
+  pointer-events: none;
+}
+
+.works-layer.works-after {
+  z-index: 2;
+  will-change: clip-path;
+}
+
+/* Linha Divisória de Wipe com Efeito de Luz */
+.works-wipe-bar {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  width: 2px;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.25) 0%,
+    rgba(255, 255, 255, 0.95) 20%,
+    rgba(196, 174, 136, 1) 50%,
+    rgba(255, 255, 255, 0.95) 80%,
+    rgba(255, 255, 255, 0.25) 100%
+  );
+  box-shadow:
+    0 0 14px rgba(196, 174, 136, 0.9),
+    0 0 28px rgba(59, 136, 132, 0.7);
+  pointer-events: none;
+  z-index: 8;
+}
+
+.wipe-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: rgba(196, 174, 136, 0.9);
+  border: 2px solid #ffffff;
+  box-shadow: 0 0 16px rgba(255, 255, 255, 0.9), 0 0 30px rgba(196, 174, 136, 0.8);
+}
+
+.wipe-glow::after {
+  content: '‹ ›';
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 800;
+  color: #061e20;
+  line-height: 1;
+}
+
+/* Tags Flutuantes "Antes" e "Depois" */
+.works-tag {
+  position: absolute;
+  top: 16px;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  z-index: 9;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  pointer-events: none;
+}
+
+.tag-before {
+  left: 16px;
+  background: rgba(6, 25, 26, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.tag-after {
+  right: 16px;
+  background: rgba(196, 174, 136, 0.35);
+  border: 1px solid rgba(196, 174, 136, 0.8);
+  color: #ffffff;
+  box-shadow: 0 0 16px rgba(196, 174, 136, 0.4);
+}
+
+/* Informações do Card (Rodapé Dark Glass) */
+.works-card-info {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  padding: 24px 22px 18px;
+  background: linear-gradient(180deg, transparent 0%, rgba(3, 16, 17, 0.85) 35%, rgba(2, 12, 13, 0.98) 100%);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  pointer-events: none;
+}
+
+.works-card-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 5px;
+}
+
+.works-count {
+  font-family: var(--title);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent);
+  letter-spacing: 0.08em;
+}
+
+.works-badge-service {
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: rgba(59, 136, 132, 0.28);
+  border: 1px solid rgba(196, 174, 136, 0.35);
+  color: #ffffff;
+}
+
+.works-service-name {
+  font-family: var(--title);
+  font-size: clamp(19px, 2.1vw, 23px);
+  line-height: 1.2;
+  margin: 0 0 4px;
+  color: #ffffff;
+}
+
+.works-service-desc {
+  font-size: 12px;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.75);
+  margin: 0;
+}
+
+/* Controles de Navegação Flutuantes */
+.works-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-top: clamp(14px, 2vh, 22px);
+  z-index: 8;
+}
+
+.works-arrow-btn {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: rgba(6, 25, 26, 0.7);
+  border: 1px solid rgba(185, 201, 197, 0.25);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  cursor: pointer;
+  transition: transform 200ms ease, background 200ms ease, border-color 200ms ease;
+}
+
+.works-arrow-btn:hover {
+  transform: scale(1.1);
+  background: rgba(16, 74, 72, 0.85);
   border-color: var(--accent);
 }
 
-.rail {
+.works-dots-bar {
   display: flex;
-  gap: var(--s4);
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  scrollbar-width: thin;
-  scrollbar-color: var(--accent) transparent;
-  padding-bottom: var(--s3);
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: rgba(6, 25, 26, 0.6);
+  border: 1px solid rgba(185, 201, 197, 0.16);
+  backdrop-filter: blur(10px);
 }
 
-.work {
-  flex: 0 0 calc((100% - 32px) / 3);
-  min-width: 0;
-  scroll-snap-align: start;
-  margin: 0;
+.works-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.35);
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: width 280ms cubic-bezier(0.22, 1, 0.36, 1), background 280ms ease, border-radius 280ms ease;
 }
 
-.work img {
-  width: 100%;
-  aspect-ratio: 3 / 4;
-  object-fit: cover;
-  border-radius: var(--radius);
-  border: 1px solid rgba(185, 201, 197, 0.2);
-  box-shadow: 0 16px 36px rgba(2, 28, 29, 0.5);
-  transition: transform 400ms cubic-bezier(0.22, 1, 0.36, 1), filter 400ms;
+.works-dot.is-active {
+  width: 24px;
+  border-radius: 999px;
+  background: var(--accent);
+  box-shadow: 0 0 10px rgba(196, 174, 136, 0.6);
 }
 
-.work:hover img {
-  transform: scale(1.02);
-  filter: saturate(1.06);
-}
-
-.work figcaption {
-  padding-top: var(--s2);
+/* Indicador de Rolagem */
+.works-scroll-indicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+  font-size: 11px;
+  letter-spacing: 0.08em;
   color: var(--muted);
-  font-size: 13px;
-  letter-spacing: 0.05em;
+  opacity: 0.8;
+  z-index: 8;
+}
+
+.indicator-mouse {
+  width: 14px;
+  height: 22px;
+  border: 1.5px solid rgba(196, 174, 136, 0.6);
+  border-radius: 999px;
+  display: flex;
+  justify-content: center;
+  padding-top: 3px;
+}
+
+.indicator-dot {
+  width: 2.5px;
+  height: 5px;
+  border-radius: 999px;
+  background: var(--accent);
+  animation: mouseScrollDot 1.6s ease-in-out infinite;
+}
+
+@keyframes mouseScrollDot {
+  0% { transform: translateY(0); opacity: 1; }
+  60% { transform: translateY(6px); opacity: 0.2; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+
+@media (max-width: 600px) {
+  .works-pinned-stage {
+    padding: clamp(16px, 2.5vh, 28px) 16px;
+    justify-content: space-evenly;
+  }
+  .works-deck-stack {
+    width: clamp(290px, 86vw, 340px);
+    height: clamp(410px, 53vh, 480px);
+  }
+  .works-service-name {
+    font-size: 18px;
+  }
+  .works-service-desc {
+    font-size: 11.5px;
+  }
+  .works-heading {
+    font-size: clamp(24px, 6.5vw, 32px);
+  }
 }
 
 /* ==========================================================================
@@ -1589,7 +1834,6 @@ footer p {
    Responsividade Mobile (Smartphones & Tablets)
    ========================================================================== */
 @media (max-width: 1000px) {
-  .services-grid { gap: 48px; }
   .story-grid { gap: 48px; }
   .portrait-carousel.is-ready .portrait-viewport { height: 550px; }
 }
@@ -1783,17 +2027,9 @@ footer p {
     margin-inline: auto;
   }
 
-  .services-grid, .story-grid, .contact-grid {
+  .story-grid, .contact-grid {
     grid-template-columns: 1fr;
     gap: 36px;
-  }
-
-  .service-row {
-    padding: 20px 24px;
-  }
-
-  .work {
-    flex-basis: 75%;
   }
 
   .rating-grid {

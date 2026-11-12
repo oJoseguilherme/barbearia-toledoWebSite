@@ -16,8 +16,237 @@ const heroCopy=document.querySelector('.hero-copy');
 if(heroCopy&&'IntersectionObserver' in window){const heroObs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){heroCopy.classList.add('is-inview');heroObs.unobserve(heroCopy);}})},{threshold:0.15});heroObs.observe(heroCopy);}else if(heroCopy){heroCopy.classList.add('is-inview');}
 const video=document.querySelector('#hero-video'),videoButton=document.querySelector('.video-control');
 if(video){if(videoButton){let manualPause=false;videoButton.addEventListener('click',async()=>{if(video.paused){manualPause=false;try{await video.play()}catch{videoButton.textContent='Reproduzir vídeo'}}else{manualPause=true;video.pause()}});video.addEventListener('play',()=>videoButton.textContent='Pausar vídeo');video.addEventListener('pause',()=>videoButton.textContent='Reproduzir vídeo');}if('IntersectionObserver'in window)new IntersectionObserver(es=>es.forEach(e=>{if(!e.isIntersecting)video.pause();else if(!reduce.matches)video.play().catch(()=>{})}),{threshold:.15}).observe(video);reduce.addEventListener('change',e=>{if(e.matches)video.pause()})}
-// The work gallery retains its native horizontal scrolling and finite controls.
-document.querySelectorAll('.rail').forEach(rail=>{const buttons=[...document.querySelectorAll(`[data-rail="${rail.id}"]`)];const sync=()=>buttons.forEach(b=>{b.disabled=Number(b.dataset.dir)<0?rail.scrollLeft<=2:rail.scrollLeft+rail.clientWidth>=rail.scrollWidth-2;b.style.opacity=b.disabled?'.4':'1';b.style.cursor=b.disabled?'default':'pointer'});buttons.forEach(b=>b.addEventListener('click',()=>rail.scrollBy({left:Number(b.dataset.dir)*rail.clientWidth*.8,behavior:reduce.matches?'instant':'smooth'})));rail.addEventListener('scroll',sync,{passive:true});if('ResizeObserver'in window)new ResizeObserver(sync).observe(rail);sync()});
+// ==========================================================================
+// Deck 3D de Transformações Antes & Depois (Scroll-Driven Pinning)
+// ==========================================================================
+function initWorksDeck(section) {
+  if (!section) return;
+  const stack = section.querySelector('.works-deck-stack');
+  if (!stack) return;
+  const cards = [...stack.querySelectorAll('.works-card')];
+  const count = cards.length;
+  if (!count) return;
+
+  const dots = [...section.querySelectorAll('.works-dot')];
+  const prevBtn = section.querySelector('[data-works-dir="-1"]');
+  const nextBtn = section.querySelector('[data-works-dir="1"]');
+
+  // Inclinações fixas orgânicas da pilha de cartas
+  const tilts = [0, 3.6, -4.2, 3.0, -3.4];
+
+  const cardData = cards.map((card, i) => {
+    const afterLayer = card.querySelector('.works-layer.works-after');
+    const wipeBar = card.querySelector('.works-wipe-bar');
+    return {
+      el: card,
+      after: afterLayer,
+      wipe: wipeBar,
+      tilt: tilts[i % tilts.length]
+    };
+  });
+
+  function setCardPose(c, depth, extraX = 0, extraY = 0, extraRot = 0, extraScale = 1, extraOpacity = 1) {
+    const d = Math.max(0, depth);
+    const cappedD = Math.min(d, 3.5);
+    const baseY = -cappedD * 18;
+    const baseScale = 1 - cappedD * 0.055;
+    const baseRot = (depth === 0) ? 0 : c.tilt;
+    const baseOpacity = depth > 3.5 ? 0 : Math.max(0, 1 - (depth - 2.5) * 1);
+    const brightness = Math.max(0.68, 1 - cappedD * 0.08);
+
+    const x = extraX;
+    const y = baseY + extraY;
+    const rot = baseRot + extraRot;
+    const scale = baseScale * extraScale;
+    const opacity = baseOpacity * extraOpacity;
+
+    c.el.style.transform = `translate3d(${x.toFixed(1)}px, ${y.toFixed(1)}px, 0) rotate(${rot.toFixed(1)}deg) scale(${scale.toFixed(3)})`;
+    c.el.style.opacity = opacity.toFixed(3);
+    c.el.style.filter = `brightness(${brightness.toFixed(2)})`;
+    c.el.style.pointerEvents = depth < 0.5 ? 'auto' : 'none';
+    c.el.style.zIndex = String(Math.round(100 - depth * 10));
+  }
+
+  function setWipe(c, pct) {
+    const p = Math.max(0, Math.min(100, pct));
+    if (c.after) {
+      c.after.style.clipPath = `inset(0 calc(100% - ${p.toFixed(1)}%) 0 0)`;
+    }
+  }
+
+  let activeIndex = 0;
+  function updateIndicators(index) {
+    activeIndex = Math.max(0, Math.min(count - 1, Math.round(index)));
+    dots.forEach((dot, i) => {
+      const isCur = i === activeIndex;
+      dot.classList.toggle('is-active', isCur);
+      dot.setAttribute('aria-selected', String(isCur));
+    });
+  }
+
+  // Inicializa poses padrão
+  cards.forEach((_, i) => {
+    setCardPose(cardData[i], i);
+    setWipe(cardData[i], 0);
+  });
+
+  let worksST = null;
+  const pinnedStage = section.querySelector('.works-pinned-stage');
+
+  if (window.gsap && window.ScrollTrigger && pinnedStage) {
+    const scrollPerCard = 750;
+    const totalScroll = count * scrollPerCard;
+
+    worksST = ScrollTrigger.create({
+      trigger: section,
+      pin: pinnedStage,
+      start: 'top top',
+      end: () => `+=${totalScroll}`,
+      scrub: 0.45,
+      anticipatePin: 1,
+      invalidateOnRefresh: true,
+      onUpdate: (self) => {
+        const p = self.progress; // 0.0 a 1.0
+        const virtualIndex = p * count;
+        const currentCardIdx = Math.min(count - 1, Math.floor(virtualIndex));
+        const localProgress = virtualIndex - currentCardIdx; // 0.0 a 1.0
+
+        updateIndicators(virtualIndex >= count - 0.15 ? count - 1 : currentCardIdx);
+
+        cards.forEach((_, i) => {
+          const c = cardData[i];
+
+          if (i < currentCardIdx) {
+            // Card já passou e foi para o fundo
+            setCardPose(c, 4, 0, 0, 0, 0.78, 0);
+            setWipe(c, 100);
+          } else if (i === currentCardIdx) {
+            // Card em foco atual
+            if (currentCardIdx === count - 1) {
+              // Último card: apenas realiza o wipe completo
+              const wipePct = Math.min(100, (localProgress / 0.82) * 100);
+              setWipe(c, wipePct);
+              setCardPose(c, 0, 0, 0, 0, 1, 1);
+            } else {
+              if (localProgress <= 0.50) {
+                // Fase 1: Revelação do Antes -> Depois
+                const wipePct = (localProgress / 0.50) * 100;
+                setWipe(c, wipePct);
+                setCardPose(c, 0, 0, 0, 0, 1, 1);
+              } else {
+                // Fase 2: Arremesso tridimensional (Throw Top para trás)
+                setWipe(c, 100);
+                const throwProg = (localProgress - 0.50) / 0.50; // 0.0 a 1.0
+                const stackWidth = stack.offsetWidth || 380;
+
+                let throwX, throwY, throwRot, throwScale, throwOpacity, targetZ;
+                if (throwProg < 0.55) {
+                  const subP = throwProg / 0.55;
+                  throwX = subP * (stackWidth * 1.18);
+                  throwY = -Math.sin(subP * Math.PI) * 40;
+                  throwRot = subP * 15;
+                  throwScale = 1 + subP * 0.04;
+                  throwOpacity = 1;
+                  targetZ = 120;
+                } else {
+                  const subP = (throwProg - 0.55) / 0.45;
+                  throwX = (1 - subP) * (stackWidth * 1.18);
+                  throwY = -40 * (1 - subP) - subP * (3.5 * 18);
+                  throwRot = 15 * (1 - subP) + subP * c.tilt;
+                  throwScale = (1.04 * (1 - subP)) + subP * (1 - 3.5 * 0.055);
+                  throwOpacity = Math.max(0, 1 - subP * 1.2);
+                  targetZ = Math.round(100 - subP * 90);
+                }
+
+                c.el.style.transform = `translate3d(${throwX.toFixed(1)}px, ${throwY.toFixed(1)}px, 0) rotate(${throwRot.toFixed(1)}deg) scale(${throwScale.toFixed(3)})`;
+                c.el.style.opacity = throwOpacity.toFixed(3);
+                c.el.style.filter = `brightness(${(1 - throwProg * 0.32).toFixed(2)})`;
+                c.el.style.zIndex = String(targetZ);
+              }
+            }
+          } else {
+            // Cards posteriores na pilha
+            let relativeDepth = i - currentCardIdx;
+            if (localProgress > 0.50 && currentCardIdx < count - 1) {
+              const advanceProg = (localProgress - 0.50) / 0.50;
+              relativeDepth -= advanceProg; // avança suavemente para a frente
+            }
+            setWipe(c, 0);
+            setCardPose(c, relativeDepth);
+          }
+        });
+      }
+    });
+
+    function scrollToCard(targetIdx) {
+      if (!worksST) return;
+      const targetP = (targetIdx + 0.05) / count;
+      const targetY = worksST.start + targetP * totalScroll;
+      window.scrollTo({ top: targetY, behavior: 'smooth' });
+    }
+
+    prevBtn?.addEventListener('click', () => {
+      scrollToCard(Math.max(0, activeIndex - 1));
+    });
+    nextBtn?.addEventListener('click', () => {
+      scrollToCard(Math.min(count - 1, activeIndex + 1));
+    });
+    dots.forEach((dot, idx) => {
+      dot.addEventListener('click', () => scrollToCard(idx));
+    });
+  } else {
+    // Fallback sem ScrollTrigger
+    function renderFallback() {
+      cards.forEach((_, i) => {
+        const c = cardData[i];
+        const depth = (i - activeIndex + count) % count;
+        setCardPose(c, depth);
+        setWipe(c, depth === 0 ? 50 : 0);
+      });
+      updateIndicators(activeIndex);
+    }
+    renderFallback();
+    prevBtn?.addEventListener('click', () => {
+      activeIndex = (activeIndex - 1 + count) % count;
+      renderFallback();
+    });
+    nextBtn?.addEventListener('click', () => {
+      activeIndex = (activeIndex + 1) % count;
+      renderFallback();
+    });
+    dots.forEach((dot, idx) => {
+      dot.addEventListener('click', () => {
+        activeIndex = idx;
+        renderFallback();
+      });
+    });
+  }
+
+  // Interação por toque no mobile
+  let touchStartX = 0;
+  let touchStartY = 0;
+  stack.addEventListener('touchstart', (e) => {
+    touchStartX = e.touches[0].clientX;
+    touchStartY = e.touches[0].clientY;
+  }, { passive: true });
+  stack.addEventListener('touchend', (e) => {
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    const dy = e.changedTouches[0].clientY - touchStartY;
+    if (Math.abs(dx) > 42 && Math.abs(dx) > Math.abs(dy) * 1.25) {
+      const dir = dx < 0 ? 1 : -1;
+      const target = Math.max(0, Math.min(count - 1, activeIndex + dir));
+      if (worksST) {
+        const targetP = (target + 0.05) / count;
+        window.scrollTo({ top: worksST.start + targetP * (count * 750), behavior: 'smooth' });
+      } else {
+        activeIndex = target;
+        updateIndicators(activeIndex);
+      }
+    }
+  }, { passive: true });
+}
+
+document.querySelectorAll('#trabalhos').forEach(initWorksDeck);
 
 function initPortraits(region){
  const stage=region.querySelector('.portrait-stage'),cards=[...stage.querySelectorAll('.team-card')],status=region.querySelector('.portrait-status');const count=cards.length;
