@@ -27,15 +27,22 @@ function initWorksDeck(section) {
   const count = cards.length;
   if (!count) return;
 
-  // Ativa animação do título quando a seção fica visível
-  if ('IntersectionObserver' in window) {
+  // Ativa a animação do título EXCLUSIVAMENTE quando a seção entrar no campo de visão
+  if (window.ScrollTrigger) {
+    ScrollTrigger.create({
+      trigger: section,
+      start: 'top 75%',
+      onEnter: () => section.classList.add('is-inview'),
+      onEnterBack: () => section.classList.add('is-inview')
+    });
+  } else if ('IntersectionObserver' in window) {
     const secObs = new IntersectionObserver((entries) => {
       entries.forEach((e) => {
         if (e.isIntersecting) {
           section.classList.add('is-inview');
         }
       });
-    }, { threshold: 0.1 });
+    }, { threshold: 0.2 });
     secObs.observe(section);
   } else {
     section.classList.add('is-inview');
@@ -94,7 +101,7 @@ function initWorksDeck(section) {
   const pinnedStage = section.querySelector('.works-pinned-stage');
 
   if (window.gsap && window.ScrollTrigger && pinnedStage) {
-    const scrollPerCard = 750;
+    const scrollPerCard = 800;
     const totalScroll = count * scrollPerCard;
 
     worksST = ScrollTrigger.create({
@@ -121,38 +128,58 @@ function initWorksDeck(section) {
           } else if (i === currentCardIdx) {
             // Card em foco atual
             if (currentCardIdx === count - 1) {
-              // Último card: apenas realiza o wipe completo
-              const wipePct = Math.min(100, (localProgress / 0.82) * 100);
+              // Último card: onda suave e contemplação final
+              let wipePct = 0;
+              if (localProgress < 0.08) {
+                wipePct = 0;
+              } else if (localProgress <= 0.62) {
+                const t = (localProgress - 0.08) / 0.54;
+                const wave = 0.5 - 0.5 * Math.cos(Math.PI * t);
+                wipePct = wave * 100;
+              } else {
+                wipePct = 100;
+              }
               setWipe(c, wipePct);
               setCardPose(c, 0, 0, 0, 0, 1, 1);
             } else {
-              if (localProgress <= 0.50) {
-                // Fase 1: Revelação do Antes -> Depois
-                const wipePct = (localProgress / 0.50) * 100;
-                setWipe(c, wipePct);
+              // Cadência de onda: Início (Antes) -> Onda suave -> Pausa (Depois) -> Throw
+              if (localProgress < 0.08) {
+                // Momento inicial contemplando o Antes
+                setWipe(c, 0);
+                setCardPose(c, 0, 0, 0, 0, 1, 1);
+              } else if (localProgress <= 0.58) {
+                // A onda passa suavemente (rápido, devagar, curva de onda orgânica)
+                const t = (localProgress - 0.08) / 0.50;
+                const wave = 0.5 - 0.5 * Math.cos(Math.PI * t);
+                setWipe(c, wave * 100);
+                setCardPose(c, 0, 0, 0, 0, 1, 1);
+              } else if (localProgress <= 0.76) {
+                // "Pausou, pausou, pausou, passou a onda e acalmou":
+                // O Depois fica 100% visível, nítido e estático para contemplação com calma
+                setWipe(c, 100);
                 setCardPose(c, 0, 0, 0, 0, 1, 1);
               } else {
-                // Fase 2: Arremesso tridimensional (Throw Top para trás)
+                // Throw tridimensional para trás após a pausa contemplativa
                 setWipe(c, 100);
-                const throwProg = (localProgress - 0.50) / 0.50; // 0.0 a 1.0
+                const throwProg = (localProgress - 0.76) / 0.24; // 0.0 a 1.0
                 const stackWidth = stack.offsetWidth || 480;
 
                 let throwX, throwY, throwRot, throwScale, throwOpacity, targetZ;
                 if (throwProg < 0.55) {
                   const subP = throwProg / 0.55;
-                  throwX = subP * (stackWidth * 1.18);
-                  throwY = -Math.sin(subP * Math.PI) * 40;
-                  throwRot = subP * 15;
-                  throwScale = 1 + subP * 0.04;
+                  throwX = subP * (stackWidth * 1.15);
+                  throwY = -Math.sin(subP * Math.PI) * 38;
+                  throwRot = subP * 14;
+                  throwScale = 1 + subP * 0.035;
                   throwOpacity = 1;
                   targetZ = 120;
                 } else {
                   const subP = (throwProg - 0.55) / 0.45;
-                  throwX = (1 - subP) * (stackWidth * 1.18);
-                  throwY = -40 * (1 - subP) - subP * (3.5 * 18);
-                  throwRot = 15 * (1 - subP) + subP * c.tilt;
-                  throwScale = (1.04 * (1 - subP)) + subP * (1 - 3.5 * 0.055);
-                  throwOpacity = Math.max(0, 1 - subP * 1.2);
+                  throwX = (1 - subP) * (stackWidth * 1.15);
+                  throwY = -38 * (1 - subP) - subP * (3.5 * 18);
+                  throwRot = 14 * (1 - subP) + subP * c.tilt;
+                  throwScale = (1.035 * (1 - subP)) + subP * (1 - 3.5 * 0.055);
+                  throwOpacity = Math.max(0, 1 - subP * 1.25);
                   targetZ = Math.round(100 - subP * 90);
                 }
 
@@ -163,11 +190,11 @@ function initWorksDeck(section) {
               }
             }
           } else {
-            // Cards posteriores na pilha
+            // Cards posteriores na pilha: avançam durante a fase do throw
             let relativeDepth = i - currentCardIdx;
-            if (localProgress > 0.50 && currentCardIdx < count - 1) {
-              const advanceProg = (localProgress - 0.50) / 0.50;
-              relativeDepth -= advanceProg; // avança suavemente para a frente
+            if (localProgress > 0.76 && currentCardIdx < count - 1) {
+              const advanceProg = (localProgress - 0.76) / 0.24;
+              relativeDepth -= advanceProg;
             }
             setWipe(c, 0);
             setCardPose(c, relativeDepth);
