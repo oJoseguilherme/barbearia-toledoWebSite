@@ -19,15 +19,18 @@ if(video){if(videoButton){let manualPause=false;videoButton.addEventListener('cl
 // ==========================================================================
 // Deck 3D de Transformações Antes & Depois (Scroll-Driven Pinning)
 // ==========================================================================
-function initWorksDeck(section) {
+function initWorksCarousel(section) {
   if (!section) return;
-  const stack = section.querySelector('.works-deck-stack');
-  if (!stack) return;
-  const cards = [...stack.querySelectorAll('.works-card')];
-  const count = cards.length;
+  const carousel = section.querySelector('.works-carousel');
+  if (!carousel) return;
+  const items = [...carousel.querySelectorAll('.works-item')];
+  const count = items.length;
   if (!count) return;
 
-  // Ativa a animação do título EXCLUSIVAMENTE quando a seção entrar no campo de visão
+  const status = carousel.querySelector('.works-status');
+  const names = items.map(it => it.dataset.service || it.querySelector('h3').textContent.trim());
+
+  // Ativa a animação do título ao entrar no campo de visão
   if (window.ScrollTrigger) {
     ScrollTrigger.create({
       trigger: section,
@@ -35,193 +38,317 @@ function initWorksDeck(section) {
       onEnter: () => section.classList.add('is-inview'),
       onEnterBack: () => section.classList.add('is-inview')
     });
-  } else if ('IntersectionObserver' in window) {
-    const secObs = new IntersectionObserver((entries) => {
-      entries.forEach((e) => {
-        if (e.isIntersecting) {
-          section.classList.add('is-inview');
-        }
-      });
-    }, { threshold: 0.2 });
-    secObs.observe(section);
   } else {
     section.classList.add('is-inview');
   }
 
-  // Inclinações fixas orgânicas da pilha de cartas
-  const tilts = [0, 3.2, -3.8, 2.6, -3.0];
+  const mod = (n, m) => ((n % m) + m) % m;
+  const state = { phase: 0 };
+  let busy = false;
+  let active = 0;
 
-  const cardData = cards.map((card, i) => {
-    const afterLayer = card.querySelector('.works-layer.works-after');
-    const wipeBar = card.querySelector('.works-wipe-bar');
+  // Estado das fotos de cada card
+  const cardStates = items.map(item => {
+    const beforeLayer = item.querySelector('.photo-before');
+    const afterLayer = item.querySelector('.photo-after');
+    const btn = item.querySelector('.works-toggle-btn');
+    const pillBefore = btn ? btn.querySelector('.pill-before') : null;
+    const pillAfter = btn ? btn.querySelector('.pill-after') : null;
+
+    if (window.gsap) {
+      gsap.set(beforeLayer, { z: 12, x: 0, y: 0, rotation: 0, scale: 1, filter: 'brightness(1)' });
+      gsap.set(afterLayer, { z: -12, x: 8, y: -6, rotation: 2.5, scale: 0.96, filter: 'brightness(0.72)' });
+    }
+
     return {
-      el: card,
+      item,
+      before: beforeLayer,
       after: afterLayer,
-      wipe: wipeBar,
-      tilt: tilts[i % tilts.length]
+      btn,
+      pillBefore,
+      pillAfter,
+      isAfter: false,
+      animating: false
     };
   });
 
-  function setCardPose(c, depth, extraX = 0, extraY = 0, extraRot = 0, extraScale = 1, extraOpacity = 1) {
-    const d = Math.max(0, depth);
-    const cappedD = Math.min(d, 3.5);
-    const baseY = -cappedD * 18;
-    const baseScale = 1 - cappedD * 0.055;
-    const baseRot = (depth === 0) ? 0 : c.tilt;
-    const baseOpacity = depth > 3.5 ? 0 : Math.max(0, 1 - (depth - 2.5) * 1);
-    const brightness = Math.max(0.68, 1 - cappedD * 0.08);
+  // Função cinematográfica de troca de fotos (Antes <-> Depois)
+  function togglePhoto(index, forceState, duration = 0.62) {
+    const cs = cardStates[index];
+    if (!cs || cs.animating) return;
 
-    const x = extraX;
-    const y = baseY + extraY;
-    const rot = baseRot + extraRot;
-    const scale = baseScale * extraScale;
-    const opacity = baseOpacity * extraOpacity;
+    const toAfter = (typeof forceState === 'boolean') ? forceState : !cs.isAfter;
+    if (toAfter === cs.isAfter) return;
 
-    c.el.style.transform = `translate3d(${x.toFixed(1)}px, ${y.toFixed(1)}px, 0) rotate(${rot.toFixed(1)}deg) scale(${scale.toFixed(3)})`;
-    c.el.style.opacity = opacity.toFixed(3);
-    c.el.style.filter = `brightness(${brightness.toFixed(2)})`;
-    c.el.style.pointerEvents = depth < 0.5 ? 'auto' : 'none';
-    c.el.style.zIndex = String(Math.round(100 - depth * 10));
-  }
+    cs.animating = true;
+    cs.isAfter = toAfter;
 
-  function setWipe(c, pct) {
-    const p = Math.max(0, Math.min(100, pct));
-    if (c.after) {
-      c.after.style.clipPath = `inset(0 calc(100% - ${p.toFixed(1)}%) 0 0)`;
+    if (cs.pillBefore && cs.pillAfter) {
+      cs.pillBefore.classList.toggle('is-active', !toAfter);
+      cs.pillAfter.classList.toggle('is-active', toAfter);
+    }
+
+    if (!window.gsap || reduce.matches) {
+      if (toAfter) {
+        cs.before.style.zIndex = '1';
+        cs.after.style.zIndex = '12';
+        cs.before.style.filter = 'brightness(0.72)';
+        cs.after.style.filter = 'brightness(1)';
+      } else {
+        cs.before.style.zIndex = '12';
+        cs.after.style.zIndex = '1';
+        cs.before.style.filter = 'brightness(1)';
+        cs.after.style.filter = 'brightness(0.72)';
+      }
+      cs.animating = false;
+      return;
+    }
+
+    if (toAfter) {
+      // ANTES vai para trás, DEPOIS vem para a frente
+      const tl = gsap.timeline({
+        onComplete: () => { cs.animating = false; }
+      });
+
+      tl.to(cs.before, {
+        y: -24,
+        x: -72,
+        rotation: -7,
+        scale: 1.02,
+        duration: duration * 0.42,
+        ease: 'power2.out'
+      })
+      .set(cs.before, { z: -12 })
+      .to(cs.before, {
+        y: -6,
+        x: -8,
+        rotation: -2.5,
+        scale: 0.96,
+        filter: 'brightness(0.72)',
+        duration: duration * 0.58,
+        ease: 'power2.inOut'
+      }, '-=0.04');
+
+      tl.set(cs.after, { z: 12 }, '<')
+      .to(cs.after, {
+        y: 0,
+        x: 0,
+        rotation: 0,
+        scale: 1,
+        filter: 'brightness(1)',
+        duration: duration * 0.75,
+        ease: 'power2.out'
+      }, '<');
+
+    } else {
+      // DEPOIS vai para trás, ANTES volta para a frente
+      const tl = gsap.timeline({
+        onComplete: () => { cs.animating = false; }
+      });
+
+      tl.to(cs.after, {
+        y: -24,
+        x: 72,
+        rotation: 7,
+        scale: 1.02,
+        duration: duration * 0.42,
+        ease: 'power2.out'
+      })
+      .set(cs.after, { z: -12 })
+      .to(cs.after, {
+        y: -6,
+        x: 8,
+        rotation: 2.5,
+        scale: 0.96,
+        filter: 'brightness(0.72)',
+        duration: duration * 0.58,
+        ease: 'power2.inOut'
+      }, '-=0.04');
+
+      tl.set(cs.before, { z: 12 }, '<')
+      .to(cs.before, {
+        y: 0,
+        x: 0,
+        rotation: 0,
+        scale: 1,
+        filter: 'brightness(1)',
+        duration: duration * 0.75,
+        ease: 'power2.out'
+      }, '<');
     }
   }
 
-  // Inicializa poses padrão
-  cards.forEach((_, i) => {
-    setCardPose(cardData[i], i);
-    setWipe(cardData[i], 0);
+  // Renderização 3D Reto & Flutuante do Carrossel
+  function render() {
+    if (!window.gsap) return;
+    const width = carousel.offsetWidth || window.innerWidth;
+    const desktop = width >= 1050;
+    const tablet = width >= 640;
+    const step = desktop ? Math.min(420, width * 0.34) : tablet ? 330 : Math.min(290, width * 0.82);
+
+    items.forEach((item, i) => {
+      const d = mod(i - state.phase + count / 2, count) - count / 2;
+      const absD = Math.abs(d);
+
+      const x = d * step;
+      const z = -absD * 50;
+      const scale = Math.max(0.78, 1 - Math.min(absD * 0.08, 0.22));
+      const opacity = Math.max(0, Math.min(1, 1 - (absD - 0.72) * 1.25));
+      const isCur = absD < 0.38;
+
+      gsap.set(item, {
+        x: x,
+        y: 0,
+        z: z,
+        rotationY: 0,
+        scale: scale,
+        opacity: opacity,
+        zIndex: Math.round(150 - absD * 20),
+        visibility: opacity < 0.01 ? 'hidden' : 'visible'
+      });
+
+      item.classList.toggle('is-current', isCur);
+      item.setAttribute('aria-hidden', String(!isCur));
+    });
+  }
+
+  function announce() {
+    active = mod(Math.round(state.phase), count);
+    if (status) {
+      status.textContent = `${names[active]} · ${active + 1} de ${count}`;
+    }
+  }
+
+  function navigate(direction) {
+    if (busy) return;
+    busy = true;
+
+    if (!window.gsap || reduce.matches) {
+      state.phase = mod(state.phase + direction, count);
+      render();
+      announce();
+      busy = false;
+      return;
+    }
+
+    gsap.to(state, {
+      phase: state.phase + direction,
+      duration: 0.65,
+      ease: 'power2.inOut',
+      onUpdate: render,
+      onComplete: () => {
+        state.phase = mod(state.phase, count);
+        render();
+        announce();
+        busy = false;
+      }
+    });
+  }
+
+  // Eventos de clique nas fotos e cards
+  items.forEach((item, i) => {
+    const btn = item.querySelector('.works-toggle-btn');
+    if (btn) {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        togglePhoto(i);
+      });
+    }
+
+    item.addEventListener('click', () => {
+      const d = mod(i - state.phase + count / 2, count) - count / 2;
+      if (Math.abs(d) < 0.38) {
+        togglePhoto(i);
+      } else {
+        navigate(Math.sign(d));
+      }
+    });
   });
 
-  let worksST = null;
+  // Botões de navegação
+  const prevBtn = carousel.querySelector('[data-works-prev]');
+  const nextBtn = carousel.querySelector('[data-works-next]');
+  if (prevBtn) prevBtn.addEventListener('click', () => navigate(-1));
+  if (nextBtn) nextBtn.addEventListener('click', () => navigate(1));
+
+  // Teclado
+  carousel.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+      e.preventDefault();
+      navigate(e.key === 'ArrowRight' ? 1 : -1);
+    }
+  });
+
+  // Touch & Swipe
+  let down = null;
+  const viewport = carousel.querySelector('.works-viewport');
+  if (viewport) {
+    viewport.addEventListener('pointerdown', (e) => {
+      if (e.pointerType === 'mouse' && e.button !== 0) return;
+      down = { x: e.clientX, y: e.clientY, id: e.pointerId };
+      viewport.setPointerCapture(e.pointerId);
+    });
+
+    viewport.addEventListener('pointerup', (e) => {
+      if (!down || e.pointerId !== down.id) return;
+      const dx = e.clientX - down.x;
+      const dy = e.clientY - down.y;
+      down = null;
+      try { viewport.releasePointerCapture(e.pointerId); } catch (_) {}
+      if (Math.abs(dx) > 36 && Math.abs(dx) > Math.abs(dy)) {
+        navigate(dx < 0 ? 1 : -1);
+      }
+    });
+
+    viewport.addEventListener('pointercancel', (e) => {
+      down = null;
+      try { viewport.releasePointerCapture(e.pointerId); } catch (_) {}
+    });
+  }
+
+  // Inicialização 3D e Resize
+  if (window.gsap) {
+    gsap.set(items, { xPercent: -50, yPercent: -50, transformPerspective: 1600 });
+  }
+  render();
+  announce();
+
+  window.addEventListener('resize', render);
+
+  // ScrollTrigger para revelação no Visagismo ao rolar a página:
+  // Começa com o Antes. Ao rolar suavemente na seção, revela o Depois!
   const pinnedStage = section.querySelector('.works-pinned-stage');
-
-  if (window.gsap && window.ScrollTrigger && pinnedStage) {
+  if (window.gsap && window.ScrollTrigger && pinnedStage && !reduce.matches) {
     const isMobile = window.innerWidth <= 760;
-    const scrollPerCard = isMobile ? 850 : 800;
-    const totalScroll = count * scrollPerCard;
+    const pinDist = isMobile ? 380 : 420;
 
-    worksST = ScrollTrigger.create({
+    let hasScrolledAfter = false;
+
+    ScrollTrigger.create({
       trigger: section,
       pin: pinnedStage,
       start: 'top top',
-      end: () => `+=${totalScroll}`,
-      scrub: isMobile ? 0.35 : 0.45,
+      end: () => `+=${pinDist}`,
+      scrub: 0.35,
       anticipatePin: 1,
-      preventOverlaps: true,
-      fastScrollEnd: true,
       invalidateOnRefresh: true,
       onUpdate: (self) => {
-        const p = self.progress; // 0.0 a 1.0
-        const virtualIndex = p * count;
-        const currentCardIdx = Math.min(count - 1, Math.floor(virtualIndex));
-        const localProgress = virtualIndex - currentCardIdx; // 0.0 a 1.0
-
-        cards.forEach((_, i) => {
-          const c = cardData[i];
-
-          if (i < currentCardIdx) {
-            // Card já passou e foi para o fundo
-            setCardPose(c, 4, 0, 0, 0, 0.78, 0);
-            setWipe(c, 100);
-          } else if (i === currentCardIdx) {
-            // Card em foco atual
-            if (currentCardIdx === count - 1) {
-              // Último card: onda suave e contemplação final
-              let wipePct = 0;
-              if (localProgress < 0.08) {
-                wipePct = 0;
-              } else if (localProgress <= 0.62) {
-                const t = (localProgress - 0.08) / 0.54;
-                const wave = 0.5 - 0.5 * Math.cos(Math.PI * t);
-                wipePct = wave * 100;
-              } else {
-                wipePct = 100;
-              }
-              setWipe(c, wipePct);
-              setCardPose(c, 0, 0, 0, 0, 1, 1);
-            } else {
-              // Cadência de onda: Início (Antes) -> Onda suave -> Pausa (Depois) -> Throw
-              if (localProgress < 0.08) {
-                setWipe(c, 0);
-                setCardPose(c, 0, 0, 0, 0, 1, 1);
-              } else if (localProgress <= 0.58) {
-                const t = (localProgress - 0.08) / 0.50;
-                const wave = 0.5 - 0.5 * Math.cos(Math.PI * t);
-                setWipe(c, wave * 100);
-                setCardPose(c, 0, 0, 0, 0, 1, 1);
-              } else if (localProgress <= 0.76) {
-                // Pausou, acalmou: o resultado fica nítido e estático para contemplação
-                setWipe(c, 100);
-                setCardPose(c, 0, 0, 0, 0, 1, 1);
-              } else {
-                // Throw tridimensional suave para trás
-                setWipe(c, 100);
-                const throwProg = (localProgress - 0.76) / 0.24; // 0.0 a 1.0
-                const stackWidth = stack.offsetWidth || 480;
-
-                let throwX, throwY, throwRot, throwScale, throwOpacity, targetZ;
-                if (throwProg < 0.55) {
-                  const subP = throwProg / 0.55;
-                  throwX = subP * (stackWidth * 1.15);
-                  throwY = -Math.sin(subP * Math.PI) * 38;
-                  throwRot = subP * 14;
-                  throwScale = 1 + subP * 0.035;
-                  throwOpacity = 1;
-                  targetZ = 120;
-                } else {
-                  const subP = (throwProg - 0.55) / 0.45;
-                  throwX = (1 - subP) * (stackWidth * 1.15);
-                  throwY = -38 * (1 - subP) - subP * (3.5 * 18);
-                  throwRot = 14 * (1 - subP) + subP * c.tilt;
-                  throwScale = (1.035 * (1 - subP)) + subP * (1 - 3.5 * 0.055);
-                  throwOpacity = Math.max(0, 1 - subP * 1.25);
-                  targetZ = Math.round(100 - subP * 90);
-                }
-
-                c.el.style.transform = `translate3d(${throwX.toFixed(1)}px, ${throwY.toFixed(1)}px, 0) rotate(${throwRot.toFixed(1)}deg) scale(${throwScale.toFixed(3)})`;
-                c.el.style.opacity = throwOpacity.toFixed(3);
-                c.el.style.filter = `brightness(${(1 - throwProg * 0.32).toFixed(2)})`;
-                c.el.style.zIndex = String(targetZ);
-              }
-            }
-          } else {
-            // Cards posteriores na pilha: sobem de forma controlada
-            let relativeDepth = i - currentCardIdx;
-            if (localProgress > 0.76 && currentCardIdx < count - 1) {
-              const advanceProg = (localProgress - 0.76) / 0.24;
-              relativeDepth -= advanceProg;
-            }
-            setWipe(c, 0);
-            setCardPose(c, relativeDepth);
+        const p = self.progress;
+        if (Math.round(state.phase) === 0) {
+          if (p >= 0.40 && !hasScrolledAfter) {
+            hasScrolledAfter = true;
+            togglePhoto(0, true, 0.55);
+          } else if (p < 0.25 && hasScrolledAfter) {
+            hasScrolledAfter = false;
+            togglePhoto(0, false, 0.55);
           }
-        });
+        }
       }
-    });
-  } else {
-    // Fallback sem ScrollTrigger
-    let currentIdx = 0;
-    function renderFallback() {
-      cards.forEach((_, i) => {
-        const c = cardData[i];
-        const depth = (i - currentIdx + count) % count;
-        setCardPose(c, depth);
-        setWipe(c, depth === 0 ? 50 : 0);
-      });
-    }
-    renderFallback();
-    stack.addEventListener('click', () => {
-      currentIdx = (currentIdx + 1) % count;
-      renderFallback();
     });
   }
 }
 
-document.querySelectorAll('#trabalhos').forEach(initWorksDeck);
+document.querySelectorAll('#trabalhos').forEach(initWorksCarousel);
 
 function initPortraits(region){
  const stage=region.querySelector('.portrait-stage'),cards=[...stage.querySelectorAll('.team-card')],status=region.querySelector('.portrait-status');const count=cards.length;
