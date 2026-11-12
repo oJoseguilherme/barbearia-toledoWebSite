@@ -500,7 +500,7 @@ section, .wrap {
 
 .hero {
   position: relative;
-  min-height: clamp(700px, 92vh, 880px);
+  min-height: clamp(740px, 94vh, 920px);
   padding-top: calc(84px + clamp(10px, 1.8vh, 24px));
   padding-bottom: clamp(24px, 4vh, 48px);
   overflow: visible;
@@ -590,7 +590,7 @@ section, .wrap {
   animation: heroBrandSlideIn 1400ms cubic-bezier(0.16, 1, 0.3, 1) 2450ms both;
 }
 
-/* Box Quadradinho Tecnológico e Sutil para TOLEDO */
+/* Box Quadradinho Tecnológico e Sutil para TOLEDO (100% respirável em volta, nada por perto) */
 .brand-sweep {
   position: relative;
   display: inline-flex;
@@ -612,13 +612,13 @@ section, .wrap {
   text-shadow: 0 2px 20px rgba(196, 174, 136, 0.4);
 }
 
-/* Botão "Agendar nesta unidade" posicionado lá embaixo no chão do vídeo (no X azul), ultra minimalista e respirando */
+/* Botão "Agendar nesta unidade" descolado de Toledo, lá embaixo no chão do vídeo (no X vermelho), ultra minimalista */
 .hero-cta {
   opacity: 0;
   align-self: flex-start;
   margin-left: clamp(140px, 19vw, 290px);
-  margin-top: auto;
-  margin-bottom: clamp(8px, 1.5vh, 20px);
+  margin-top: clamp(120px, 20vh, 260px) !important;
+  margin-bottom: clamp(16px, 3vh, 36px);
   background: rgba(6, 25, 26, 0.4);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
@@ -1559,7 +1559,7 @@ footer p {
     align-self: center;
     margin-left: auto;
     margin-right: auto;
-    margin-top: clamp(24px, 4vh, 36px);
+    margin-top: clamp(32px, 5vh, 48px) !important;
     margin-bottom: 0;
   }
 
