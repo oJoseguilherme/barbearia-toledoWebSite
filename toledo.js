@@ -27,12 +27,22 @@ function initWorksDeck(section) {
   const count = cards.length;
   if (!count) return;
 
-  const dots = [...section.querySelectorAll('.works-dot')];
-  const prevBtn = section.querySelector('[data-works-dir="-1"]');
-  const nextBtn = section.querySelector('[data-works-dir="1"]');
+  // Ativa animação do título quando a seção fica visível
+  if ('IntersectionObserver' in window) {
+    const secObs = new IntersectionObserver((entries) => {
+      entries.forEach((e) => {
+        if (e.isIntersecting) {
+          section.classList.add('is-inview');
+        }
+      });
+    }, { threshold: 0.1 });
+    secObs.observe(section);
+  } else {
+    section.classList.add('is-inview');
+  }
 
   // Inclinações fixas orgânicas da pilha de cartas
-  const tilts = [0, 3.6, -4.2, 3.0, -3.4];
+  const tilts = [0, 3.2, -3.8, 2.6, -3.0];
 
   const cardData = cards.map((card, i) => {
     const afterLayer = card.querySelector('.works-layer.works-after');
@@ -74,16 +84,6 @@ function initWorksDeck(section) {
     }
   }
 
-  let activeIndex = 0;
-  function updateIndicators(index) {
-    activeIndex = Math.max(0, Math.min(count - 1, Math.round(index)));
-    dots.forEach((dot, i) => {
-      const isCur = i === activeIndex;
-      dot.classList.toggle('is-active', isCur);
-      dot.setAttribute('aria-selected', String(isCur));
-    });
-  }
-
   // Inicializa poses padrão
   cards.forEach((_, i) => {
     setCardPose(cardData[i], i);
@@ -111,8 +111,6 @@ function initWorksDeck(section) {
         const currentCardIdx = Math.min(count - 1, Math.floor(virtualIndex));
         const localProgress = virtualIndex - currentCardIdx; // 0.0 a 1.0
 
-        updateIndicators(virtualIndex >= count - 0.15 ? count - 1 : currentCardIdx);
-
         cards.forEach((_, i) => {
           const c = cardData[i];
 
@@ -137,7 +135,7 @@ function initWorksDeck(section) {
                 // Fase 2: Arremesso tridimensional (Throw Top para trás)
                 setWipe(c, 100);
                 const throwProg = (localProgress - 0.50) / 0.50; // 0.0 a 1.0
-                const stackWidth = stack.offsetWidth || 380;
+                const stackWidth = stack.offsetWidth || 480;
 
                 let throwX, throwY, throwRot, throwScale, throwOpacity, targetZ;
                 if (throwProg < 0.55) {
@@ -177,52 +175,25 @@ function initWorksDeck(section) {
         });
       }
     });
-
-    function scrollToCard(targetIdx) {
-      if (!worksST) return;
-      const targetP = (targetIdx + 0.05) / count;
-      const targetY = worksST.start + targetP * totalScroll;
-      window.scrollTo({ top: targetY, behavior: 'smooth' });
-    }
-
-    prevBtn?.addEventListener('click', () => {
-      scrollToCard(Math.max(0, activeIndex - 1));
-    });
-    nextBtn?.addEventListener('click', () => {
-      scrollToCard(Math.min(count - 1, activeIndex + 1));
-    });
-    dots.forEach((dot, idx) => {
-      dot.addEventListener('click', () => scrollToCard(idx));
-    });
   } else {
     // Fallback sem ScrollTrigger
+    let currentIdx = 0;
     function renderFallback() {
       cards.forEach((_, i) => {
         const c = cardData[i];
-        const depth = (i - activeIndex + count) % count;
+        const depth = (i - currentIdx + count) % count;
         setCardPose(c, depth);
         setWipe(c, depth === 0 ? 50 : 0);
       });
-      updateIndicators(activeIndex);
     }
     renderFallback();
-    prevBtn?.addEventListener('click', () => {
-      activeIndex = (activeIndex - 1 + count) % count;
+    stack.addEventListener('click', () => {
+      currentIdx = (currentIdx + 1) % count;
       renderFallback();
-    });
-    nextBtn?.addEventListener('click', () => {
-      activeIndex = (activeIndex + 1) % count;
-      renderFallback();
-    });
-    dots.forEach((dot, idx) => {
-      dot.addEventListener('click', () => {
-        activeIndex = idx;
-        renderFallback();
-      });
     });
   }
 
-  // Interação por toque no mobile
+  // Interação por toque no mobile (avanço por swipe)
   let touchStartX = 0;
   let touchStartY = 0;
   stack.addEventListener('touchstart', (e) => {
@@ -233,14 +204,13 @@ function initWorksDeck(section) {
     const dx = e.changedTouches[0].clientX - touchStartX;
     const dy = e.changedTouches[0].clientY - touchStartY;
     if (Math.abs(dx) > 42 && Math.abs(dx) > Math.abs(dy) * 1.25) {
-      const dir = dx < 0 ? 1 : -1;
-      const target = Math.max(0, Math.min(count - 1, activeIndex + dir));
       if (worksST) {
+        const p = worksST.progress;
+        const currentCard = Math.floor(p * count);
+        const dir = dx < 0 ? 1 : -1;
+        const target = Math.max(0, Math.min(count - 1, currentCard + dir));
         const targetP = (target + 0.05) / count;
         window.scrollTo({ top: worksST.start + targetP * (count * 750), behavior: 'smooth' });
-      } else {
-        activeIndex = target;
-        updateIndicators(activeIndex);
       }
     }
   }, { passive: true });
