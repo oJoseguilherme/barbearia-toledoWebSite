@@ -1694,12 +1694,14 @@ footer p {
   .hero-title {
     align-items: center;
     text-align: center;
-    gap: clamp(16px, 3vh, 24px);
+    gap: clamp(20px, 3.5vh, 28px);
   }
 
   .hero-auxiliary {
-    font-size: clamp(24px, 6.4vw, 36px);
-    gap: 10px;
+    font-size: clamp(34px, 9.2vw, 46px);
+    line-height: 1.04;
+    letter-spacing: -0.02em;
+    gap: 12px;
     align-items: center;
     text-align: center;
     color: #ffffff !important;
@@ -1710,7 +1712,9 @@ footer p {
   }
 
   .brand-sweep {
-    font-size: clamp(42px, 11vw, 58px);
+    font-size: clamp(56px, 15vw, 78px);
+    line-height: 0.92;
+    letter-spacing: 0.05em;
     padding-bottom: 8px;
     padding-inline: 0;
   }
@@ -1719,27 +1723,51 @@ footer p {
     align-self: center;
     margin-left: auto;
     margin-right: auto;
-    margin-top: clamp(32px, 5vh, 48px) !important;
+    margin-top: clamp(36px, 6vh, 56px) !important;
     margin-bottom: 0;
+    padding: 7px 16px;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    background: rgba(6, 25, 26, 0.45);
+    border: 1px solid rgba(196, 174, 136, 0.25);
+    border-radius: 999px;
   }
 
-  /* No mobile, ao arrastar para baixo e revelar o texto: 1. Agende agora -> 2. e viva a experiência -> 3. Toledo -> 4. CTA */
+  /* No mobile, ao arrastar para baixo e revelar o texto: timing sincronizado e fluido */
+  /* 1. Agende agora */
   .hero-copy.is-inview .hero-line.line-1,
   .hero-copy.is-inview .hero-line.line-left {
-    animation: heroLineSlideInLeft 1100ms cubic-bezier(0.16, 1, 0.3, 1) 120ms both;
+    animation: heroBlurRevealLeft 1000ms cubic-bezier(0.16, 1, 0.3, 1) 150ms both;
   }
 
+  /* 2. e viva a experiência */
   .hero-copy.is-inview .hero-line.line-2,
   .hero-copy.is-inview .hero-line.line-right {
-    animation: heroLineSlideInRight 1100ms cubic-bezier(0.16, 1, 0.3, 1) 480ms both;
+    animation: heroBlurRevealRight 1000ms cubic-bezier(0.16, 1, 0.3, 1) 550ms both;
   }
 
+  /* 3. Toledo: entra o wireframe vazado com foco suave */
   .hero-copy.is-inview .hero-line.line-brand {
-    animation: heroBrandSlideIn 1250ms cubic-bezier(0.16, 1, 0.3, 1) 980ms both;
+    animation: heroWireframeIn 1050ms cubic-bezier(0.16, 1, 0.3, 1) 1050ms both;
   }
 
+  /* 4. Toledo: o preenchimento luminoso sobe suave meio segundo depois do wireframe */
+  .hero-copy.is-inview .brand-sweep::before {
+    animation: wireframeToSolidFill 1100ms cubic-bezier(0.16, 1, 0.3, 1) 1600ms forwards;
+  }
+
+  .hero-copy.is-inview .brand-sweep::after {
+    animation: laserScanUp 1100ms cubic-bezier(0.16, 1, 0.3, 1) 1600ms forwards;
+  }
+
+  /* 5. O sublinhadozinho branquinho desliza logo após o sólido assentar */
+  .hero-copy.is-inview .brand-underline {
+    animation: toledoUnderlineIn 950ms cubic-bezier(0.16, 1, 0.3, 1) 2400ms forwards;
+  }
+
+  /* 6. O botão menorzinho surge discretamente por último */
   .hero-copy.is-inview .hero-cta {
-    animation: heroCtaFadeUp 900ms cubic-bezier(0.16, 1, 0.3, 1) 1550ms both;
+    animation: heroCtaFadeUp 850ms cubic-bezier(0.16, 1, 0.3, 1) 3000ms both;
   }
 
   .hero-copy > p:not(.label) {
