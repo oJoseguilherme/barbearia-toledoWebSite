@@ -594,6 +594,7 @@ section, .wrap {
 .brand-sweep {
   position: relative;
   display: inline-block;
+  padding-bottom: 8px;
   font-family: var(--title);
   font-size: clamp(64px, 7.8vw, 106px);
   font-weight: 800;
@@ -610,6 +611,41 @@ section, .wrap {
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
   text-shadow: 0 0 24px rgba(196, 174, 136, 0.35);
+}
+
+/* Sublinhadozinho arquitetônico branquinho minimalista sob Toledo */
+.brand-underline {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.25) 0%, #ffffff 50%, rgba(255, 255, 255, 0.5) 100%);
+  border-radius: 2px;
+  box-shadow: 0 0 12px rgba(255, 255, 255, 0.8), 0 0 20px rgba(196, 174, 136, 0.35);
+  transform: scaleX(0);
+  transform-origin: left;
+  opacity: 0;
+  will-change: transform, opacity;
+  pointer-events: none;
+}
+
+.hero-copy.is-inview .brand-underline {
+  animation: toledoUnderlineIn 1100ms cubic-bezier(0.16, 1, 0.3, 1) 3300ms forwards;
+}
+
+@keyframes toledoUnderlineIn {
+  0% {
+    transform: scaleX(0);
+    opacity: 0;
+  }
+  25% {
+    opacity: 1;
+  }
+  100% {
+    transform: scaleX(1);
+    opacity: 0.92;
+  }
 }
 
 /* O sólido branco puro que preenche o wireframe suavemente e sem linhas rígidas */
