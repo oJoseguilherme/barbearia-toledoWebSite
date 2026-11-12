@@ -569,47 +569,131 @@ section, .wrap {
   will-change: transform, opacity;
 }
 
-/* Sequência fluida com pausas aveludadas: 1. Agende agora -> minissegundinho -> 2. e viva a experiência -> espaço -> 3. Toledo -> demora -> 4. CTA */
+/* Sequência Blur-Reveal 21st.dev: 1. Agende agora -> minissegundinho -> 2. e viva a experiência -> espaço -> 3. Toledo + Laser Line -> 4. CTA */
 .hero-copy.is-inview .hero-line.line-1,
 .hero-copy.is-inview .hero-line.line-left {
-  animation: heroLineSlideInLeft 1250ms cubic-bezier(0.16, 1, 0.3, 1) 1300ms both;
+  animation: heroBlurRevealLeft 1300ms cubic-bezier(0.16, 1, 0.3, 1) 1300ms both;
 }
 
 .hero-copy.is-inview .hero-line.line-2,
 .hero-copy.is-inview .hero-line.line-right {
-  animation: heroLineSlideInRight 1250ms cubic-bezier(0.16, 1, 0.3, 1) 1800ms both;
+  animation: heroBlurRevealRight 1300ms cubic-bezier(0.16, 1, 0.3, 1) 1800ms both;
 }
 
-/* Toledo: Protagonista com deslocamento generoso para a direita e entrada com presença suave */
+/* Toledo: Protagonista solto, monumental e arquitetônico com deslocamento para a direita */
 .hero-line.line-brand {
   display: inline-flex;
   margin-left: clamp(56px, 9vw, 150px);
 }
 
 .hero-copy.is-inview .hero-line.line-brand {
-  animation: heroBrandSlideIn 1400ms cubic-bezier(0.16, 1, 0.3, 1) 2450ms both;
+  animation: heroBrandBlurIn 1400ms cubic-bezier(0.16, 1, 0.3, 1) 2450ms both;
 }
 
-/* Box Quadradinho Tecnológico e Sutil para TOLEDO (100% respirável em volta, nada por perto) */
+/* Tipografia Arquitetônica Pura para TOLEDO (sem caixa fechada, 100% respirável e solta) */
 .brand-sweep {
   position: relative;
-  display: inline-flex;
-  align-items: center;
-  padding: 8px 28px 10px;
+  display: inline-block;
+  padding-bottom: 12px;
   font-family: var(--title);
-  font-size: clamp(56px, 6.8vw, 92px);
+  font-size: clamp(64px, 7.8vw, 106px);
   font-weight: 800;
-  line-height: 0.95;
-  letter-spacing: 0.04em;
+  line-height: 0.92;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--accent-gold);
-  border-radius: 14px;
-  border: 1px solid rgba(196, 174, 136, 0.35);
-  background: rgba(9, 44, 46, 0.72);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  box-shadow: 0 16px 40px rgba(2, 28, 29, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.12);
-  text-shadow: 0 2px 20px rgba(196, 174, 136, 0.4);
+  color: #ffffff !important;
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  text-shadow: 0 4px 32px rgba(2, 28, 29, 0.95);
+}
+
+/* Sublinhado Laser Dinâmico (Hairline Arquitetônico de Luxo do 21st.dev) */
+.brand-sweep::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, rgba(196, 174, 136, 0.2) 0%, #c4ae88 35%, #ffffff 80%, #f4e7c3 100%);
+  border-radius: 2px;
+  box-shadow: 0 0 14px rgba(196, 174, 136, 0.8), 0 0 26px rgba(255, 255, 255, 0.5);
+  transform: scaleX(0);
+  transform-origin: left;
+  opacity: 0;
+  will-change: transform, opacity;
+}
+
+.hero-copy.is-inview .brand-sweep::after {
+  animation: laserLineSweep 1300ms cubic-bezier(0.16, 1, 0.3, 1) 2800ms forwards;
+}
+
+@keyframes laserLineSweep {
+  0% {
+    transform: scaleX(0);
+    opacity: 0;
+  }
+  25% {
+    opacity: 1;
+  }
+  80% {
+    box-shadow: 0 0 16px rgba(196, 174, 136, 0.9), 0 0 30px rgba(255, 255, 255, 0.8);
+  }
+  100% {
+    transform: scaleX(1);
+    opacity: 0.9;
+    box-shadow: 0 0 8px rgba(196, 174, 136, 0.45);
+  }
+}
+
+@keyframes heroBlurRevealLeft {
+  0% {
+    opacity: 0;
+    filter: blur(14px);
+    transform: translateX(-32px);
+  }
+  100% {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateX(0);
+  }
+}
+
+@keyframes heroBlurRevealRight {
+  0% {
+    opacity: 0;
+    filter: blur(14px);
+    transform: translateX(32px);
+  }
+  100% {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateX(0);
+  }
+}
+
+@keyframes heroBrandBlurIn {
+  0% {
+    opacity: 0;
+    filter: blur(18px);
+    transform: translateX(-36px);
+  }
+  50% {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateX(0);
+    text-shadow: 0 0 32px rgba(255, 255, 255, 0.65), 0 0 54px rgba(196, 174, 136, 0.4);
+  }
+  100% {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateX(0);
+    text-shadow: 0 4px 32px rgba(2, 28, 29, 0.95);
+  }
 }
 
 /* Botão "Agendar nesta unidade" descolado de Toledo, lá embaixo no chão do vídeo (no X vermelho), ultra minimalista */
@@ -1551,8 +1635,8 @@ footer p {
 
   .brand-sweep {
     font-size: clamp(42px, 11vw, 58px);
-    padding: 6px 20px 8px;
-    border-radius: 12px;
+    padding-bottom: 8px;
+    padding-inline: 0;
   }
 
   .hero-cta {
