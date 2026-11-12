@@ -500,31 +500,32 @@ section, .wrap {
 
 .hero {
   position: relative;
-  min-height: clamp(660px, 90vh, 840px);
-  padding-top: calc(84px + clamp(18px, 2.5vh, 36px));
+  min-height: clamp(700px, 92vh, 880px);
+  padding-top: calc(84px + clamp(10px, 1.8vh, 24px));
   padding-bottom: clamp(24px, 4vh, 48px);
   overflow: visible;
   perspective: 1600px;
   background: transparent;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
 }
 
 .hero-content {
-  min-height: auto;
+  min-height: clamp(630px, 80vh, 780px);
   width: 100%;
   display: flex;
-  align-items: center;
+  align-items: stretch;
   position: relative;
   z-index: 2;
   pointer-events: none;
 }
 
 .hero-copy {
-  padding-block: clamp(24px, 4vh, 48px);
+  padding-top: clamp(64px, 10vh, 120px);
+  padding-bottom: clamp(12px, 2vh, 28px);
   margin-left: clamp(28px, 6vw, 96px);
   width: clamp(520px, 56vw, 720px);
-  min-height: clamp(580px, 72vh, 710px);
+  min-height: clamp(630px, 80vh, 780px);
   pointer-events: auto;
   position: relative;
   z-index: 4;
@@ -579,10 +580,10 @@ section, .wrap {
   animation: heroLineSlideInRight 1250ms cubic-bezier(0.16, 1, 0.3, 1) 1800ms both;
 }
 
-/* Toledo: Protagonista com deslocamento para a direita e entrada com presença suave */
+/* Toledo: Protagonista com deslocamento generoso para a direita e entrada com presença suave */
 .hero-line.line-brand {
   display: inline-flex;
-  margin-left: clamp(48px, 7.5vw, 120px);
+  margin-left: clamp(56px, 9vw, 150px);
 }
 
 .hero-copy.is-inview .hero-line.line-brand {
@@ -611,35 +612,35 @@ section, .wrap {
   text-shadow: 0 2px 20px rgba(196, 174, 136, 0.4);
 }
 
-/* Botão "Agendar nesta unidade" pareado com a linha inferior do vídeo (mesmo chão), menorzinho e discreto */
+/* Botão "Agendar nesta unidade" posicionado lá embaixo no chão do vídeo (no X azul), ultra minimalista e respirando */
 .hero-cta {
   opacity: 0;
   align-self: flex-start;
   margin-left: clamp(140px, 19vw, 290px);
   margin-top: auto;
-  margin-bottom: clamp(8px, 1.4vh, 22px);
-  background: rgba(6, 25, 26, 0.55);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  color: rgba(244, 241, 234, 0.85);
-  border: 1px solid rgba(196, 174, 136, 0.28);
-  box-shadow: 0 6px 18px rgba(2, 28, 29, 0.45);
-  padding: 8px 18px;
-  font-size: 11.5px;
-  font-weight: 600;
-  letter-spacing: 0.12em;
+  margin-bottom: clamp(8px, 1.5vh, 20px);
+  background: rgba(6, 25, 26, 0.4);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: rgba(244, 241, 234, 0.8);
+  border: 1px solid rgba(196, 174, 136, 0.22);
+  box-shadow: 0 4px 12px rgba(2, 28, 29, 0.3);
+  padding: 7px 16px;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   border-radius: 999px;
   will-change: transform, opacity;
-  transition: background 260ms, border-color 260ms, color 260ms, transform 260ms;
+  transition: background 260ms, border-color 260ms, color 260ms, transform 260ms, box-shadow 260ms;
 }
 
 .hero-cta:hover {
   background: rgba(16, 74, 72, 0.65);
-  border-color: rgba(196, 174, 136, 0.6);
+  border-color: rgba(196, 174, 136, 0.55);
   color: #ffffff;
   transform: translateY(-2px);
-  box-shadow: 0 10px 24px rgba(2, 28, 29, 0.75), 0 0 20px rgba(59, 136, 132, 0.25);
+  box-shadow: 0 8px 20px rgba(2, 28, 29, 0.6);
 }
 
 .hero-copy.is-inview .hero-cta {
