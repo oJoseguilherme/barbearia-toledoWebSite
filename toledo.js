@@ -30,7 +30,7 @@ function initWorksCarousel(section) {
   const status = carousel.querySelector('.works-status');
   const names = items.map(it => it.dataset.service || it.querySelector('h3').textContent.trim());
 
-  // Ativa a animação do título ao entrar no campo de visão
+  // Ativa a animação do título ao entrar no campo de visão (sem travar scroll)
   if (window.ScrollTrigger) {
     ScrollTrigger.create({
       trigger: section,
@@ -47,109 +47,61 @@ function initWorksCarousel(section) {
   let busy = false;
   let active = 0;
 
-  // Estado das fotos de cada card
+  // Estado das fotos de cada card: já inicia mostrando o DEPOIS
   const cardStates = items.map(item => {
-    const beforeLayer = item.querySelector('.photo-before');
     const afterLayer = item.querySelector('.photo-after');
-    const btn = item.querySelector('.works-toggle-btn');
-    const pillBefore = btn ? btn.querySelector('.pill-before') : null;
-    const pillAfter = btn ? btn.querySelector('.pill-after') : null;
+    const beforeLayer = item.querySelector('.photo-before');
 
+    // DEPOIS na frente, ANTES atrás
     if (window.gsap) {
-      gsap.set(beforeLayer, { z: 12, x: 0, y: 0, rotation: 0, scale: 1, filter: 'brightness(1)' });
-      gsap.set(afterLayer, { z: -12, x: 8, y: -6, rotation: 2.5, scale: 0.96, filter: 'brightness(0.72)' });
+      gsap.set(afterLayer, { z: 12, x: 0, y: 0, rotation: 0, scale: 1, filter: 'brightness(1)' });
+      gsap.set(beforeLayer, { z: -12, x: 8, y: -6, rotation: 2.5, scale: 0.96, filter: 'brightness(0.72)' });
     }
 
     return {
       item,
-      before: beforeLayer,
       after: afterLayer,
-      btn,
-      pillBefore,
-      pillAfter,
-      isAfter: false,
+      before: beforeLayer,
+      isShowingBefore: false,
       animating: false
     };
   });
 
-  // Função cinematográfica de troca de fotos (Antes <-> Depois)
-  function togglePhoto(index, forceState, duration = 0.62) {
+  // Alternância suave entre DEPOIS e ANTES ao clicar na imagem central
+  function togglePhoto(index, duration = 0.6) {
     const cs = cardStates[index];
     if (!cs || cs.animating) return;
 
-    const toAfter = (typeof forceState === 'boolean') ? forceState : !cs.isAfter;
-    if (toAfter === cs.isAfter) return;
-
     cs.animating = true;
-    cs.isAfter = toAfter;
-
-    if (cs.pillBefore && cs.pillAfter) {
-      cs.pillBefore.classList.toggle('is-active', !toAfter);
-      cs.pillAfter.classList.toggle('is-active', toAfter);
-    }
+    const toBefore = !cs.isShowingBefore;
+    cs.isShowingBefore = toBefore;
 
     if (!window.gsap || reduce.matches) {
-      if (toAfter) {
+      if (toBefore) {
+        cs.after.style.zIndex = '1';
+        cs.before.style.zIndex = '12';
+        cs.after.style.filter = 'brightness(0.72)';
+        cs.before.style.filter = 'brightness(1)';
+      } else {
         cs.before.style.zIndex = '1';
         cs.after.style.zIndex = '12';
         cs.before.style.filter = 'brightness(0.72)';
         cs.after.style.filter = 'brightness(1)';
-      } else {
-        cs.before.style.zIndex = '12';
-        cs.after.style.zIndex = '1';
-        cs.before.style.filter = 'brightness(1)';
-        cs.after.style.filter = 'brightness(0.72)';
       }
       cs.animating = false;
       return;
     }
 
-    if (toAfter) {
-      // ANTES vai para trás, DEPOIS vem para a frente
-      const tl = gsap.timeline({
-        onComplete: () => { cs.animating = false; }
-      });
-
-      tl.to(cs.before, {
-        y: -24,
-        x: -72,
-        rotation: -7,
-        scale: 1.02,
-        duration: duration * 0.42,
-        ease: 'power2.out'
-      })
-      .set(cs.before, { z: -12 })
-      .to(cs.before, {
-        y: -6,
-        x: -8,
-        rotation: -2.5,
-        scale: 0.96,
-        filter: 'brightness(0.72)',
-        duration: duration * 0.58,
-        ease: 'power2.inOut'
-      }, '-=0.04');
-
-      tl.set(cs.after, { z: 12 }, '<')
-      .to(cs.after, {
-        y: 0,
-        x: 0,
-        rotation: 0,
-        scale: 1,
-        filter: 'brightness(1)',
-        duration: duration * 0.75,
-        ease: 'power2.out'
-      }, '<');
-
-    } else {
-      // DEPOIS vai para trás, ANTES volta para a frente
+    if (toBefore) {
+      // Mostra o ANTES: o DEPOIS vai para trás e o ANTES vem para a frente
       const tl = gsap.timeline({
         onComplete: () => { cs.animating = false; }
       });
 
       tl.to(cs.after, {
         y: -24,
-        x: 72,
-        rotation: 7,
+        x: -72,
+        rotation: -6,
         scale: 1.02,
         duration: duration * 0.42,
         ease: 'power2.out'
@@ -157,8 +109,8 @@ function initWorksCarousel(section) {
       .set(cs.after, { z: -12 })
       .to(cs.after, {
         y: -6,
-        x: 8,
-        rotation: 2.5,
+        x: -8,
+        rotation: -2.5,
         scale: 0.96,
         filter: 'brightness(0.72)',
         duration: duration * 0.58,
@@ -175,24 +127,60 @@ function initWorksCarousel(section) {
         duration: duration * 0.75,
         ease: 'power2.out'
       }, '<');
+
+    } else {
+      // Volta para o DEPOIS: o ANTES vai para trás e o DEPOIS vem para a frente
+      const tl = gsap.timeline({
+        onComplete: () => { cs.animating = false; }
+      });
+
+      tl.to(cs.before, {
+        y: -24,
+        x: 72,
+        rotation: 6,
+        scale: 1.02,
+        duration: duration * 0.42,
+        ease: 'power2.out'
+      })
+      .set(cs.before, { z: -12 })
+      .to(cs.before, {
+        y: -6,
+        x: 8,
+        rotation: 2.5,
+        scale: 0.96,
+        filter: 'brightness(0.72)',
+        duration: duration * 0.58,
+        ease: 'power2.inOut'
+      }, '-=0.04');
+
+      tl.set(cs.after, { z: 12 }, '<')
+      .to(cs.after, {
+        y: 0,
+        x: 0,
+        rotation: 0,
+        scale: 1,
+        filter: 'brightness(1)',
+        duration: duration * 0.75,
+        ease: 'power2.out'
+      }, '<');
     }
   }
 
-  // Renderização 3D Reto & Flutuante do Carrossel
+  // Renderização 3D Reto & Flutuante do Carrossel Livre
   function render() {
     if (!window.gsap) return;
     const width = carousel.offsetWidth || window.innerWidth;
     const desktop = width >= 1050;
     const tablet = width >= 640;
-    const step = desktop ? Math.min(420, width * 0.34) : tablet ? 330 : Math.min(290, width * 0.82);
+    const step = desktop ? Math.min(480, width * 0.36) : tablet ? 360 : Math.min(300, width * 0.84);
 
     items.forEach((item, i) => {
       const d = mod(i - state.phase + count / 2, count) - count / 2;
       const absD = Math.abs(d);
 
       const x = d * step;
-      const z = -absD * 50;
-      const scale = Math.max(0.78, 1 - Math.min(absD * 0.08, 0.22));
+      const z = -absD * 55;
+      const scale = Math.max(0.76, 1 - Math.min(absD * 0.09, 0.24));
       const opacity = Math.max(0, Math.min(1, 1 - (absD - 0.72) * 1.25));
       const isCur = absD < 0.38;
 
@@ -215,7 +203,7 @@ function initWorksCarousel(section) {
   function announce() {
     active = mod(Math.round(state.phase), count);
     if (status) {
-      status.textContent = `${names[active]} · ${active + 1} de ${count}`;
+      status.textContent = `${names[active]}`;
     }
   }
 
@@ -247,25 +235,19 @@ function initWorksCarousel(section) {
 
   // Eventos de clique nas fotos e cards
   items.forEach((item, i) => {
-    const btn = item.querySelector('.works-toggle-btn');
-    if (btn) {
-      btn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        togglePhoto(i);
-      });
-    }
-
     item.addEventListener('click', () => {
       const d = mod(i - state.phase + count / 2, count) - count / 2;
       if (Math.abs(d) < 0.38) {
+        // Clica na imagem que está no centro: alterna entre DEPOIS e ANTES
         togglePhoto(i);
       } else {
+        // Clica no card lateral: navega para ele
         navigate(Math.sign(d));
       }
     });
   });
 
-  // Botões de navegação
+  // Pequenas setas de navegação embaixo
   const prevBtn = carousel.querySelector('[data-works-prev]');
   const nextBtn = carousel.querySelector('[data-works-next]');
   if (prevBtn) prevBtn.addEventListener('click', () => navigate(-1));
@@ -314,38 +296,6 @@ function initWorksCarousel(section) {
   announce();
 
   window.addEventListener('resize', render);
-
-  // ScrollTrigger para revelação no Visagismo ao rolar a página:
-  // Começa com o Antes. Ao rolar suavemente na seção, revela o Depois!
-  const pinnedStage = section.querySelector('.works-pinned-stage');
-  if (window.gsap && window.ScrollTrigger && pinnedStage && !reduce.matches) {
-    const isMobile = window.innerWidth <= 760;
-    const pinDist = isMobile ? 380 : 420;
-
-    let hasScrolledAfter = false;
-
-    ScrollTrigger.create({
-      trigger: section,
-      pin: pinnedStage,
-      start: 'top top',
-      end: () => `+=${pinDist}`,
-      scrub: 0.35,
-      anticipatePin: 1,
-      invalidateOnRefresh: true,
-      onUpdate: (self) => {
-        const p = self.progress;
-        if (Math.round(state.phase) === 0) {
-          if (p >= 0.40 && !hasScrolledAfter) {
-            hasScrolledAfter = true;
-            togglePhoto(0, true, 0.55);
-          } else if (p < 0.25 && hasScrolledAfter) {
-            hasScrolledAfter = false;
-            togglePhoto(0, false, 0.55);
-          }
-        }
-      }
-    });
-  }
 }
 
 document.querySelectorAll('#trabalhos').forEach(initWorksCarousel);

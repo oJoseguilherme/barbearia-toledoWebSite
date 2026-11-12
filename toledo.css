@@ -1088,23 +1088,26 @@ section, .wrap {
 /* ==========================================================================
    Transformações Antes & Depois — Carrossel Espacial Flutuante & Tecnológico
    ========================================================================== */
+/* ==========================================================================
+   Transformações Antes & Depois — Quadros Livres Flutuantes (Grandes & Sem Moldura)
+   ========================================================================== */
 .works-section {
   position: relative;
   background: transparent;
-  padding: 0;
+  padding: clamp(60px, 9vh, 110px) 0 clamp(40px, 6vh, 80px);
   width: 100%;
+  overflow: hidden;
 }
 
-.works-pinned-stage {
-  min-height: 100vh;
+.works-stage-container {
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: clamp(28px, 4.5vh, 52px) 20px;
+  padding: 0 20px;
   position: relative;
-  overflow: hidden;
+  overflow: visible;
   box-sizing: border-box;
 }
 
@@ -1112,7 +1115,7 @@ section, .wrap {
   text-align: center;
   width: 100%;
   max-width: 900px;
-  margin: 0 auto clamp(10px, 1.8vh, 20px);
+  margin: 0 auto clamp(16px, 3vh, 32px);
   position: relative;
   z-index: 5;
   display: flex;
@@ -1186,11 +1189,11 @@ section, .wrap {
   animation: toledoUnderlineIn 1000ms cubic-bezier(0.16, 1, 0.3, 1) 1750ms forwards;
 }
 
-/* Palco Espacial dos Cartões Flutuantes Tecnológicos */
+/* Palco dos Cartões Livres Flutuantes */
 .works-carousel-wrap {
   position: relative;
   width: 100%;
-  max-width: 1320px;
+  max-width: 1440px;
   margin: 0 auto;
   z-index: 6;
 }
@@ -1203,14 +1206,14 @@ section, .wrap {
 .works-mask {
   overflow: clip;
   width: 100%;
-  padding-block: 16px;
+  padding-block: 20px;
 }
 
 .works-viewport {
   position: relative;
   perspective: 1600px;
   perspective-origin: 50% 50%;
-  height: clamp(460px, 56vh, 520px);
+  height: clamp(520px, 64vh, 660px);
   width: 100%;
   touch-action: pan-y;
   user-select: none;
@@ -1226,56 +1229,29 @@ section, .wrap {
   justify-content: center;
 }
 
-/* O Cartão Individual: Reto, Flutuante e Espacial */
+/* O Cartão Individual: Puro, Grande, Sem Moldura Engessada */
 .works-item {
   position: absolute;
   left: 50%;
   top: 50%;
-  width: clamp(275px, 25vw, 335px);
+  width: clamp(340px, 34vw, 460px);
   margin: 0;
   transform-style: preserve-3d;
   backface-visibility: hidden;
   will-change: transform, opacity, filter;
   cursor: pointer;
   outline: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-/* Painel de Vidro Dark Glass Tecnológico */
-.works-floating-panel {
-  position: relative;
-  border-radius: 24px;
-  padding: 14px 14px 16px;
-  background: linear-gradient(165deg, rgba(8, 35, 37, 0.90) 0%, rgba(4, 20, 22, 0.97) 100%);
-  border: 1px solid rgba(196, 174, 136, 0.32);
-  box-shadow:
-    0 24px 60px rgba(2, 28, 29, 0.85),
-    0 0 32px rgba(59, 136, 132, 0.18),
-    inset 0 1px 0 rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  transition: border-color 350ms ease, box-shadow 350ms ease, transform 350ms ease;
-  transform-style: preserve-3d;
-}
-
-.works-item.is-current .works-floating-panel {
-  border-color: rgba(196, 174, 136, 0.75);
-  box-shadow:
-    0 32px 75px rgba(2, 28, 29, 0.96),
-    0 0 45px rgba(196, 174, 136, 0.28),
-    0 0 50px rgba(59, 136, 132, 0.25),
-    inset 0 1px 0 rgba(255, 255, 255, 0.25);
-}
-
-.works-floating-panel:hover {
-  border-color: rgba(196, 174, 136, 0.6);
-}
-
-/* Maço de Fotos 3D: Foto do Antes e Foto do Depois */
+/* O Maço de Fotos Flutuante Livre */
 .works-photo-bundle {
   position: relative;
   width: 100%;
-  aspect-ratio: 3.5 / 4.15;
-  border-radius: 18px;
+  aspect-ratio: 3.5 / 4.4;
+  border-radius: 28px;
   perspective: 1200px;
   transform-style: preserve-3d;
   outline: none;
@@ -1286,11 +1262,13 @@ section, .wrap {
   inset: 0;
   width: 100%;
   height: 100%;
-  border-radius: 18px;
+  border-radius: 28px;
   overflow: hidden;
   background: #041416;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.65);
+  border: 1px solid rgba(196, 174, 136, 0.28);
+  box-shadow:
+    0 28px 65px rgba(2, 28, 29, 0.9),
+    0 0 40px rgba(59, 136, 132, 0.22);
   transform-style: preserve-3d;
   backface-visibility: hidden;
   will-change: transform, opacity, filter;
@@ -1308,7 +1286,7 @@ section, .wrap {
   pointer-events: none;
 }
 
-/* Enquadramento fotográfico calibrado sem cortes */
+/* Calibrações fotográficas sem cortes */
 .works-item[data-index="2"] .photo-before img {
   object-position: center 8% !important;
   transform: scale(0.88);
@@ -1327,183 +1305,62 @@ section, .wrap {
   transform-origin: center 15%;
 }
 
-/* Badges Flutuantes de Identificação com Glow */
-.photo-badge {
-  position: absolute;
-  top: 12px;
-  left: 12px;
-  z-index: 5;
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  padding: 5px 14px;
-  border-radius: 999px;
-  font-family: var(--title);
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
-  pointer-events: none;
-}
-
-.badge-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  display: inline-block;
-}
-
-.badge-before {
-  background: rgba(10, 30, 32, 0.88);
-  color: #f0e6d6;
-  border: 1px solid rgba(196, 174, 136, 0.55);
-}
-
-.badge-before .badge-dot {
-  background: var(--accent);
-  box-shadow: 0 0 8px rgba(196, 174, 136, 0.9);
-}
-
-.badge-after {
-  background: rgba(3, 34, 36, 0.90);
-  color: #72ffe0;
-  border: 1px solid rgba(114, 255, 224, 0.55);
-}
-
-.badge-after .badge-dot {
-  background: #72ffe0;
-  box-shadow: 0 0 8px rgba(114, 255, 224, 0.95);
-}
-
-/* Área de Informações e Controle Tecnológico do Card */
-.works-panel-info {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-top: 14px;
-  gap: 12px;
-}
-
-.works-meta {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.works-step-tag {
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--accent);
-}
-
+/* Nome do Procedimento Logo Abaixo da Imagem */
 .works-service-name {
   font-family: var(--title);
-  font-size: 21px;
+  font-size: clamp(20px, 2.2vw, 26px);
   font-weight: 600;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: #ffffff;
-  margin: 0;
-  line-height: 1.15;
+  margin: 16px 0 0;
+  line-height: 1.1;
+  text-align: center;
+  text-shadow: 0 4px 16px rgba(0, 0, 0, 0.7);
 }
 
-/* Botão Switcher Tecnológico em Cápsula Glass */
-.works-toggle-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  padding: 5px 12px;
-  border-radius: 999px;
-  background: rgba(14, 61, 63, 0.65);
-  border: 1px solid rgba(196, 174, 136, 0.4);
-  color: var(--muted);
-  font-size: 10.5px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  cursor: pointer;
-  transition: all 250ms ease;
-  flex-shrink: 0;
-}
-
-.works-toggle-btn:hover {
-  background: rgba(196, 174, 136, 0.22);
-  border-color: rgba(196, 174, 136, 0.75);
-  color: #ffffff;
-}
-
-.works-toggle-btn .toggle-pill {
-  transition: color 250ms, text-shadow 250ms, font-weight 250ms;
-}
-
-.works-toggle-btn .toggle-pill.is-active {
-  color: #ffffff;
-  font-weight: 800;
-  text-shadow: 0 0 10px rgba(196, 174, 136, 0.75);
-}
-
-.works-toggle-btn .toggle-arrow {
-  font-size: 11px;
-  color: var(--accent);
-  opacity: 0.8;
-}
-
-/* Controles de Navegação do Carrossel */
+/* Pequenas Setas Elegantes Embaixo */
 .works-controls {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 22px;
-  margin-top: 12px;
+  gap: 16px;
+  margin-top: 18px;
   z-index: 10;
   position: relative;
 }
 
 .works-status {
-  min-width: 200px;
+  min-width: 190px;
   text-align: center;
-  color: var(--muted);
-  font-size: 12.5px;
-  letter-spacing: 0.08em;
+  color: var(--accent);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
   font-family: var(--title);
   text-transform: uppercase;
 }
 
 .works-controls button {
-  width: 48px;
-  height: 48px;
+  width: 38px;
+  height: 38px;
   border-radius: 50%;
-  background: rgba(14, 61, 63, 0.7);
-  border: 1px solid rgba(196, 174, 136, 0.45);
+  background: rgba(14, 61, 63, 0.55);
+  border: 1px solid rgba(196, 174, 136, 0.35);
   color: #ffffff;
-  font-size: 18px;
+  font-size: 15px;
   cursor: pointer;
   transition: all 250ms ease;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 8px 24px rgba(2, 28, 29, 0.6);
+  box-shadow: 0 6px 18px rgba(2, 28, 29, 0.6);
 }
 
 .works-controls button:hover {
-  background: rgba(196, 174, 136, 0.28);
-  border-color: #ffffff;
-  transform: scale(1.06);
-  box-shadow: 0 10px 28px rgba(196, 174, 136, 0.35);
-}
-
-.works-help {
-  font-size: 11.5px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  text-align: center;
-  color: rgba(185, 201, 197, 0.6);
-  margin: 10px auto 0;
+  background: rgba(196, 174, 136, 0.25);
+  border-color: rgba(196, 174, 136, 0.8);
+  transform: scale(1.08);
 }
 
 /* Responsividade Mobile & Tablet */
@@ -1512,77 +1369,40 @@ section, .wrap {
     height: 520px;
   }
   .works-item {
-    width: clamp(280px, 44vw, 330px);
+    width: clamp(290px, 44vw, 360px);
   }
 }
 
 @media (max-width: 600px) {
-  .works-pinned-stage {
-    min-height: 100svh;
-    height: 100svh;
-    padding-top: calc(72px + clamp(4px, 1vh, 10px));
-    padding-bottom: clamp(10px, 1.8vh, 18px);
-    padding-inline: 14px;
-    justify-content: space-between;
-  }
-  .works-header {
-    margin-bottom: clamp(4px, 0.8vh, 10px);
-  }
-  .works-line {
-    font-size: clamp(16px, 4.8vw, 22px);
-    line-height: 1.15;
-  }
-  .works-sweep {
-    font-size: clamp(34px, 9.8vw, 46px) !important;
+  .works-section {
+    padding: 44px 0 32px;
   }
   .works-viewport {
-    height: calc(100svh - 220px);
-    min-height: 400px;
+    height: 480px;
   }
   .works-item {
-    width: min(calc(100vw - 36px), 320px);
+    width: min(calc(100vw - 44px), 340px);
   }
-  .works-floating-panel {
-    padding: 12px 12px 14px;
-    border-radius: 20px;
+  .works-photo-bundle,
+  .photo-layer {
+    border-radius: 22px;
   }
   .works-service-name {
     font-size: 18px;
+    margin-top: 12px;
   }
   .works-controls {
-    gap: 16px;
-    margin-top: 10px;
+    gap: 14px;
+    margin-top: 14px;
   }
   .works-controls button {
-    width: 42px;
-    height: 42px;
-    font-size: 16px;
+    width: 34px;
+    height: 34px;
+    font-size: 14px;
   }
   .works-status {
-    font-size: 11.5px;
-    min-width: 170px;
-  }
-  .works-help {
-    display: none;
-  }
-
-  .works-section.is-inview .works-line.works-line-1 {
-    animation-delay: 80ms;
-  }
-  .works-section.is-inview .works-line.works-line-2 {
-    animation-delay: 260ms;
-  }
-  .works-section.is-inview .works-line-brand {
-    animation-delay: 460ms;
-  }
-  .works-section.is-inview .works-sweep::before {
-    animation-delay: 680ms;
-  }
-  .works-section.is-inview .works-sweep::after {
-    animation-delay: 680ms;
-  }
-  .works-section.is-inview .works-underline {
-    animation-delay: 900ms;
+    font-size: 12px;
+    min-width: 150px;
   }
 }
 
