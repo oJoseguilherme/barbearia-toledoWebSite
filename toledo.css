@@ -569,7 +569,7 @@ section, .wrap {
   will-change: transform, opacity;
 }
 
-/* Sequência Blur-Reveal 21st.dev: 1. Agende agora -> minissegundinho -> 2. e viva a experiência -> espaço -> 3. Toledo + Laser Line -> 4. CTA */
+/* Sequência Blur-Reveal 21st.dev: 1. Agende agora -> 2. e viva a experiência -> 3. Toledo Wireframe-to-Solid -> 4. CTA */
 .hero-copy.is-inview .hero-line.line-1,
 .hero-copy.is-inview .hero-line.line-left {
   animation: heroBlurRevealLeft 1300ms cubic-bezier(0.16, 1, 0.3, 1) 1300ms both;
@@ -580,73 +580,114 @@ section, .wrap {
   animation: heroBlurRevealRight 1300ms cubic-bezier(0.16, 1, 0.3, 1) 1800ms both;
 }
 
-/* Toledo: Protagonista solto, monumental e arquitetônico com deslocamento para a direita */
+/* Toledo: Protagonista com deslocamento generoso para a direita */
 .hero-line.line-brand {
   display: inline-flex;
   margin-left: clamp(56px, 9vw, 150px);
 }
 
+/* Proposta 2: Wireframe Arquitetônico Vazado para Sólido Luminoso Preenchido */
 .hero-copy.is-inview .hero-line.line-brand {
-  animation: heroBrandBlurIn 1400ms cubic-bezier(0.16, 1, 0.3, 1) 2450ms both;
+  animation: heroWireframeIn 1300ms cubic-bezier(0.16, 1, 0.3, 1) 2450ms both;
 }
 
-/* Tipografia Arquitetônica Pura para TOLEDO (sem caixa fechada, 100% respirável e solta) */
 .brand-sweep {
   position: relative;
   display: inline-block;
-  padding-bottom: 12px;
   font-family: var(--title);
   font-size: clamp(64px, 7.8vw, 106px);
   font-weight: 800;
   line-height: 0.92;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: #ffffff !important;
+  color: transparent !important;
+  -webkit-text-fill-color: transparent !important;
+  -webkit-text-stroke: 1.5px rgba(216, 195, 157, 0.88);
   background: transparent !important;
   border: none !important;
   border-radius: 0 !important;
   box-shadow: none !important;
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
-  text-shadow: 0 4px 32px rgba(2, 28, 29, 0.95);
+  text-shadow: 0 0 24px rgba(196, 174, 136, 0.35);
 }
 
-/* Sublinhado Laser Dinâmico (Hairline Arquitetônico de Luxo do 21st.dev) */
+/* O sólido branco puro que preenche o wireframe */
+.brand-sweep::before {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  -webkit-text-stroke: 0px transparent;
+  clip-path: inset(100% 0 0 0);
+  text-shadow: 0 4px 32px rgba(2, 28, 29, 0.95);
+  will-change: clip-path;
+  pointer-events: none;
+}
+
+/* Linha de laser scanner que sobe com o preenchimento */
 .brand-sweep::after {
   content: '';
   position: absolute;
-  left: 0;
+  left: -4%;
+  right: -4%;
   bottom: 0;
-  width: 100%;
   height: 2px;
-  background: linear-gradient(90deg, rgba(196, 174, 136, 0.2) 0%, #c4ae88 35%, #ffffff 80%, #f4e7c3 100%);
-  border-radius: 2px;
-  box-shadow: 0 0 14px rgba(196, 174, 136, 0.8), 0 0 26px rgba(255, 255, 255, 0.5);
-  transform: scaleX(0);
-  transform-origin: left;
+  background: linear-gradient(90deg, transparent 0%, #ffffff 50%, transparent 100%);
+  box-shadow: 0 0 16px rgba(255, 255, 255, 0.9), 0 0 28px rgba(196, 174, 136, 0.8);
   opacity: 0;
+  transform: translateY(0);
   will-change: transform, opacity;
+  pointer-events: none;
 }
 
+/* 2. O sólido preenche o wireframe de baixo para cima meio segundo depois */
+.hero-copy.is-inview .brand-sweep::before {
+  animation: wireframeToSolidFill 1200ms cubic-bezier(0.16, 1, 0.3, 1) 2950ms forwards;
+}
+
+/* 3. O feixe laser scanner acompanha o preenchimento */
 .hero-copy.is-inview .brand-sweep::after {
-  animation: laserLineSweep 1300ms cubic-bezier(0.16, 1, 0.3, 1) 2800ms forwards;
+  animation: laserScanUp 1200ms cubic-bezier(0.16, 1, 0.3, 1) 2950ms forwards;
 }
 
-@keyframes laserLineSweep {
+@keyframes heroWireframeIn {
   0% {
-    transform: scaleX(0);
     opacity: 0;
-  }
-  25% {
-    opacity: 1;
-  }
-  80% {
-    box-shadow: 0 0 16px rgba(196, 174, 136, 0.9), 0 0 30px rgba(255, 255, 255, 0.8);
+    filter: blur(14px);
+    transform: translateX(-32px);
   }
   100% {
-    transform: scaleX(1);
-    opacity: 0.9;
-    box-shadow: 0 0 8px rgba(196, 174, 136, 0.45);
+    opacity: 1;
+    filter: blur(0);
+    transform: translateX(0);
+  }
+}
+
+@keyframes wireframeToSolidFill {
+  0% {
+    clip-path: inset(100% 0 0 0);
+  }
+  100% {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@keyframes laserScanUp {
+  0% {
+    opacity: 0;
+    transform: translateY(0);
+  }
+  15% {
+    opacity: 1;
+  }
+  85% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(clamp(-60px, -7.5vw, -95px));
   }
 }
 
@@ -673,26 +714,6 @@ section, .wrap {
     opacity: 1;
     filter: blur(0);
     transform: translateX(0);
-  }
-}
-
-@keyframes heroBrandBlurIn {
-  0% {
-    opacity: 0;
-    filter: blur(18px);
-    transform: translateX(-36px);
-  }
-  50% {
-    opacity: 1;
-    filter: blur(0);
-    transform: translateX(0);
-    text-shadow: 0 0 32px rgba(255, 255, 255, 0.65), 0 0 54px rgba(196, 174, 136, 0.4);
-  }
-  100% {
-    opacity: 1;
-    filter: blur(0);
-    transform: translateX(0);
-    text-shadow: 0 4px 32px rgba(2, 28, 29, 0.95);
   }
 }
 
@@ -728,7 +749,7 @@ section, .wrap {
 }
 
 .hero-copy.is-inview .hero-cta {
-  animation: heroCtaFadeUp 1000ms cubic-bezier(0.16, 1, 0.3, 1) 3300ms both;
+  animation: heroCtaFadeUp 1000ms cubic-bezier(0.16, 1, 0.3, 1) 3900ms both;
 }
 
 @keyframes heroBrandSlideIn {
