@@ -523,8 +523,8 @@ section, .wrap {
 .hero-copy {
   padding-top: clamp(64px, 10vh, 120px);
   padding-bottom: clamp(12px, 2vh, 28px);
-  margin-left: clamp(28px, 6vw, 96px);
-  width: clamp(520px, 56vw, 720px);
+  margin-left: clamp(56px, 8.5vw, 130px);
+  width: clamp(500px, 54vw, 700px);
   min-height: clamp(630px, 80vh, 780px);
   pointer-events: auto;
   position: relative;
@@ -772,23 +772,23 @@ section, .wrap {
   }
 }
 
-/* Botão "Agendar nesta unidade" descolado de Toledo, lá embaixo no chão do vídeo (no X vermelho), ultra minimalista */
+/* Botão "Agendar nesta unidade" descolado de Toledo, mais para a direita e mais para baixo, mais curto e ultra minimalista */
 .hero-cta {
   opacity: 0;
   align-self: flex-start;
-  margin-left: clamp(140px, 19vw, 290px);
-  margin-top: clamp(120px, 20vh, 260px) !important;
-  margin-bottom: clamp(16px, 3vh, 36px);
+  margin-left: clamp(170px, 23vw, 340px);
+  margin-top: clamp(140px, 22vh, 280px) !important;
+  margin-bottom: clamp(20px, 3.5vh, 42px);
   background: rgba(6, 25, 26, 0.4);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   color: rgba(244, 241, 234, 0.8);
   border: 1px solid rgba(196, 174, 136, 0.22);
   box-shadow: 0 4px 12px rgba(2, 28, 29, 0.3);
-  padding: 7px 16px;
-  font-size: 11px;
+  padding: 6px 13px;
+  font-size: 10.5px;
   font-weight: 500;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.09em;
   text-transform: uppercase;
   border-radius: 999px;
   will-change: transform, opacity;
@@ -1670,9 +1670,9 @@ footer p {
   }
 
   .hero-copy {
-    width: min(100%, 480px);
+    width: min(calc(100% - 40px), 380px);
     min-height: auto;
-    padding-inline: clamp(16px, 4.5vw, 28px);
+    padding-inline: clamp(14px, 4vw, 24px);
     padding-block: 0;
     text-align: left;
     display: flex;
@@ -1700,7 +1700,7 @@ footer p {
   }
 
   .hero-auxiliary {
-    font-size: clamp(38px, 10.5vw, 54px);
+    font-size: clamp(36px, 9.8vw, 48px);
     line-height: 1.02;
     letter-spacing: -0.025em;
     gap: 10px;
@@ -1711,11 +1711,11 @@ footer p {
   }
 
   .hero-line.line-brand {
-    margin-left: clamp(24px, 7vw, 48px);
+    margin-left: clamp(20px, 6vw, 40px);
   }
 
   .brand-sweep {
-    font-size: clamp(62px, 16.5vw, 86px);
+    font-size: clamp(58px, 15.5vw, 78px);
     line-height: 0.9;
     letter-spacing: 0.05em;
     padding-bottom: 8px;
@@ -1725,12 +1725,12 @@ footer p {
   .hero-cta {
     align-self: flex-end;
     margin-left: auto;
-    margin-right: clamp(8px, 2.5vw, 20px);
-    margin-top: clamp(60px, 10vh, 96px) !important;
-    margin-bottom: clamp(16px, 3vh, 32px);
-    padding: 6px 14px;
-    font-size: 10.5px;
-    letter-spacing: 0.12em;
+    margin-right: -2px;
+    margin-top: clamp(74px, 13vh, 115px) !important;
+    margin-bottom: clamp(28px, 5vh, 52px);
+    padding: 5px 12px;
+    font-size: 10px;
+    letter-spacing: 0.08em;
     background: rgba(6, 25, 26, 0.45);
     border: 1px solid rgba(196, 174, 136, 0.25);
     border-radius: 999px;
