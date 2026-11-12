@@ -612,44 +612,47 @@ section, .wrap {
   text-shadow: 0 0 24px rgba(196, 174, 136, 0.35);
 }
 
-/* O sólido branco puro que preenche o wireframe */
+/* O sólido branco puro que preenche o wireframe suavemente e sem linhas rígidas */
 .brand-sweep::before {
   content: attr(data-text);
   position: absolute;
-  inset: 0;
+  inset: -6px -4px;
+  padding: 6px 4px;
   color: #ffffff !important;
   -webkit-text-fill-color: #ffffff !important;
   -webkit-text-stroke: 0px transparent;
   clip-path: inset(100% 0 0 0);
+  -webkit-mask-image: linear-gradient(to top, rgba(0, 0, 0, 1) 75%, rgba(0, 0, 0, 0) 100%);
+  mask-image: linear-gradient(to top, rgba(0, 0, 0, 1) 75%, rgba(0, 0, 0, 0) 100%);
   text-shadow: 0 4px 32px rgba(2, 28, 29, 0.95);
-  will-change: clip-path;
+  will-change: clip-path, opacity;
   pointer-events: none;
 }
 
-/* Linha de laser scanner que sobe com o preenchimento */
+/* Brilho volumétrico 100% difuso e aveludado (zero linhas ou riscos perceptíveis) */
 .brand-sweep::after {
   content: '';
   position: absolute;
-  left: -4%;
-  right: -4%;
-  bottom: 0;
-  height: 2px;
-  background: linear-gradient(90deg, transparent 0%, #ffffff 50%, transparent 100%);
-  box-shadow: 0 0 16px rgba(255, 255, 255, 0.9), 0 0 28px rgba(196, 174, 136, 0.8);
+  left: -8%;
+  right: -8%;
+  bottom: -4px;
+  height: 28px;
+  background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.55) 0%, rgba(196, 174, 136, 0.28) 45%, transparent 75%);
+  filter: blur(12px);
   opacity: 0;
   transform: translateY(0);
   will-change: transform, opacity;
   pointer-events: none;
 }
 
-/* 2. O sólido preenche o wireframe de baixo para cima meio segundo depois */
+/* 2. O sólido preenche o wireframe com transição suave */
 .hero-copy.is-inview .brand-sweep::before {
-  animation: wireframeToSolidFill 1200ms cubic-bezier(0.16, 1, 0.3, 1) 2950ms forwards;
+  animation: wireframeToSolidFill 1300ms cubic-bezier(0.16, 1, 0.3, 1) 2950ms forwards;
 }
 
-/* 3. O feixe laser scanner acompanha o preenchimento */
+/* 3. O brilho difuso acompanha e dissipa bem antes do topo para não deixar linha */
 .hero-copy.is-inview .brand-sweep::after {
-  animation: laserScanUp 1200ms cubic-bezier(0.16, 1, 0.3, 1) 2950ms forwards;
+  animation: laserScanUp 1300ms cubic-bezier(0.16, 1, 0.3, 1) 2950ms forwards;
 }
 
 @keyframes heroWireframeIn {
@@ -668,9 +671,21 @@ section, .wrap {
 @keyframes wireframeToSolidFill {
   0% {
     clip-path: inset(100% 0 0 0);
+    opacity: 0.25;
+  }
+  30% {
+    opacity: 1;
+  }
+  90% {
+    clip-path: inset(0 0 0 0);
+    -webkit-mask-image: linear-gradient(to top, rgba(0, 0, 0, 1) 85%, rgba(0, 0, 0, 0) 100%);
+    mask-image: linear-gradient(to top, rgba(0, 0, 0, 1) 85%, rgba(0, 0, 0, 0) 100%);
   }
   100% {
-    clip-path: inset(0 0 0 0);
+    clip-path: inset(-15% 0 -10% 0);
+    -webkit-mask-image: none;
+    mask-image: none;
+    opacity: 1;
   }
 }
 
@@ -679,15 +694,19 @@ section, .wrap {
     opacity: 0;
     transform: translateY(0);
   }
-  15% {
-    opacity: 1;
+  20% {
+    opacity: 0.75;
   }
-  85% {
-    opacity: 1;
+  55% {
+    opacity: 0.55;
+  }
+  75% {
+    /* Desvanece totalmente bem antes do topo, eliminando qualquer linha residual */
+    opacity: 0;
   }
   100% {
     opacity: 0;
-    transform: translateY(clamp(-60px, -7.5vw, -95px));
+    transform: translateY(clamp(-70px, -8.5vw, -110px));
   }
 }
 
