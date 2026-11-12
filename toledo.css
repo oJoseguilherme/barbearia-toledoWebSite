@@ -524,6 +524,7 @@ section, .wrap {
   padding-block: clamp(24px, 4vh, 48px);
   margin-left: clamp(28px, 6vw, 96px);
   width: clamp(520px, 56vw, 720px);
+  min-height: clamp(580px, 72vh, 710px);
   pointer-events: auto;
   position: relative;
   z-index: 4;
@@ -535,14 +536,14 @@ section, .wrap {
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: clamp(16px, 2.5vh, 28px);
+  gap: clamp(28px, 4.2vh, 48px);
 }
 
-/* "Agende agora e viva a experiência" em branco puro, solto e amplo */
+/* "Agende agora" e "e viva a experiência" em branco puro, solto e amplo */
 .hero-auxiliary {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: clamp(16px, 2.6vh, 26px);
   font-family: var(--title);
   font-size: clamp(38px, 4.8vw, 64px);
   font-weight: 700;
@@ -554,6 +555,8 @@ section, .wrap {
 }
 
 .hero-auxiliary span,
+.hero-line.line-1,
+.hero-line.line-2,
 .hero-line.line-left,
 .hero-line.line-right {
   color: #ffffff !important;
@@ -565,13 +568,15 @@ section, .wrap {
   will-change: transform, opacity;
 }
 
-/* Movimento ultra fluido e aveludado, com o mesmo jogo de cintura suave do quadro de vídeo */
+/* Sequência fluida com pausas aveludadas: 1. Agende agora -> minissegundinho -> 2. e viva a experiência -> espaço -> 3. Toledo -> demora -> 4. CTA */
+.hero-copy.is-inview .hero-line.line-1,
 .hero-copy.is-inview .hero-line.line-left {
-  animation: heroLineSlideInLeft 1400ms cubic-bezier(0.16, 1, 0.3, 1) 1350ms both;
+  animation: heroLineSlideInLeft 1250ms cubic-bezier(0.16, 1, 0.3, 1) 1300ms both;
 }
 
+.hero-copy.is-inview .hero-line.line-2,
 .hero-copy.is-inview .hero-line.line-right {
-  animation: heroLineSlideInRight 1400ms cubic-bezier(0.16, 1, 0.3, 1) 1480ms both;
+  animation: heroLineSlideInRight 1250ms cubic-bezier(0.16, 1, 0.3, 1) 1800ms both;
 }
 
 /* Toledo: Protagonista com deslocamento para a direita e entrada com presença suave */
@@ -581,7 +586,7 @@ section, .wrap {
 }
 
 .hero-copy.is-inview .hero-line.line-brand {
-  animation: heroBrandSlideIn 1500ms cubic-bezier(0.16, 1, 0.3, 1) 2150ms both;
+  animation: heroBrandSlideIn 1400ms cubic-bezier(0.16, 1, 0.3, 1) 2450ms both;
 }
 
 /* Box Quadradinho Tecnológico e Sutil para TOLEDO */
@@ -606,22 +611,23 @@ section, .wrap {
   text-shadow: 0 2px 20px rgba(196, 174, 136, 0.4);
 }
 
-/* Botão "Agendar nesta unidade" rebaixado, menor, no canto inferior direito sutil */
+/* Botão "Agendar nesta unidade" pareado com a linha inferior do vídeo (mesmo chão), menorzinho e discreto */
 .hero-cta {
   opacity: 0;
   align-self: flex-start;
   margin-left: clamp(140px, 19vw, 290px);
-  margin-top: clamp(48px, 8vh, 84px);
+  margin-top: auto;
+  margin-bottom: clamp(8px, 1.4vh, 22px);
   background: rgba(6, 25, 26, 0.55);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   color: rgba(244, 241, 234, 0.85);
   border: 1px solid rgba(196, 174, 136, 0.28);
   box-shadow: 0 6px 18px rgba(2, 28, 29, 0.45);
-  padding: 10px 22px;
-  font-size: 13px;
+  padding: 8px 18px;
+  font-size: 11.5px;
   font-weight: 600;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   border-radius: 999px;
   will-change: transform, opacity;
@@ -637,7 +643,7 @@ section, .wrap {
 }
 
 .hero-copy.is-inview .hero-cta {
-  animation: heroCtaFadeUp 1000ms cubic-bezier(0.16, 1, 0.3, 1) 2750ms both;
+  animation: heroCtaFadeUp 1000ms cubic-bezier(0.16, 1, 0.3, 1) 3300ms both;
 }
 
 @keyframes heroBrandSlideIn {
@@ -1504,6 +1510,7 @@ footer p {
 
   .hero-copy {
     width: 100%;
+    min-height: auto;
     padding: 0;
     text-align: center;
     display: flex;
@@ -1526,11 +1533,12 @@ footer p {
   .hero-title {
     align-items: center;
     text-align: center;
-    gap: 12px;
+    gap: clamp(16px, 3vh, 24px);
   }
 
   .hero-auxiliary {
     font-size: clamp(24px, 6.4vw, 36px);
+    gap: 10px;
     align-items: center;
     text-align: center;
     color: #ffffff !important;
@@ -1550,24 +1558,27 @@ footer p {
     align-self: center;
     margin-left: auto;
     margin-right: auto;
-    margin-top: 24px;
+    margin-top: clamp(24px, 4vh, 36px);
+    margin-bottom: 0;
   }
 
-  /* No mobile, ao arrastar para baixo e revelar o texto, animações fluidas */
+  /* No mobile, ao arrastar para baixo e revelar o texto: 1. Agende agora -> 2. e viva a experiência -> 3. Toledo -> 4. CTA */
+  .hero-copy.is-inview .hero-line.line-1,
   .hero-copy.is-inview .hero-line.line-left {
-    animation: heroLineSlideInLeft 1200ms cubic-bezier(0.16, 1, 0.3, 1) 120ms both;
+    animation: heroLineSlideInLeft 1100ms cubic-bezier(0.16, 1, 0.3, 1) 120ms both;
   }
 
+  .hero-copy.is-inview .hero-line.line-2,
   .hero-copy.is-inview .hero-line.line-right {
-    animation: heroLineSlideInRight 1200ms cubic-bezier(0.16, 1, 0.3, 1) 240ms both;
+    animation: heroLineSlideInRight 1100ms cubic-bezier(0.16, 1, 0.3, 1) 480ms both;
   }
 
   .hero-copy.is-inview .hero-line.line-brand {
-    animation: heroBrandSlideIn 1350ms cubic-bezier(0.16, 1, 0.3, 1) 500ms both;
+    animation: heroBrandSlideIn 1250ms cubic-bezier(0.16, 1, 0.3, 1) 980ms both;
   }
 
   .hero-copy.is-inview .hero-cta {
-    animation: heroCtaFadeUp 900ms cubic-bezier(0.16, 1, 0.3, 1) 900ms both;
+    animation: heroCtaFadeUp 900ms cubic-bezier(0.16, 1, 0.3, 1) 1550ms both;
   }
 
   .hero-copy > p:not(.label) {
