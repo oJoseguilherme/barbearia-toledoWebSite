@@ -4147,3 +4147,315 @@ footer p {
     flex-shrink: 0 !important;
   }
 }
+
+/* ========================================================
+   PRELOADER COM ANIMAÇÃO DA LOGO, RISCOS E TESOURAS
+   ======================================================== */
+.toledo-preloader {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  background-color: #041416;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.5s ease;
+  will-change: opacity, visibility;
+}
+
+.toledo-preloader.is-finished {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/* Luz de fundo radial sutil */
+.preloader-bg-glow {
+  position: absolute;
+  width: min(85vw, 680px);
+  height: min(85vw, 680px);
+  background: radial-gradient(circle, rgba(196, 174, 136, 0.14) 0%, rgba(4, 20, 22, 0) 70%);
+  pointer-events: none;
+  animation: preloaderGlowPulse 2.4s ease-in-out infinite alternate;
+}
+
+@keyframes preloaderGlowPulse {
+  0% { transform: scale(0.92); opacity: 0.6; }
+  100% { transform: scale(1.15); opacity: 1; }
+}
+
+.preloader-stage {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: min(92vw, 420px);
+  padding: 24px 16px;
+  z-index: 2;
+}
+
+/* Riscos arquitetônicos traçando da direita para a esquerda */
+.preloader-line {
+  position: relative;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(270deg, #c4ae88 0%, rgba(196, 174, 136, 0.75) 45%, rgba(196, 174, 136, 0) 100%);
+  transform-origin: right center;
+  transform: scaleX(0);
+  box-shadow: 0 0 10px rgba(196, 174, 136, 0.55);
+  animation: preloaderDrawLineFromRight 0.75s cubic-bezier(0.22, 1, 0.36, 1) 0.32s forwards;
+}
+
+.preloader-line-bottom {
+  animation-delay: 0.44s;
+}
+
+@keyframes preloaderDrawLineFromRight {
+  0% {
+    transform: scaleX(0);
+    opacity: 0;
+  }
+  30% {
+    opacity: 1;
+  }
+  100% {
+    transform: scaleX(1);
+    opacity: 1;
+  }
+}
+
+/* Feixe brilhante correndo pelas linhas */
+.preloader-line::after {
+  content: '';
+  position: absolute;
+  top: -1px;
+  right: 0;
+  width: 32px;
+  height: 4px;
+  background: #ffffff;
+  box-shadow: 0 0 12px #ffffff, 0 0 22px #c4ae88;
+  border-radius: 2px;
+  opacity: 0;
+  animation: preloaderLineGlint 0.75s ease-out 0.32s forwards;
+}
+
+.preloader-line-bottom::after {
+  animation-delay: 0.44s;
+}
+
+@keyframes preloaderLineGlint {
+  0% { right: 0; opacity: 1; }
+  85% { opacity: 1; }
+  100% { right: 100%; opacity: 0; }
+}
+
+/* Centro: Logo Barbearia Toledo */
+.preloader-emblem {
+  position: relative;
+  margin: 18px 0;
+  width: min(72vw, 250px);
+  aspect-ratio: 1.38 / 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transform: scale(0.92);
+  filter: drop-shadow(0 0 1px rgba(196, 174, 136, 0.2));
+  animation: preloaderRevealLogo 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.15s forwards;
+}
+
+@keyframes preloaderRevealLogo {
+  0% {
+    opacity: 0;
+    transform: scale(0.92);
+    filter: blur(4px) drop-shadow(0 0 2px rgba(196, 174, 136, 0.2));
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+    filter: blur(0) drop-shadow(0 8px 30px rgba(196, 174, 136, 0.4));
+  }
+}
+
+.preloader-logo-img {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  display: block;
+}
+
+/* Tesouras dinâmicas vindo de fora e cortando */
+.preloader-shears-wrap {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: min(96vw, 400px);
+  height: 220px;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.scissor-unit {
+  position: absolute;
+  width: clamp(110px, 30vw, 155px);
+  height: clamp(55px, 15vw, 75px);
+  transform-origin: center center;
+}
+
+.scissor-left {
+  left: -140px;
+  top: 50%;
+  margin-top: -37px;
+  animation: preloaderScissorEnterLeft 1.25s cubic-bezier(0.19, 1, 0.22, 1) 0.38s forwards;
+}
+
+.scissor-right {
+  right: -140px;
+  top: 50%;
+  margin-top: -37px;
+  transform: scaleX(-1);
+  animation: preloaderScissorEnterRight 1.25s cubic-bezier(0.19, 1, 0.22, 1) 0.38s forwards;
+}
+
+@keyframes preloaderScissorEnterLeft {
+  0% {
+    left: -150px;
+    opacity: 0;
+    transform: rotate(-24deg);
+  }
+  42% {
+    left: calc(50% - 90px);
+    opacity: 1;
+    transform: rotate(-10deg);
+  }
+  64% {
+    left: calc(50% - 75px);
+    transform: rotate(0deg);
+  }
+  80% {
+    left: calc(50% - 75px);
+    transform: rotate(-12deg);
+  }
+  100% {
+    left: calc(50% - 75px);
+    opacity: 1;
+    transform: rotate(0deg);
+  }
+}
+
+@keyframes preloaderScissorEnterRight {
+  0% {
+    right: -150px;
+    opacity: 0;
+    transform: scaleX(-1) rotate(-24deg);
+  }
+  42% {
+    right: calc(50% - 90px);
+    opacity: 1;
+    transform: scaleX(-1) rotate(-10deg);
+  }
+  64% {
+    right: calc(50% - 75px);
+    transform: scaleX(-1) rotate(0deg);
+  }
+  80% {
+    right: calc(50% - 75px);
+    transform: scaleX(-1) rotate(-12deg);
+  }
+  100% {
+    right: calc(50% - 75px);
+    opacity: 1;
+    transform: scaleX(-1) rotate(0deg);
+  }
+}
+
+/* Movimento de corte das lâminas (*snip*) */
+.scissor-blade-top {
+  transform-origin: 75% 50%;
+  animation: preloaderCutSnipTop 1.25s cubic-bezier(0.4, 0, 0.2, 1) 0.38s forwards;
+}
+
+.scissor-blade-bottom {
+  transform-origin: 75% 50%;
+  animation: preloaderCutSnipBottom 1.25s cubic-bezier(0.4, 0, 0.2, 1) 0.38s forwards;
+}
+
+@keyframes preloaderCutSnipTop {
+  0%, 38% {
+    transform: rotate(-18deg);
+  }
+  60% {
+    transform: rotate(2deg);
+  }
+  74% {
+    transform: rotate(-14deg);
+  }
+  88%, 100% {
+    transform: rotate(0deg);
+  }
+}
+
+@keyframes preloaderCutSnipBottom {
+  0%, 38% {
+    transform: rotate(18deg);
+  }
+  60% {
+    transform: rotate(-2deg);
+  }
+  74% {
+    transform: rotate(14deg);
+  }
+  88%, 100% {
+    transform: rotate(0deg);
+  }
+}
+
+/* Faísca / Centelha no cruzamento do corte */
+.shear-spark {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 6px;
+  height: 6px;
+  margin: -3px 0 0 -3px;
+  background: #ffffff;
+  border-radius: 50%;
+  box-shadow: 0 0 16px 6px #ffffff, 0 0 32px 12px #c4ae88;
+  opacity: 0;
+  transform: scale(0);
+  pointer-events: none;
+  animation: preloaderSparkFlash 0.42s ease-out 1.02s forwards;
+}
+
+@keyframes preloaderSparkFlash {
+  0% {
+    opacity: 0;
+    transform: scale(0);
+  }
+  40% {
+    opacity: 1;
+    transform: scale(2.5);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(4.2);
+  }
+}
+
+/* Acessibilidade */
+@media (prefers-reduced-motion: reduce) {
+  .toledo-preloader {
+    transition: opacity 0.2s ease;
+  }
+  .preloader-line, .preloader-emblem, .scissor-unit, .preloader-bg-glow, .shear-spark {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+

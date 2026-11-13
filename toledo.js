@@ -1008,3 +1008,45 @@ function initHaloReel(container) {
 }
 
 document.querySelectorAll('.halo-reel-container').forEach(initHaloReel);
+
+/* ========================================================
+   CONTROLE DO PRELOADER COM LOGO, RISCOS E TESOURAS
+   ======================================================== */
+const initToledoPreloader = () => {
+  const preloader = document.getElementById('toledo-preloader');
+  if (!preloader) return;
+
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let finished = false;
+
+  const dismiss = () => {
+    if (finished) return;
+    finished = true;
+    preloader.classList.add('is-finished');
+    setTimeout(() => {
+      try { preloader.remove(); } catch (err) {}
+    }, 600);
+  };
+
+  if (reduceMotion) {
+    dismiss();
+    return;
+  }
+
+  // Duração da coreografia de animação (1.45s) antes da transição de abertura suave
+  const animTimePromise = new Promise(resolve => setTimeout(resolve, 1450));
+  const loadPromise = new Promise(resolve => {
+    if (document.readyState === 'complete') {
+      resolve();
+    } else {
+      window.addEventListener('load', resolve, { once: true });
+    }
+  });
+
+  Promise.all([animTimePromise, loadPromise]).then(dismiss);
+
+  // Fallback de segurança absoluto (2.4s)
+  setTimeout(dismiss, 2400);
+};
+
+initToledoPreloader();
