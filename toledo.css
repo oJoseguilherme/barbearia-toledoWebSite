@@ -3269,6 +3269,9 @@ footer p {
   flex-direction: column;
   min-height: 520px;
   background: #020c0e;
+  contain: paint;
+  transform: translateZ(0);
+  will-change: transform;
 }
 
 .map-frame {
@@ -3284,7 +3287,14 @@ footer p {
   height: 100%;
   border: none;
   display: block;
+  pointer-events: none;
+  contain: strict;
+  transform: translateZ(0);
   filter: invert(90%) hue-rotate(180deg) contrast(95%) saturate(75%);
+}
+
+.map-container-box.is-active .map-frame iframe {
+  pointer-events: auto;
 }
 
 /* Card Flutuante de Fachada Sobreposto no Mapa */

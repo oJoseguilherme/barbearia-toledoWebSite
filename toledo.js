@@ -11,41 +11,31 @@ if(drawer){drawer.querySelectorAll('a').forEach(a=>a.addEventListener('click',()
 if('scrollRestoration' in history){history.scrollRestoration='manual';}
 const header = document.querySelector('.site-header');
 if (header) {
-  let lastScrollY = window.scrollY;
   let ticking = false;
-  const scrollThreshold = 10;
 
   const updateHeader = () => {
     const currentScrollY = window.scrollY;
     const isDrawerOpen = document.body.classList.contains('menu-open') || 
-                         document.querySelector('.side-drawer')?.classList.contains('is-open');
+                         document.querySelector('.side-drawer')?.classList.contains('open');
 
     // Nao esconde se o menu drawer estiver aberto
     if (isDrawerOpen) {
       header.classList.remove('is-hidden');
-      header.classList.toggle('is-scrolled', currentScrollY > 60);
-      lastScrollY = currentScrollY;
       ticking = false;
       return;
     }
 
-    // No topo absoluto da pagina, sempre exibe
+    // A barra superior só aparece quando o usuário estiver lá no topo do site.
+    // Assim que rolar para baixo, ela some e permanece escondida por toda a navegação,
+    // reaparecendo exclusivamente quando o usuário arrastar para cima e chegar no topo.
     if (currentScrollY <= 60) {
       header.classList.remove('is-hidden');
       header.classList.remove('is-scrolled');
     } else {
+      header.classList.add('is-hidden');
       header.classList.add('is-scrolled');
-      // Rolar para baixo: desaparece
-      if (currentScrollY > lastScrollY + scrollThreshold) {
-        header.classList.add('is-hidden');
-      }
-      // Rolar para cima: ressurge
-      else if (currentScrollY < lastScrollY - scrollThreshold) {
-        header.classList.remove('is-hidden');
-      }
     }
 
-    lastScrollY = currentScrollY;
     ticking = false;
   };
 
@@ -59,6 +49,14 @@ if (header) {
   window.addEventListener('resize', updateHeader, { passive: true });
   updateHeader();
 }
+
+// Ativação fluida do mapa sob clique (impede que o iframe intercepte ou trave a rolagem da página)
+document.querySelectorAll('.map-container-box').forEach(box => {
+  box.addEventListener('click', () => box.classList.add('is-active'));
+});
+window.addEventListener('scroll', () => {
+  document.querySelectorAll('.map-container-box.is-active').forEach(b => b.classList.remove('is-active'));
+}, { passive: true });
 document.querySelectorAll('a[href="#inicio"]').forEach(a=>{a.addEventListener('click',e=>{e.preventDefault();window.scrollTo({top:0,behavior:'smooth'});});});
 
 // ==========================================================================
