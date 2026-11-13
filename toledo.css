@@ -46,14 +46,17 @@ html {
   scroll-behavior: smooth;
   scroll-padding-top: 96px;
   overflow-x: clip;
+  overscroll-behavior-y: none;
+  background-color: #061e20;
 }
 
 body {
   margin: 0;
-  background-color: var(--bg);
+  background-color: #061e20;
   isolation: isolate;
   position: relative;
   overflow-x: clip;
+  overscroll-behavior-y: none;
   font: 400 var(--text) / 1.65 var(--body);
   color: var(--ink);
   -webkit-font-smoothing: antialiased;
@@ -64,14 +67,16 @@ body::before {
   content: '';
   position: fixed;
   inset: 0;
+  width: 100%;
+  height: 100%;
   z-index: -1;
   pointer-events: none;
   background:
-    radial-gradient(circle at 88% 10%, rgba(59, 136, 132, 0.28) 0%, transparent 45%),
-    radial-gradient(circle at 10% 35%, rgba(74, 142, 135, 0.2) 0%, transparent 50%),
-    radial-gradient(circle at 85% 65%, rgba(22, 86, 89, 0.3) 0%, transparent 48%),
-    radial-gradient(circle at 15% 90%, rgba(59, 136, 132, 0.22) 0%, transparent 45%),
-    linear-gradient(180deg, #071f20 0%, #051415 100%);
+    radial-gradient(circle at 88% 10%, rgba(59, 136, 132, 0.24) 0%, transparent 45%),
+    radial-gradient(circle at 10% 35%, rgba(74, 142, 135, 0.18) 0%, transparent 50%),
+    radial-gradient(circle at 85% 65%, rgba(22, 86, 89, 0.25) 0%, transparent 48%),
+    radial-gradient(circle at 50% 88%, rgba(59, 136, 132, 0.15) 0%, transparent 50%),
+    linear-gradient(180deg, #071f20 0%, #061e20 50%, #05181a 100%);
 }
 
 a {
@@ -3031,16 +3036,34 @@ footer p {
    Refinamentos Mobile Exclusivos (Tipografia, Curvatura e Minimalismo)
    ========================================================================== */
 @media (max-width: 768px) {
-  /* Título de Resultados: "O cuidado aparece no" maior e mais evidente */
+  /* Título de Resultados no Mobile: Proporção harmônica monumental com Resultado */
   .works-line {
-    font-size: clamp(24px, 6.4vw, 34px) !important;
-    letter-spacing: 0.1em !important;
+    font-size: clamp(36px, 10.2vw, 50px) !important;
+    font-weight: 700 !important;
+    line-height: 1.05 !important;
+    letter-spacing: 0.04em !important;
+    color: #ffffff !important;
+    text-shadow: 0 4px 20px rgba(2, 28, 29, 0.95) !important;
   }
 
-  /* Título de Equipe: "Quem cuida do" maior e proporcional ao "Seu Estilo" */
+  .works-sweep {
+    font-size: clamp(54px, 15vw, 76px) !important;
+    line-height: 0.95 !important;
+  }
+
+  /* Título de Equipe no Mobile: "Quem cuida do" perfeitamente proporcional a "Seu Estilo" */
   .team-line {
-    font-size: clamp(24px, 6.4vw, 34px) !important;
-    letter-spacing: 0.1em !important;
+    font-size: clamp(36px, 10.2vw, 50px) !important;
+    font-weight: 700 !important;
+    line-height: 1.05 !important;
+    letter-spacing: 0.04em !important;
+    color: #ffffff !important;
+    text-shadow: 0 4px 20px rgba(2, 28, 29, 0.95) !important;
+  }
+
+  .team-sweep {
+    font-size: clamp(54px, 15vw, 76px) !important;
+    line-height: 0.95 !important;
   }
 
   /* Botãozinho "Ver Antes" ultraclean e sem bordas pesadas */
@@ -3540,4 +3563,23 @@ footer p {
     padding: 8px 14px !important;
     height: 36px !important;
   }
+}
+
+
+
+/* Cabeçalho de Contato Minimalista */
+.contact-header {
+  text-align: center;
+  margin-bottom: clamp(36px, 6vh, 56px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.contact-title {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
