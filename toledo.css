@@ -1592,105 +1592,371 @@ section, .wrap {
 /* ==========================================================================
    História & Avaliações (Sem blocos brancos, contínuo)
    ========================================================================== */
-.story {
-  background: transparent;
-  color: var(--ink);
+/* ==========================================================================
+   Seção de História Repaginada (Estilo Editorial e Tecnológico)
+   ========================================================================== */
+.story-section {
+  padding-block: clamp(60px, 9vh, 100px);
+  position: relative;
+  z-index: 5;
 }
 
-.story-grid {
+.story-card {
+  background: linear-gradient(135deg, rgba(8, 35, 37, 0.45) 0%, rgba(4, 20, 22, 0.7) 100%);
+  border: 1px solid rgba(196, 174, 136, 0.18);
+  border-radius: var(--radius-lg, 28px);
+  padding: clamp(32px, 5vw, 64px);
+  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  display: grid;
+  grid-template-columns: 1fr 1.15fr;
+  gap: clamp(32px, 5vw, 64px);
+  align-items: center;
+}
+
+.story-left {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.story-kicker {
+  font-size: 11.5px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--accent, #c5a059);
+  font-weight: 600;
+}
+
+.story-title {
+  font-family: var(--title);
+  font-size: clamp(38px, 5vw, 64px);
+  line-height: 1.02;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #ffffff;
+  margin: 0;
+}
+
+.story-accent {
+  color: var(--accent, #c5a059);
+  text-shadow: 0 0 25px rgba(197, 160, 89, 0.35);
+}
+
+.story-right {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.story-lead {
+  font-size: clamp(16px, 1.8vw, 19px);
+  line-height: 1.5;
+  color: #ffffff;
+  font-weight: 400;
+  margin: 0;
+}
+
+.story-desc {
+  font-size: clamp(14px, 1.4vw, 15px);
+  line-height: 1.6;
+  color: var(--muted, #94a3b8);
+  margin: 0;
+}
+
+.story-timeline {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 80px;
-  align-items: start;
+  gap: 20px;
+  margin-top: 12px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(196, 174, 136, 0.2);
 }
 
-.story h2 {
-  font-size: clamp(48px, 6vw, 84px);
-  line-height: 0.98;
+.timeline-node {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
-.story-text p {
-  color: var(--muted);
-  margin-bottom: var(--s4);
+.timeline-year {
+  font-family: var(--title);
+  font-size: clamp(28px, 3.5vw, 42px);
+  font-weight: 700;
+  color: var(--accent, #c5a059);
+  line-height: 1;
 }
 
-.story-text p:first-child {
-  font-size: var(--intro);
-  color: var(--ink);
-}
-
-.timeline {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--s5);
-  margin-top: var(--s6);
-}
-
-.timeline div {
-  border-top: 1px solid rgba(185, 201, 197, 0.16);
-  padding-top: var(--s3);
-}
-
-.timeline b {
-  font: 600 32px var(--title);
-  color: var(--accent);
-  display: block;
-}
-
-.timeline span {
+.timeline-name {
   font-size: 13px;
-  color: var(--muted);
+  color: rgba(248, 250, 252, 0.8);
+  letter-spacing: 0.04em;
 }
 
-/* Avaliações em Dark Glass */
-.ratings {
-  margin-top: 80px;
+@media (max-width: 860px) {
+  .story-card {
+    grid-template-columns: 1fr;
+    gap: 32px;
+    padding: 28px 24px;
+  }
 }
 
-.ratings-heading {
+/* ==========================================================================
+   Seção de Avaliações - Stack 3D de Cards Animados (Google Reviews)
+   ========================================================================== */
+.reviews-section {
+  padding-block: clamp(60px, 9vh, 100px);
+  position: relative;
+  z-index: 5;
+  overflow: hidden;
+}
+
+.reviews-header {
+  text-align: center;
+  width: 100%;
+  max-width: 840px;
+  margin: 0 auto clamp(24px, 4vh, 44px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.reviews-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 16px;
+  border-radius: 999px;
+  background: rgba(197, 160, 89, 0.12);
+  border: 1px solid rgba(197, 160, 89, 0.35);
+  color: var(--accent, #c5a059);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.badge-star {
+  color: #fbbf24;
+  font-size: 14px;
+}
+
+.reviews-title {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.reviews-auxiliary {
+  display: block;
+  font-family: var(--title);
+  font-size: clamp(20px, 2.8vw, 32px);
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #ffffff !important;
+  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+}
+
+.reviews-sweep {
+  font-size: clamp(44px, 6vw, 76px) !important;
+  letter-spacing: 0.08em !important;
+  padding-bottom: 6px !important;
+}
+
+/* Animacao de entrada com a seção inview */
+.reviews-section.is-inview .reviews-sweep::before {
+  animation: wireframeToSolidFill 1200ms cubic-bezier(0.16, 1, 0.3, 1) 400ms forwards;
+}
+
+.reviews-section.is-inview .reviews-sweep::after {
+  animation: laserScanUp 1200ms cubic-bezier(0.16, 1, 0.3, 1) 400ms forwards;
+}
+
+.reviews-section.is-inview .reviews-underline {
+  animation: toledoUnderlineIn 1000ms cubic-bezier(0.16, 1, 0.3, 1) 750ms forwards;
+}
+
+/* Stack 3D Container */
+.reviews-stack-container {
+  position: relative;
+  width: 100%;
+  max-width: 620px;
+  margin: 0 auto;
+  perspective: 1200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.reviews-cards-viewport {
+  position: relative;
+  width: 100%;
+  height: clamp(320px, 46vh, 380px);
+  transform-style: preserve-3d;
+}
+
+/* Cards com empilhamento 3D dinâmico */
+.review-card-stack {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(14, 20, 28, 0.88) 0%, rgba(6, 12, 16, 0.96) 100%);
+  border: 1px solid rgba(197, 160, 89, 0.25);
+  border-radius: 24px;
+  padding: clamp(24px, 4vw, 36px);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 25px 60px -10px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  will-change: transform, opacity;
+  transition: transform 600ms cubic-bezier(0.16, 1, 0.3, 1),
+              opacity 500ms ease,
+              border-color 400ms ease;
+  user-select: none;
+  -webkit-user-select: none;
+  cursor: grab;
+}
+
+.review-card-stack:active {
+  cursor: grabbing;
+}
+
+.review-card-top {
   display: flex;
   justify-content: space-between;
-  gap: var(--s5);
-  align-items: end;
-  margin-bottom: var(--s5);
+  align-items: center;
 }
 
-.ratings-heading p {
-  font-size: 13px;
-  color: var(--muted);
-  max-width: 340px;
+.review-stars {
+  display: flex;
+  gap: 3px;
+  color: #fbbf24;
+  font-size: 18px;
+  filter: drop-shadow(0 0 6px rgba(251, 191, 36, 0.4));
 }
 
-.rating-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--s5);
-}
-
-.rating {
-  background: linear-gradient(145deg, rgba(16, 74, 72, 0.5) 0%, rgba(9, 44, 46, 0.75) 100%);
-  border: 1px solid rgba(185, 201, 197, 0.16);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border-radius: var(--radius);
-  padding: 28px 32px;
+.review-google-badge {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: var(--s4);
-  box-shadow: 0 16px 40px rgba(2, 28, 29, 0.35);
+  gap: 6px;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(226, 232, 240, 0.65);
 }
 
-.rating strong {
-  font: 600 52px var(--title);
-  color: var(--ink);
-  letter-spacing: -0.02em;
+.google-icon {
+  width: 14px;
+  height: 14px;
 }
 
-.rating p {
+.review-card-body blockquote {
+  margin: 0;
+  font-size: clamp(14.5px, 1.6vw, 16.5px);
+  line-height: 1.6;
+  color: #f1f5f9;
+  font-style: normal;
+  display: -webkit-box;
+  -webkit-line-clamp: 5;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.review-card-foot {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.review-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, rgba(197, 160, 89, 0.3) 0%, rgba(8, 35, 37, 0.8) 100%);
+  border: 1px solid rgba(197, 160, 89, 0.5);
+  display: grid;
+  place-items: center;
+  font-family: var(--title);
+  font-size: 15px;
+  font-weight: 700;
+  color: #ffffff;
+  flex-shrink: 0;
+}
+
+.review-meta {
+  display: flex;
+  flex-direction: column;
+}
+
+.review-author {
+  font-size: 15px;
+  font-weight: 600;
+  color: #ffffff;
+  letter-spacing: 0.02em;
+}
+
+.review-sub {
+  font-size: 12px;
+  color: var(--muted, #94a3b8);
+}
+
+/* Controles de Navegação da Pilha */
+.reviews-controls {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-top: 28px;
+}
+
+.reviews-btn {
+  width: 48px;
+  height: 48px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  color: var(--text, #f8fafc);
+  cursor: pointer;
+  background: rgba(18, 20, 26, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 12px 30px -8px rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  transition: transform 0.35s cubic-bezier(0.3, 1.6, 0.5, 1), background 0.3s ease, border-color 0.3s ease;
+}
+
+.reviews-btn:hover {
+  transform: translateY(-2px) scale(1.08);
+  background: rgba(197, 160, 89, 0.22);
+  border-color: var(--accent, #c5a059);
+  color: #ffffff;
+}
+
+.reviews-btn svg {
+  width: 20px;
+  height: 20px;
+}
+
+.reviews-indicator {
   font-size: 13px;
-  color: var(--muted);
-  margin-top: 4px;
+  letter-spacing: 0.16em;
+  color: var(--muted, #94a3b8);
+  font-variant-numeric: tabular-nums;
+}
+
+.reviews-indicator-current {
+  color: var(--accent, #c5a059);
+  font-weight: 700;
 }
 
 /* ==========================================================================

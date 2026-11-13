@@ -635,3 +635,139 @@ if(window.gsap&&window.ScrollTrigger){gsap.registerPlugin(ScrollTrigger);const m
  document.fonts?.ready.then(()=>ScrollTrigger.refresh());
 }
 })();
+
+
+// ==========================================
+// Animated Cards Stack 3D (Avaliações Google)
+// ==========================================
+function initReviewsStack(container) {
+  if (!container) return;
+  const cards = [...container.querySelectorAll('.review-card-stack')];
+  const count = cards.length;
+  if (!count) return;
+
+  const prevBtn = container.querySelector('.reviews-btn-prev');
+  const nextBtn = container.querySelector('.reviews-btn-next');
+  const currentNumEl = container.querySelector('.reviews-indicator-current');
+  const totalNumEl = container.querySelector('.reviews-indicator-total');
+  if (totalNumEl) totalNumEl.textContent = count < 10 ? '0' + count : String(count);
+
+  let activeIndex = 0;
+  let isAnimating = false;
+
+  function pad2(n) {
+    return n < 10 ? '0' + n : String(n);
+  }
+
+  function updateStack() {
+    cards.forEach((card, idx) => {
+      // Distância relativa do card ativo (circular)
+      const diff = (idx - activeIndex + count) % count;
+
+      if (diff === 0) {
+        // Card frontal ativo em foco total
+        card.style.transform = 'translateZ(0px) translateY(0px) rotate(0deg)';
+        card.style.opacity = '1';
+        card.style.zIndex = '10';
+        card.style.pointerEvents = 'auto';
+        card.style.filter = 'drop-shadow(0 20px 30px rgba(0,0,0,0.6))';
+      } else if (diff === 1) {
+        // Segundo card na pilha (inclinado levemente à direita)
+        card.style.transform = 'translateZ(-40px) translateY(18px) rotate(-2.5deg)';
+        card.style.opacity = '0.85';
+        card.style.zIndex = '9';
+        card.style.pointerEvents = 'none';
+        card.style.filter = 'drop-shadow(0 15px 25px rgba(0,0,0,0.4))';
+      } else if (diff === 2) {
+        // Terceiro card na pilha (inclinado à esquerda)
+        card.style.transform = 'translateZ(-80px) translateY(34px) rotate(2deg)';
+        card.style.opacity = '0.6';
+        card.style.zIndex = '8';
+        card.style.pointerEvents = 'none';
+        card.style.filter = 'none';
+      } else {
+        // Cards ocultos atrás na pilha
+        card.style.transform = 'translateZ(-120px) translateY(48px) rotate(0deg)';
+        card.style.opacity = '0';
+        card.style.zIndex = '1';
+        card.style.pointerEvents = 'none';
+        card.style.filter = 'none';
+      }
+    });
+
+    if (currentNumEl) currentNumEl.textContent = pad2(activeIndex + 1);
+  }
+
+  function goNext() {
+    if (isAnimating) return;
+    isAnimating = true;
+    const currentCard = cards[activeIndex];
+    
+    // Anima o card ativo subindo e saindo da pilha
+    currentCard.style.transform = 'translateZ(40px) translateY(-130%) rotate(-8deg)';
+    currentCard.style.opacity = '0';
+
+    setTimeout(() => {
+      activeIndex = (activeIndex + 1) % count;
+      updateStack();
+      isAnimating = false;
+    }, 380);
+  }
+
+  function goPrev() {
+    if (isAnimating) return;
+    isAnimating = true;
+    activeIndex = (activeIndex - 1 + count) % count;
+    const incomingCard = cards[activeIndex];
+    
+    // Prepara entrada pelo topo
+    incomingCard.style.transform = 'translateZ(40px) translateY(-130%) rotate(8deg)';
+    incomingCard.style.opacity = '0';
+    incomingCard.style.zIndex = '11';
+
+    requestAnimationFrame(() => {
+      updateStack();
+      setTimeout(() => {
+        isAnimating = false;
+      }, 400);
+    });
+  }
+
+  if (nextBtn) nextBtn.addEventListener('click', goNext);
+  if (prevBtn) prevBtn.addEventListener('click', goPrev);
+
+  // Swipe touch e mouse drag
+  let startX = 0, startY = 0;
+  container.addEventListener('pointerdown', (e) => {
+    startX = e.clientX;
+    startY = e.clientY;
+  });
+
+  container.addEventListener('pointerup', (e) => {
+    const diffX = e.clientX - startX;
+    const diffY = e.clientY - startY;
+    if (Math.abs(diffX) > 40 && Math.abs(diffX) > Math.abs(diffY)) {
+      if (diffX < 0) goNext();
+      else goPrev();
+    }
+  });
+
+  // Disparo com ScrollTrigger (adiciona efeito in-view no título da seção)
+  const reviewsSection = container.closest('.reviews-section');
+  if (reviewsSection) {
+    if (window.ScrollTrigger) {
+      ScrollTrigger.create({
+        trigger: reviewsSection,
+        start: 'top 75%',
+        onEnter: () => reviewsSection.classList.add('is-inview'),
+        onEnterBack: () => reviewsSection.classList.add('is-inview')
+      });
+    } else {
+      reviewsSection.classList.add('is-inview');
+    }
+  }
+
+  updateStack();
+}
+
+document.querySelectorAll('.reviews-stack-container').forEach(initReviewsStack);
