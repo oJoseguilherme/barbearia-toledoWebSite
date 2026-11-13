@@ -2038,7 +2038,7 @@ section, .wrap {
 footer {
   padding: var(--s6) 0 var(--s7);
   background: transparent;
-  border-top: 1px solid rgba(185, 201, 197, 0.08);
+  border-top: none !important;
 }
 
 footer .wrap {
@@ -3017,4 +3017,96 @@ footer p {
   border-radius: 999px;
   background: #22c55e;
   box-shadow: 0 0 8px rgba(34, 197, 94, 0.8);
+}
+
+
+/* ==========================================================================
+   Refinamentos Mobile Exclusivos (Tipografia, Curvatura e Minimalismo)
+   ========================================================================== */
+@media (max-width: 768px) {
+  /* Título de Resultados: "O cuidado aparece no" maior e mais evidente */
+  .works-line {
+    font-size: clamp(24px, 6.4vw, 34px) !important;
+    letter-spacing: 0.1em !important;
+  }
+
+  /* Título de Equipe: "Quem cuida do" maior e proporcional ao "Seu Estilo" */
+  .team-line {
+    font-size: clamp(24px, 6.4vw, 34px) !important;
+    letter-spacing: 0.1em !important;
+  }
+
+  /* Botãozinho "Ver Antes" ultraclean e sem bordas pesadas */
+  .showcase-toggle-btn {
+    padding: 5px 12px !important;
+    font-size: 11px !important;
+    letter-spacing: 0.05em !important;
+    background: rgba(3, 20, 22, 0.72) !important;
+    border: none !important;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45) !important;
+    backdrop-filter: blur(10px) !important;
+    -webkit-backdrop-filter: blur(10px) !important;
+    bottom: 12px !important;
+    right: 12px !important;
+    color: rgba(244, 241, 234, 0.88) !important;
+    border-radius: 999px !important;
+  }
+
+  /* Zero divisões ou linhas duras entre as seções */
+  .section,
+  .works-section,
+  .team-section,
+  .story-section,
+  .reviews-section,
+  .single-contact,
+  .closing-section,
+  footer {
+    border-top: none !important;
+    border-bottom: none !important;
+  }
+
+  /* Carrossel de Barbeiros no Mobile: cards mais verticais e container ajustado */
+  .clc-root {
+    height: clamp(520px, 72vh, 580px) !important;
+  }
+
+  /* Destaque a mais para o nome do barbeiro no mobile */
+  .clc-title {
+    font-size: clamp(34px, 8.5vw, 48px) !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.05em !important;
+    color: #ffffff !important;
+    text-shadow: 0 4px 25px rgba(0, 0, 0, 0.95), 0 0 35px rgba(197, 160, 89, 0.35) !important;
+  }
+
+  .clc-copy {
+    bottom: 66px !important;
+  }
+
+  .clc-ctl {
+    bottom: 14px !important;
+  }
+
+  /* Setinhas dos barbeiros ultraclean e minimalistas (sem bordas/caixas no mobile) */
+  .clc-btn {
+    width: 42px !important;
+    height: 42px !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    color: rgba(248, 250, 252, 0.8) !important;
+  }
+
+  .clc-btn:hover,
+  .clc-btn:active {
+    color: var(--accent, #c5a059) !important;
+    transform: scale(1.18) !important;
+  }
+
+  .clc-btn svg {
+    width: 24px !important;
+    height: 24px !important;
+  }
 }

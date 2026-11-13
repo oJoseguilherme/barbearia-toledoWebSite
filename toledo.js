@@ -247,7 +247,7 @@ function initCurvedLensCarousel(root) {
   const canvas = root.querySelector('.clc-canvas');
   if (!canvas) return;
 
-  const bend = parseFloat(root.dataset.bend || '0.55');
+  const bend = parseFloat(root.dataset.bend || (window.innerWidth < 640 ? '0.24' : '0.35'));
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
 
   const copyEl = root.querySelector('.clc-copy');
@@ -279,13 +279,13 @@ function initCurvedLensCarousel(root) {
     return [pos + v * dt, v];
   }
 
-  // Cards proporcionais e expansivos, sem aspecto esticado no mobile
+  // Cards proporcionais e mais verticais no mobile (com presenca editorial e menos curvatura)
   function cardSize(w, h) {
     const isMobile = w < 640;
-    // Diminui um pouco a largura no mobile para respiro e expansividade
-    const cw = isMobile ? Math.min(w * 0.54, 250) : Math.min(Math.max(250, w * 0.23), h * 0.35);
-    // Aspect ratio 1 : 1.32 no mobile evita estiramento facial e mantém a foto natural
-    const ratio = isMobile ? 1.32 : 1.40;
+    // Largura com bom respiro lateral
+    const cw = isMobile ? Math.min(w * 0.58, 260) : Math.min(Math.max(250, w * 0.23), h * 0.35);
+    // Mais vertical no mobile conforme solicitado (ratio 1.45)
+    const ratio = isMobile ? 1.45 : 1.40;
     const ch = Math.round(cw * ratio);
     return [Math.round(cw), ch];
   }
