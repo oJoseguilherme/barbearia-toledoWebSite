@@ -1315,6 +1315,7 @@ section, .wrap {
 
 /* Badges e Botões no Quadro */
 .showcase-badge {
+  display: none !important;
   position: absolute;
   top: 18px;
   left: 18px;
@@ -1397,7 +1398,7 @@ section, .wrap {
 @media (max-width: 900px) {
   .showcase-split {
     grid-template-columns: 1fr;
-    gap: 32px;
+    gap: 24px;
   }
   .showcase-display {
     order: 1; /* Foto no topo no mobile para visualização instantânea */
@@ -1405,37 +1406,47 @@ section, .wrap {
   }
   .showcase-menu {
     order: 2;
-    gap: 10px;
+    gap: 8px;
+    max-width: min(calc(100vw - 32px), 430px);
+    margin: 0 auto;
+    width: 100%;
   }
   .showcase-frame {
-    max-width: min(calc(100vw - 48px), 380px);
-    aspect-ratio: 3.5 / 4.2;
+    max-width: min(calc(100vw - 32px), 430px);
+    aspect-ratio: 4 / 4.9;
     margin: 0 auto;
+    border-radius: 24px;
   }
   .showcase-item {
-    padding: 14px 18px;
-    border-radius: 16px;
+    padding: 10px 16px;
+    border-radius: 14px;
+    gap: 8px;
   }
   .showcase-item-text h4 {
-    font-size: 18px;
+    font-size: 14.5px;
+    letter-spacing: 0.05em;
+    font-weight: 500;
   }
   .showcase-item-text p {
-    font-size: 12px;
+    font-size: 11.5px;
+    margin-top: 2px;
+    opacity: 0.72;
+  }
+  .showcase-arrow {
+    font-size: 14px;
+    opacity: 0.6;
   }
   .showcase-toggle-btn {
     padding: 7px 16px;
     font-size: 12px;
-    bottom: 16px;
-    right: 16px;
+    bottom: 14px;
+    right: 14px;
+    border-radius: 999px;
   }
   .showcase-badge {
-    top: 14px;
-    left: 14px;
-    padding: 5px 12px;
-    font-size: 11.5px;
+    display: none !important;
   }
 }
-
 /* ==========================================================================
    Carrossel Espacial 3D dos Profissionais (Cinematográfico)
    ========================================================================== */
@@ -2123,25 +2134,29 @@ footer p {
   padding-bottom: 6px !important;
 }
 
-/* Animacao do Titulo da Equipe com entrada da secao */
+/* Animacao do Titulo da Equipe com entrada da secao (Sweep Laser & Wireframe completo) */
 .team-section.is-inview .team-line.team-line-1 {
   animation: heroBlurRevealLeft 1100ms cubic-bezier(0.16, 1, 0.3, 1) 150ms both;
 }
 
 .team-section.is-inview .team-line.team-line-2 {
-  animation: heroBlurRevealLeft 1100ms cubic-bezier(0.16, 1, 0.3, 1) 320ms both;
+  animation: heroBlurRevealRight 1100ms cubic-bezier(0.16, 1, 0.3, 1) 500ms both;
 }
 
 .team-section.is-inview .team-line-brand {
-  animation: heroBlurRevealLeft 1200ms cubic-bezier(0.16, 1, 0.3, 1) 500ms both;
+  animation: heroWireframeIn 1100ms cubic-bezier(0.16, 1, 0.3, 1) 950ms both;
 }
 
-.team-section.is-inview .team-sweep {
-  animation: brandTextGlow 3000ms cubic-bezier(0.16, 1, 0.3, 1) 1100ms 1 normal forwards;
+.team-section.is-inview .team-sweep::before {
+  animation: wireframeToSolidFill 1200ms cubic-bezier(0.16, 1, 0.3, 1) 1400ms forwards;
+}
+
+.team-section.is-inview .team-sweep::after {
+  animation: laserScanUp 1200ms cubic-bezier(0.16, 1, 0.3, 1) 1400ms forwards;
 }
 
 .team-section.is-inview .team-underline {
-  animation: brandLineExpand 1400ms cubic-bezier(0.16, 1, 0.3, 1) 950ms forwards;
+  animation: toledoUnderlineIn 1000ms cubic-bezier(0.16, 1, 0.3, 1) 1750ms forwards;
 }
 
 /* ==========================================================================
@@ -2306,12 +2321,36 @@ footer p {
 
 @media (max-width: 640px) {
   .clc-root {
-    height: 590px;
+    height: clamp(480px, 68vh, 540px);
+    margin-top: 8px;
+    margin-bottom: 16px;
   }
   .clc-copy {
-    bottom: 84px;
+    bottom: 68px;
+  }
+  .clc-title {
+    font-size: clamp(26px, 6.2vw, 38px);
   }
   .clc-ctl {
-    bottom: 18px;
+    bottom: 14px;
+  }
+  .clc-btn {
+    width: 44px;
+    height: 44px;
+  }
+  .clc-btn svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  /* No mobile, sweep do titulo da equipe */
+  .team-section.is-inview .team-sweep::before {
+    animation: wireframeToSolidFill 1100ms cubic-bezier(0.16, 1, 0.3, 1) 1400ms forwards;
+  }
+  .team-section.is-inview .team-sweep::after {
+    animation: laserScanUp 1100ms cubic-bezier(0.16, 1, 0.3, 1) 1400ms forwards;
+  }
+  .team-section.is-inview .team-underline {
+    animation: toledoUnderlineIn 950ms cubic-bezier(0.16, 1, 0.3, 1) 1800ms forwards;
   }
 }

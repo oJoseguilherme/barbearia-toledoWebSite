@@ -231,10 +231,14 @@ function initCurvedLensCarousel(root) {
     return [pos + v * dt, v];
   }
 
-  // Cards mais puxados e verticais: mais teto e mais chao, com presenca imponente
+  // Cards proporcionais e expansivos, sem aspecto esticado no mobile
   function cardSize(w, h) {
-    const cw = Math.min(w < 640 ? w * 0.64 : Math.max(270, w * 0.25), h * 0.36);
-    const ch = Math.round(cw * 1.54); // Proporcao vertical acentuada
+    const isMobile = w < 640;
+    // Diminui um pouco a largura no mobile para respiro e expansividade
+    const cw = isMobile ? Math.min(w * 0.54, 250) : Math.min(Math.max(250, w * 0.23), h * 0.35);
+    // Aspect ratio 1 : 1.32 no mobile evita estiramento facial e mantém a foto natural
+    const ratio = isMobile ? 1.32 : 1.40;
+    const ch = Math.round(cw * ratio);
     return [Math.round(cw), ch];
   }
 
@@ -416,7 +420,7 @@ function initCurvedLensCarousel(root) {
     canvas.width = Math.round(W * dpr);
     canvas.height = Math.round(H * dpr);
     [cw, ch] = cardSize(W, H);
-    gap = cw * 0.16;
+    gap = cw * (W < 640 ? 0.20 : 0.15);
     gl.viewport(0, 0, canvas.width, canvas.height);
     kick();
   };
@@ -428,7 +432,7 @@ function initCurvedLensCarousel(root) {
     gl.uniform2f(u.uSize, cw, ch);
     gl.uniform1f(u.uBend, bend);
     gl.uniform1f(u.uVel, reduced.matches ? 0 : Math.max(-1, Math.min(1, vel * 0.12)));
-    gl.uniform1f(u.uLift, W < 640 ? 0.32 : 0.16);
+    gl.uniform1f(u.uLift, W < 640 ? 0.20 : 0.15);
     const step = cw + gap;
     for (let i = 0; i < n; i++) {
       const d = offsetOf(i, pos, n);
