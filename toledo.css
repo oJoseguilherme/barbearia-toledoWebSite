@@ -782,26 +782,20 @@ section, .wrap {
   }
 }
 
-/* Botão "Agendar nesta unidade" descolado de Toledo, mais para a direita e mais para baixo, mais curto e ultra minimalista */
+/* Botões Hero CTA */
 .hero-cta {
-  opacity: 0;
-  align-self: flex-start;
-  margin-left: clamp(170px, 23vw, 340px);
-  margin-top: clamp(140px, 22vh, 280px) !important;
-  margin-bottom: clamp(20px, 3.5vh, 42px);
   background: rgba(6, 25, 26, 0.4);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   color: rgba(244, 241, 234, 0.8);
   border: 1px solid rgba(196, 174, 136, 0.22);
   box-shadow: 0 4px 12px rgba(2, 28, 29, 0.3);
-  padding: 6px 13px;
-  font-size: 10.5px;
-  font-weight: 500;
+  padding: 8px 18px;
+  font-size: 11px;
+  font-weight: 600;
   letter-spacing: 0.09em;
   text-transform: uppercase;
   border-radius: 999px;
-  will-change: transform, opacity;
   transition: background 260ms, border-color 260ms, color 260ms, transform 260ms, box-shadow 260ms;
 }
 
@@ -3920,5 +3914,99 @@ footer p {
     height: 38px !important;
     padding: 7px 18px !important;
     font-size: 10.5px !important;
+  }
+}
+
+
+/* ==========================================================================
+   Hero Actions Consolidado: "Agendar nesta unidade" + "Ver localização" Lado a Lado na Mesma Linha
+   ========================================================================== */
+.hero-actions {
+  opacity: 0;
+  display: inline-flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 12px !important;
+  flex-wrap: nowrap !important;
+  margin-left: clamp(40px, 6.5vw, 110px) !important; /* Deslocado mais para a esquerda */
+  margin-top: clamp(80px, 14vh, 150px) !important;
+  margin-bottom: clamp(16px, 3vh, 32px) !important;
+  align-self: flex-start !important;
+  width: auto !important;
+  z-index: 5;
+}
+
+.hero-copy.is-inview .hero-actions {
+  animation: heroCtaFadeUp 900ms cubic-bezier(0.16, 1, 0.3, 1) 3200ms both;
+}
+
+.hero-actions .hero-cta {
+  opacity: 1 !important;
+  animation: none !important;
+  margin: 0 !important;
+  align-self: center !important;
+  white-space: nowrap !important;
+  flex-shrink: 0 !important;
+}
+
+.hero-actions .hero-btn-sm {
+  height: 38px !important;
+  padding: 8px 18px !important;
+  font-size: 11px !important;
+  letter-spacing: 0.09em !important;
+  font-weight: 600 !important;
+  text-transform: uppercase !important;
+  border-radius: 999px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 6px !important;
+  white-space: nowrap !important;
+}
+
+.hero-actions .hero-loc-btn {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid rgba(255, 255, 255, 0.16) !important;
+  color: rgba(255, 255, 255, 0.88) !important;
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
+}
+
+.hero-actions .hero-loc-btn:hover {
+  background: rgba(255, 255, 255, 0.12) !important;
+  border-color: rgba(255, 255, 255, 0.35) !important;
+  color: #ffffff !important;
+}
+
+@media (max-width: 768px) {
+  .hero-actions {
+    display: inline-flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    flex-wrap: nowrap !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    margin-top: 24px !important;
+    margin-bottom: 16px !important;
+    gap: 8px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow-x: auto !important;
+    scrollbar-width: none !important;
+  }
+  .hero-actions::-webkit-scrollbar {
+    display: none;
+  }
+  .hero-actions .hero-cta {
+    margin: 0 !important;
+  }
+  .hero-actions .hero-btn-sm {
+    padding: 7px 14px !important;
+    font-size: 10px !important;
+    height: 35px !important;
+    white-space: nowrap !important;
+    flex-shrink: 0 !important;
   }
 }
