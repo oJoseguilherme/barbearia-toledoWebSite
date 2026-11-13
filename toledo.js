@@ -177,6 +177,7 @@ function initPortraits(region){
  region.dataset.ready='true';
 }
 
+
 // ==========================================
 // 3D Curved Lens Carousel (WebGL) - Equipe Toledo
 // ==========================================
@@ -202,21 +203,10 @@ function initCurvedLensCarousel(root) {
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
 
   const copyEl = root.querySelector('.clc-copy');
-  const kickerEl = root.querySelector('.clc-kicker');
   const titleLineEl = root.querySelector('.clc-title .clc-line');
-  const capEl = root.querySelector('.clc-cap');
-  const countCurrentEl = root.querySelector('.clc-count-current');
-  const countTotalEl = root.querySelector('.clc-count-total');
-  const barFillEl = root.querySelector('.clc-bar-fill');
   const prevBtn = root.querySelector('.clc-btn-prev');
   const nextBtn = root.querySelector('.clc-btn-next');
   const fallbackImg = root.querySelector('.clc-fallback');
-
-  function pad2(num) {
-    return num < 10 ? '0' + num : String(num);
-  }
-
-  if (countTotalEl) countTotalEl.textContent = pad2(n);
 
   let current = 0;
   let shown = false;
@@ -241,25 +231,21 @@ function initCurvedLensCarousel(root) {
     return [pos + v * dt, v];
   }
 
+  // Cards mais puxados e verticais: mais teto e mais chao, com presenca imponente
   function cardSize(w, h) {
-    const cw = Math.min(w < 640 ? w * 0.56 : w * 0.22, h * 0.34);
-    return [Math.round(cw), Math.round(cw * 1.25)];
+    const cw = Math.min(w < 640 ? w * 0.64 : Math.max(270, w * 0.25), h * 0.36);
+    const ch = Math.round(cw * 1.54); // Proporcao vertical acentuada
+    return [Math.round(cw), ch];
   }
 
   function updateCopy(idx) {
     const slide = slides[idx] || slides[0];
     if (!slide) return;
-    
-    if (countCurrentEl) countCurrentEl.textContent = pad2(idx + 1);
-    if (barFillEl) barFillEl.style.transform = 'scaleX(' + ((idx + 1) / n) + ')';
 
     if (copyEl) {
       copyEl.classList.remove('clc-in');
       void copyEl.offsetWidth; // reflow
 
-      if (kickerEl) kickerEl.textContent = slide.kicker || 'Especialista Toledo';
-      if (capEl) capEl.textContent = slide.caption || 'Consulte horários para agendamento';
-      
       if (titleLineEl) {
         titleLineEl.innerHTML = '';
         const words = (slide.title || '').split(' ');
@@ -320,6 +306,7 @@ function initCurvedLensCarousel(root) {
     "vUv=aPos;vX=x;" +
     "gl_Position=vec4(n,0.,1.);}";
 
+  // Shader com destaque de luminosidade acentuado no centro (laterais mais esmaecidos no fundo)
   const FRAG =
     "precision highp float;" +
     "uniform sampler2D uTex;uniform vec2 uSize;uniform float uAspect;uniform float uVel;uniform float uIntro;uniform float uShift;uniform float uReady;" +
@@ -332,11 +319,11 @@ function initCurvedLensCarousel(root) {
     "float ca=(.0012+.0045*vX*vX)*(1.+abs(uVel)*1.2);" +
     "vec3 c=vec3(texture2D(uTex,uv+vec2(ca,0.)).r,texture2D(uTex,uv).g,texture2D(uTex,uv-vec2(ca,0.)).b);" +
     "c=mix(vec3(.11,.11,.12),c,uReady);" +
-    "c*=1.-.42*min(1.,vX*vX);" +
-    "float d=box((vUv-.5)*uSize,uSize*.5,14.);" +
+    "c*=1.-.58*min(1.,vX*vX);" + // Destaque extra no centro
+    "float d=box((vUv-.5)*uSize,uSize*.5,16.);" +
     "float rim=smoothstep(-5.,0.,d);" +
-    "c+=rim*.10;" +
-    "c+=.07*smoothstep(.55,1.,vUv.y)*(1.-abs(vX));" +
+    "c+=rim*.12;" +
+    "c+=.09*smoothstep(.55,1.,vUv.y)*(1.-abs(vX));" +
     "float al=smoothstep(.75,-.75,d)*uIntro;" +
     "gl_FragColor=vec4(c*al,al);}";
 
@@ -429,7 +416,7 @@ function initCurvedLensCarousel(root) {
     canvas.width = Math.round(W * dpr);
     canvas.height = Math.round(H * dpr);
     [cw, ch] = cardSize(W, H);
-    gap = cw * 0.14;
+    gap = cw * 0.16;
     gl.viewport(0, 0, canvas.width, canvas.height);
     kick();
   };
@@ -441,7 +428,7 @@ function initCurvedLensCarousel(root) {
     gl.uniform2f(u.uSize, cw, ch);
     gl.uniform1f(u.uBend, bend);
     gl.uniform1f(u.uVel, reduced.matches ? 0 : Math.max(-1, Math.min(1, vel * 0.12)));
-    gl.uniform1f(u.uLift, W < 640 ? 0.3 : 0.15);
+    gl.uniform1f(u.uLift, W < 640 ? 0.32 : 0.16);
     const step = cw + gap;
     for (let i = 0; i < n; i++) {
       const d = offsetOf(i, pos, n);
@@ -569,6 +556,19 @@ function initCurvedLensCarousel(root) {
   updateCopy(0);
 }
 
+// Inicializacao de secoes de equipe para efeito in-view
+document.querySelectorAll('#equipe').forEach(section => {
+  if (window.ScrollTrigger) {
+    ScrollTrigger.create({
+      trigger: section,
+      start: 'top 75%',
+      onEnter: () => section.classList.add('is-inview'),
+      onEnterBack: () => section.classList.add('is-inview')
+    });
+  } else {
+    section.classList.add('is-inview');
+  }
+});
 
 document.querySelectorAll('.clc-root').forEach(initCurvedLensCarousel);
 document.querySelectorAll('.portrait-carousel').forEach(initPortraits);

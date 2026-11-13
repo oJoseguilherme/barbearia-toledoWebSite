@@ -2066,44 +2066,113 @@ footer p {
 }
 
 
+
 /* ==========================================================================
-   3D Curved Lens Carousel (WebGL) - Equipe Toledo
+   Header Especial Equipe - "Quem cuida do Seu Estilo" (Padrao Neon Editorial)
+   ========================================================================== */
+.team-header {
+  text-align: center;
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto clamp(24px, 4vh, 48px);
+  position: relative;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.team-title {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.team-auxiliary {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+}
+
+.team-line {
+  display: block;
+  font-family: var(--title);
+  font-size: clamp(22px, 3.2vw, 36px);
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #ffffff !important;
+  opacity: 0;
+  will-change: transform, opacity, filter;
+  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+}
+
+.team-line-brand {
+  display: inline-flex;
+  position: relative;
+  opacity: 0;
+  will-change: transform, opacity, filter;
+}
+
+.team-sweep {
+  font-size: clamp(48px, 6.5vw, 84px) !important;
+  letter-spacing: 0.08em !important;
+  padding-bottom: 6px !important;
+}
+
+/* Animacao do Titulo da Equipe com entrada da secao */
+.team-section.is-inview .team-line.team-line-1 {
+  animation: heroBlurRevealLeft 1100ms cubic-bezier(0.16, 1, 0.3, 1) 150ms both;
+}
+
+.team-section.is-inview .team-line.team-line-2 {
+  animation: heroBlurRevealLeft 1100ms cubic-bezier(0.16, 1, 0.3, 1) 320ms both;
+}
+
+.team-section.is-inview .team-line-brand {
+  animation: heroBlurRevealLeft 1200ms cubic-bezier(0.16, 1, 0.3, 1) 500ms both;
+}
+
+.team-section.is-inview .team-sweep {
+  animation: brandTextGlow 3000ms cubic-bezier(0.16, 1, 0.3, 1) 1100ms 1 normal forwards;
+}
+
+.team-section.is-inview .team-underline {
+  animation: brandLineExpand 1400ms cubic-bezier(0.16, 1, 0.3, 1) 950ms forwards;
+}
+
+/* ==========================================================================
+   3D Curved Lens Carousel - FLUTUANTE & MINIMALISTA
    ========================================================================== */
 .clc-root {
   position: relative;
   width: 100%;
-  height: clamp(520px, 72vh, 680px);
+  height: clamp(620px, 80vh, 780px);
   overflow: hidden;
   isolation: isolate;
   outline: none;
   user-select: none;
   -webkit-user-select: none;
-  border-radius: var(--radius-lg, 24px);
-  background: radial-gradient(circle at 50% 40%, rgba(26, 31, 46, 0.4), rgba(11, 12, 16, 0.95));
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.08);
-  margin-top: clamp(24px, 4vw, 40px);
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  margin-top: clamp(16px, 3vw, 32px);
   margin-bottom: 24px;
 }
 
 .clc-root:focus-visible {
-  box-shadow: 0 0 0 2px var(--accent, #c5a059), inset 0 0 0 2px rgba(255, 255, 255, 0.2);
+  outline: none;
 }
 
 .clc-glow {
-  position: absolute;
-  inset: -20%;
-  background: radial-gradient(50% 40% at 50% 46%, rgba(197, 160, 89, 0.08), transparent 70%);
-  pointer-events: none;
+  display: none !important;
 }
 
 .clc-grain {
-  position: absolute;
-  inset: 0;
-  opacity: 0.04;
-  mix-blend-mode: overlay;
-  pointer-events: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  display: none !important;
 }
 
 .clc-canvas {
@@ -2120,64 +2189,34 @@ footer p {
   cursor: grabbing;
 }
 
-.clc-top {
-  position: absolute;
-  left: clamp(20px, 4vw, 44px);
-  right: clamp(20px, 4vw, 44px);
-  top: clamp(20px, 3.5vw, 36px);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 11px;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: var(--text, #e2e8f0);
-  opacity: 0.75;
-  pointer-events: none;
-  z-index: 2;
-}
-
-.clc-top b {
-  font-weight: 600;
-  letter-spacing: 0.16em;
-  color: var(--accent, #c5a059);
-}
-
+/* Nome centralizado e flutuante */
 .clc-copy {
   position: absolute;
-  left: clamp(20px, 4vw, 44px);
-  bottom: clamp(24px, 4vw, 44px);
-  max-width: min(560px, 68%);
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: clamp(74px, 10vh, 100px);
+  width: 100%;
+  max-width: 600px;
+  text-align: center;
   color: var(--text, #f8fafc);
   pointer-events: none;
-  z-index: 2;
-}
-
-.clc-kicker {
-  display: block;
-  font-size: 11px;
-  letter-spacing: 0.24em;
-  text-transform: uppercase;
-  color: var(--accent, #c5a059);
-  opacity: 0.9;
-  margin-bottom: 8px;
-  font-weight: 500;
+  z-index: 5;
 }
 
 .clc-title {
   font-family: var(--font-display, "Cinzel", Georgia, serif);
   font-weight: 600;
-  font-size: clamp(38px, 6vw, 76px);
-  line-height: 0.95;
-  letter-spacing: -0.01em;
+  font-size: clamp(38px, 5.5vw, 70px);
+  line-height: 1;
+  letter-spacing: 0.04em;
   margin: 0;
   display: block;
-  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.7);
+  text-shadow: 0 4px 25px rgba(0, 0, 0, 0.9), 0 0 40px rgba(0, 0, 0, 0.7);
 }
 
 .clc-ch {
   display: inline-block;
-  transform: translateY(105%) rotate(6deg);
+  transform: translateY(115%) rotate(5deg);
   opacity: 0;
   transition: transform 0.85s cubic-bezier(0.2, 0.9, 0.1, 1), opacity 0.55s ease;
 }
@@ -2193,90 +2232,45 @@ footer p {
   opacity: 1;
 }
 
-.clc-cap {
-  display: block;
-  margin-top: 12px;
-  font-size: clamp(13px, 1.4vw, 15px);
-  line-height: 1.5;
-  color: rgba(226, 232, 240, 0.75);
-  opacity: 0;
-  transform: translateY(10px);
-  transition: opacity 0.7s ease 0.25s, transform 0.7s cubic-bezier(0.2, 0.9, 0.1, 1) 0.25s;
-  max-width: 36ch;
-}
-
-.clc-in .clc-cap {
-  opacity: 1;
-  transform: none;
-}
-
+/* Apenas as setas centralizadas e flutuantes */
 .clc-ctl {
   position: absolute;
-  right: clamp(20px, 4vw, 44px);
-  bottom: clamp(24px, 4vw, 44px);
+  left: 50%;
+  transform: translateX(-50%);
+  right: auto;
+  bottom: clamp(16px, 2.5vh, 28px);
   display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 16px;
-  color: var(--text, #f8fafc);
-  z-index: 2;
-}
-
-.clc-count {
-  font-size: 13px;
-  letter-spacing: 0.18em;
-  font-variant-numeric: tabular-nums;
-  opacity: 0.85;
-}
-
-.clc-count i {
-  font-style: normal;
-  opacity: 0.45;
-}
-
-.clc-bar {
-  width: 130px;
-  height: 2px;
-  border-radius: 2px;
-  background: rgba(255, 255, 255, 0.15);
-  overflow: hidden;
-}
-
-.clc-bar-fill {
-  display: block;
-  height: 100%;
-  width: 100%;
-  background: var(--accent, #c5a059);
-  transform-origin: 0 50%;
-  transition: transform 0.7s cubic-bezier(0.2, 0.9, 0.1, 1);
+  justify-content: center;
+  align-items: center;
+  z-index: 6;
 }
 
 .clc-btns {
   display: flex;
-  gap: 10px;
+  gap: 16px;
 }
 
 .clc-btn {
-  width: 46px;
-  height: 46px;
+  width: 50px;
+  height: 50px;
   border-radius: 999px;
   display: grid;
   place-items: center;
   color: var(--text, #f8fafc);
   cursor: pointer;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 10px 25px -8px rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  transition: transform 0.35s cubic-bezier(0.3, 1.6, 0.5, 1), background 0.3s ease, border-color 0.3s ease;
+  background: rgba(18, 20, 26, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 12px 30px -8px rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  transition: transform 0.35s cubic-bezier(0.3, 1.6, 0.5, 1), background 0.3s ease, border-color 0.3s ease, color 0.3s ease;
 }
 
 .clc-btn:hover {
-  transform: translateY(-2px) scale(1.06);
-  background: rgba(197, 160, 89, 0.18);
+  transform: translateY(-2px) scale(1.08);
+  background: rgba(197, 160, 89, 0.22);
   border-color: var(--accent, #c5a059);
-  color: #fff;
+  color: #ffffff;
 }
 
 .clc-btn:active {
@@ -2289,8 +2283,8 @@ footer p {
 }
 
 .clc-btn svg {
-  width: 18px;
-  height: 18px;
+  width: 20px;
+  height: 20px;
 }
 
 .clc-fallback {
@@ -2298,12 +2292,12 @@ footer p {
   position: absolute;
   left: 50%;
   top: 50%;
-  width: min(62vw, 340px);
-  aspect-ratio: 4/5;
+  width: min(65vw, 360px);
+  aspect-ratio: 1/1.5;
   transform: translate(-50%, -50%);
   object-fit: cover;
-  border-radius: 14px;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
+  border-radius: 16px;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.85);
 }
 
 .clc-no-gl .clc-fallback {
@@ -2312,20 +2306,12 @@ footer p {
 
 @media (max-width: 640px) {
   .clc-root {
-    height: 560px;
+    height: 590px;
   }
   .clc-copy {
-    max-width: calc(100% - 40px);
-    bottom: 90px;
+    bottom: 84px;
   }
   .clc-ctl {
-    flex-direction: row;
-    align-items: center;
-    left: 20px;
-    right: 20px;
-    justify-content: space-between;
-  }
-  .clc-bar {
-    width: 80px;
+    bottom: 18px;
   }
 }
