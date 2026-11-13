@@ -1050,3 +1050,53 @@ const initToledoPreloader = () => {
 };
 
 initToledoPreloader();
+
+/* ========================================================
+   TRANSIÇÃO DE ENTRADA NA UNIDADE (EXPANSÃO DO CARD)
+   ======================================================== */
+const initChoiceExpansion = () => {
+  const choices = document.querySelectorAll('.choice');
+  const entry = document.querySelector('.entry');
+  if (!choices.length || !entry) return;
+
+  let isNavigating = false;
+
+  choices.forEach(card => {
+    card.addEventListener('click', (e) => {
+      const targetHref = card.getAttribute('href');
+      if (!targetHref || isNavigating) return;
+      e.preventDefault();
+      isNavigating = true;
+
+      entry.classList.add('is-transitioning');
+      card.classList.add('is-expanding');
+
+      let wipe = document.querySelector('.portal-wipe');
+      if (!wipe) {
+        wipe = document.createElement('div');
+        wipe.className = 'portal-wipe';
+        document.body.appendChild(wipe);
+      }
+
+      setTimeout(() => {
+        wipe.classList.add('is-active');
+      }, 260);
+
+      setTimeout(() => {
+        window.location.href = targetHref;
+      }, 480);
+    });
+  });
+
+  window.addEventListener('pageshow', (e) => {
+    if (e.persisted) {
+      entry.classList.remove('is-transitioning');
+      choices.forEach(c => c.classList.remove('is-expanding'));
+      const wipe = document.querySelector('.portal-wipe');
+      if (wipe) wipe.remove();
+      isNavigating = false;
+    }
+  });
+};
+
+initChoiceExpansion();

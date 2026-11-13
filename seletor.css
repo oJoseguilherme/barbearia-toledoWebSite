@@ -557,3 +557,52 @@ body {
     transform: none !important;
   }
 }
+
+/* ========================================================
+   TRANSIÇÃO CINEMÁTICA: O CARD CRESCE E ENTRA EM TELA CHEIA
+   ======================================================== */
+.entry.is-transitioning .selector-logo,
+.entry.is-transitioning .entry-foot {
+  opacity: 0 !important;
+  transform: translateY(-20px) !important;
+  transition: opacity 0.35s ease, transform 0.35s ease !important;
+  pointer-events: none;
+}
+
+.entry.is-transitioning .choice:not(.is-expanding) {
+  opacity: 0 !important;
+  transform: scale(0.88) !important;
+  filter: blur(8px) !important;
+  transition: opacity 0.35s ease, transform 0.35s ease, filter 0.35s ease !important;
+  pointer-events: none;
+}
+
+.choice.is-expanding {
+  position: relative;
+  z-index: 9999 !important;
+  transform: scale(1.18) !important;
+  box-shadow: 0 0 100px rgba(0, 0, 0, 0.95), 0 0 60px rgba(196, 174, 136, 0.5) !important;
+  border-color: rgba(196, 174, 136, 0.9) !important;
+  transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.45s ease, border-color 0.45s ease !important;
+}
+
+.choice.is-expanding .picture img {
+  transform: scale(1.16) !important;
+  filter: brightness(1.15) !important;
+  transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), filter 0.45s ease !important;
+}
+
+/* Cortina suave de imersão ao entrar na unidade */
+.portal-wipe {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  background-color: #041416;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.22s ease-in;
+}
+
+.portal-wipe.is-active {
+  opacity: 1;
+}

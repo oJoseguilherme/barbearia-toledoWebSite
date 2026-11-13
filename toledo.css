@@ -4155,7 +4155,8 @@ footer p {
 }
 
 /* ========================================================
-   PRELOADER NATIVO: LOGO TOLEDO COM RISCOS E TESOURAS DA MARCA
+   PRELOADER DA ENTRADA (SELETOR DE UNIDADES)
+   Logo Toledo + Riscos com feixe de brilho superior (sem tesouras)
    ======================================================== */
 .toledo-preloader {
   position: fixed;
@@ -4168,7 +4169,7 @@ footer p {
   overflow: hidden;
   opacity: 1;
   visibility: visible;
-  transition: opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.55s ease;
+  transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.5s ease;
   will-change: opacity, visibility;
 }
 
@@ -4181,156 +4182,117 @@ footer p {
 /* Suave iluminação radial no fundo */
 .preloader-bg-glow {
   position: absolute;
-  width: min(85vw, 640px);
-  height: min(85vw, 640px);
-  background: radial-gradient(circle, rgba(196, 174, 136, 0.12) 0%, rgba(4, 20, 22, 0) 70%);
+  width: min(85vw, 680px);
+  height: min(85vw, 680px);
+  background: radial-gradient(circle, rgba(196, 174, 136, 0.14) 0%, rgba(4, 20, 22, 0) 70%);
   pointer-events: none;
+  animation: preloaderGlowPulse 2.4s ease-in-out infinite alternate;
+}
+
+@keyframes preloaderGlowPulse {
+  0% { transform: scale(0.92); opacity: 0.6; }
+  100% { transform: scale(1.15); opacity: 1; }
 }
 
 .preloader-stage {
   position: relative;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: min(88vw, 360px);
-  aspect-ratio: 1 / 1;
+  width: min(90vw, 360px);
+  padding: 20px 16px;
   z-index: 2;
 }
 
-/* Container da Logo Oficial Nativa */
-.toledo-native-logo {
+/* Riscos arquitetônicos com o brilhozinho (glint) correndo por cima */
+.preloader-line {
   position: relative;
   width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  height: 2px;
+  background: linear-gradient(270deg, #c4ae88 0%, rgba(196, 174, 136, 0.75) 45%, rgba(196, 174, 136, 0) 100%);
+  transform-origin: right center;
+  transform: scaleX(0);
+  box-shadow: 0 0 10px rgba(196, 174, 136, 0.55);
+  animation: preloaderDrawLineFromRight 0.75s cubic-bezier(0.22, 1, 0.36, 1) 0.28s forwards;
 }
 
-.logo-layer {
+.preloader-line-bottom {
+  animation-delay: 0.42s;
+}
+
+@keyframes preloaderDrawLineFromRight {
+  0% {
+    transform: scaleX(0);
+    opacity: 0;
+  }
+  30% {
+    opacity: 1;
+  }
+  100% {
+    transform: scaleX(1);
+    opacity: 1;
+  }
+}
+
+/* Feixe brilhante correndo pelas linhas ("aquele brilhozinho lá de cima") */
+.preloader-line::after {
+  content: '';
   position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
+  top: -1px;
+  right: 0;
+  width: 32px;
+  height: 4px;
+  background: #ffffff;
+  box-shadow: 0 0 12px #ffffff, 0 0 22px #c4ae88;
+  border-radius: 2px;
+  opacity: 0;
+  animation: preloaderLineGlint 0.75s ease-out 0.28s forwards;
+}
+
+.preloader-line-bottom::after {
+  animation-delay: 0.42s;
+}
+
+@keyframes preloaderLineGlint {
+  0% { right: 0; opacity: 1; }
+  85% { opacity: 1; }
+  100% { right: 100%; opacity: 0; }
+}
+
+/* Centro: Logo Barbearia Toledo oficial e limpa (sem nenhuma tesoura aparecendo) */
+.preloader-emblem {
+  position: relative;
+  margin: 18px 0;
+  width: min(72vw, 240px);
+  aspect-ratio: 1.38 / 1;
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-.logo-layer img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  display: block;
-}
-
-/* 1. Textos originais da logo (BARBEARIA, TOLEDO, Cabelo e Barba, DESDE 2015)
-      As duas laterais onde ficam as tesouras ficam vazias aguardando a chegada delas */
-.layer-texts {
-  clip-path: polygon(
-    0% 0%, 100% 0%,
-    100% 59.5%,
-    80% 59.5%, 80% 70.5%, 100% 70.5%,
-    100% 100%, 0% 100%,
-    0% 70.5%, 20% 70.5%, 20% 59.5%, 0% 59.5%
-  );
   opacity: 0;
-  transform: scale(0.96);
-  filter: drop-shadow(0 4px 20px rgba(196, 174, 136, 0.25));
-  animation: toledoNativeTextReveal 0.75s cubic-bezier(0.16, 1, 0.3, 1) 0.15s forwards;
+  transform: scale(0.94);
+  filter: drop-shadow(0 0 1px rgba(196, 174, 136, 0.2));
+  animation: preloaderRevealLogo 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.15s forwards;
 }
 
-@keyframes toledoNativeTextReveal {
+@keyframes preloaderRevealLogo {
   0% {
     opacity: 0;
-    transform: scale(0.96);
-    filter: blur(4px) drop-shadow(0 0 2px rgba(196, 174, 136, 0.15));
+    transform: scale(0.94);
+    filter: blur(4px) drop-shadow(0 0 2px rgba(196, 174, 136, 0.2));
   }
   100% {
     opacity: 1;
     transform: scale(1);
-    filter: blur(0) drop-shadow(0 6px 24px rgba(196, 174, 136, 0.35));
+    filter: blur(0) drop-shadow(0 8px 30px rgba(196, 174, 136, 0.4));
   }
 }
 
-/* 2. Riscos da própria logo (arcos e linhas estruturais):
-      Aparecem se desenhando da ESQUERDA PARA A DIREITA da própria logo */
-.layer-riscos {
-  clip-path: polygon(0 0, 0 0, 0 100%, 0 100%);
-  animation: toledoNativeRiscosDrawLTR 0.85s cubic-bezier(0.22, 1, 0.36, 1) 0.3s forwards;
-}
-
-@keyframes toledoNativeRiscosDrawLTR {
-  0% {
-    clip-path: polygon(0 0, 0 0, 0 100%, 0 100%);
-  }
-  100% {
-    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
-  }
-}
-
-/* 3. Tesoura Esquerda da própria logo:
-      Sai de fora (da esquerda para a direita) e vai para o lugar dela na logo */
-.layer-scissor-left {
-  clip-path: inset(59.5% 65.5% 30% 21%);
-  transform: translateX(-160px);
-  opacity: 0;
-  animation: toledoNativeScissorLeftEnter 0.95s cubic-bezier(0.16, 1, 0.3, 1) 0.35s forwards;
-}
-
-@keyframes toledoNativeScissorLeftEnter {
-  0% {
-    transform: translateX(-160px);
-    opacity: 0;
-  }
-  30% {
-    opacity: 1;
-  }
-  100% {
-    transform: translateX(0);
-    opacity: 1;
-  }
-}
-
-/* 4. Tesoura Direita da própria logo:
-      Sai de fora (da direita para a esquerda) e vai para o lugar dela na logo */
-.layer-scissor-right {
-  clip-path: inset(59.5% 21% 30% 65.5%);
-  transform: translateX(160px);
-  opacity: 0;
-  animation: toledoNativeScissorRightEnter 0.95s cubic-bezier(0.16, 1, 0.3, 1) 0.35s forwards;
-}
-
-@keyframes toledoNativeScissorRightEnter {
-  0% {
-    transform: translateX(160px);
-    opacity: 0;
-  }
-  30% {
-    opacity: 1;
-  }
-  100% {
-    transform: translateX(0);
-    opacity: 1;
-  }
-}
-
-/* Brilho suave final de completude da marca quando as tesouras se encaixam */
-.toledo-native-logo::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(circle, rgba(196, 174, 136, 0.22) 0%, rgba(4, 20, 22, 0) 70%);
-  opacity: 0;
-  pointer-events: none;
-  animation: toledoNativeGlowFlash 0.55s ease-out 1.12s forwards;
-}
-
-@keyframes toledoNativeGlowFlash {
-  0% { opacity: 0; transform: scale(0.85); }
-  50% { opacity: 1; transform: scale(1.08); }
-  100% { opacity: 0; transform: scale(1.25); }
+.preloader-logo-img {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  display: block;
 }
 
 /* Acessibilidade */
@@ -4338,11 +4300,10 @@ footer p {
   .toledo-preloader {
     transition: opacity 0.2s ease;
   }
-  .layer-texts, .layer-riscos, .layer-scissor-left, .layer-scissor-right, .toledo-native-logo::after {
+  .preloader-line, .preloader-emblem, .preloader-bg-glow {
     animation: none !important;
     opacity: 1 !important;
     transform: none !important;
-    clip-path: none !important;
   }
 }
 
