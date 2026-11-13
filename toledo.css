@@ -2439,7 +2439,7 @@ footer p {
 .clc-root {
   position: relative;
   width: 100%;
-  height: clamp(620px, 80vh, 780px);
+  height: clamp(660px, 84vh, 820px);
   overflow: hidden;
   isolation: isolate;
   outline: none;
@@ -2478,14 +2478,14 @@ footer p {
   cursor: grabbing;
 }
 
-/* Nome centralizado e flutuante */
+/* Nome centralizado e flutuante com maior destaque e respirabilidade */
 .clc-copy {
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
-  bottom: clamp(74px, 10vh, 100px);
+  bottom: clamp(100px, 14vh, 140px);
   width: 100%;
-  max-width: 600px;
+  max-width: 700px;
   text-align: center;
   color: var(--text, #f8fafc);
   pointer-events: none;
@@ -2494,13 +2494,15 @@ footer p {
 
 .clc-title {
   font-family: var(--font-display, "Cinzel", Georgia, serif);
-  font-weight: 600;
-  font-size: clamp(38px, 5.5vw, 70px);
-  line-height: 1;
-  letter-spacing: 0.04em;
+  font-weight: 700;
+  font-size: clamp(44px, 6.2vw, 76px);
+  line-height: 1.15;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
   margin: 0;
   display: block;
-  text-shadow: 0 4px 25px rgba(0, 0, 0, 0.9), 0 0 40px rgba(0, 0, 0, 0.7);
+  color: #ffffff;
+  text-shadow: 0 6px 30px rgba(0, 0, 0, 0.95), 0 0 45px rgba(197, 160, 89, 0.4);
 }
 
 .clc-ch {
@@ -2521,13 +2523,13 @@ footer p {
   opacity: 1;
 }
 
-/* Apenas as setas centralizadas e flutuantes */
+/* Apenas as setas centralizadas e flutuantes (posicionadas mais para baixo) */
 .clc-ctl {
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
   right: auto;
-  bottom: clamp(16px, 2.5vh, 28px);
+  bottom: clamp(8px, 1.4vh, 18px);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -2595,18 +2597,19 @@ footer p {
 
 @media (max-width: 640px) {
   .clc-root {
-    height: clamp(480px, 68vh, 540px);
+    height: clamp(540px, 74vh, 600px);
     margin-top: 8px;
-    margin-bottom: 16px;
+    margin-bottom: 24px;
   }
   .clc-copy {
-    bottom: 68px;
+    bottom: 84px;
   }
   .clc-title {
-    font-size: clamp(26px, 6.2vw, 38px);
+    font-size: clamp(34px, 8.8vw, 48px);
+    letter-spacing: 0.08em;
   }
   .clc-ctl {
-    bottom: 14px;
+    bottom: 4px;
   }
   .clc-btn {
     width: 44px;
@@ -3069,26 +3072,30 @@ footer p {
     border-bottom: none !important;
   }
 
-  /* Carrossel de Barbeiros no Mobile: cards mais verticais e container ajustado */
+  /* Carrossel de Barbeiros no Mobile: cards mais verticais e container ajustado com respiro */
   .clc-root {
-    height: clamp(520px, 72vh, 580px) !important;
+    height: clamp(540px, 74vh, 600px) !important;
   }
 
-  /* Destaque a mais para o nome do barbeiro no mobile */
+  /* Destaque a mais e respirabilidade para o nome do barbeiro no mobile */
   .clc-title {
-    font-size: clamp(34px, 8.5vw, 48px) !important;
+    font-size: clamp(36px, 9.2vw, 50px) !important;
     font-weight: 700 !important;
-    letter-spacing: 0.05em !important;
+    letter-spacing: 0.08em !important;
+    text-transform: uppercase !important;
     color: #ffffff !important;
-    text-shadow: 0 4px 25px rgba(0, 0, 0, 0.95), 0 0 35px rgba(197, 160, 89, 0.35) !important;
+    text-shadow: 0 6px 30px rgba(0, 0, 0, 0.95), 0 0 45px rgba(197, 160, 89, 0.4) !important;
+    line-height: 1.15 !important;
   }
 
+  /* Nome posicionado mais para cima para dar ar e respiro */
   .clc-copy {
-    bottom: 66px !important;
+    bottom: 84px !important;
   }
 
+  /* Setas abaixadas para ficarem mais para baixo */
   .clc-ctl {
-    bottom: 14px !important;
+    bottom: 4px !important;
   }
 
   /* Setinhas dos barbeiros ultraclean e minimalistas (sem bordas/caixas no mobile) */
