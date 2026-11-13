@@ -3682,3 +3682,243 @@ footer p {
   height: 14px;
   stroke: currentColor;
 }
+
+
+/* ==========================================================================
+   Seção de Fechamento Editorial Split (Halo Reel 3D + Reserve um tempo Para Você)
+   ========================================================================== */
+.closing-split-wrap {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  align-items: center;
+  gap: clamp(32px, 5vw, 64px);
+  padding-block: clamp(48px, 8vh, 80px);
+}
+
+/* Coluna Esquerda: Halo Reel 3D */
+.halo-reel-container {
+  position: relative;
+  width: 100%;
+  height: clamp(460px, 60vh, 560px);
+  overflow: hidden;
+  border-radius: var(--radius-lg, 28px);
+  background: radial-gradient(circle at 50% 50%, rgba(12, 42, 44, 0.45) 0%, rgba(3, 14, 16, 0.8) 100%);
+  border: 1px solid rgba(196, 174, 136, 0.2);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.7);
+  touch-action: pan-y;
+  user-select: none;
+  cursor: grab;
+}
+
+.halo-reel-container:active {
+  cursor: grabbing;
+}
+
+.halo-reel-stage {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.halo-wheel-card {
+  position: absolute;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.88);
+  border: 1px solid rgba(196, 174, 136, 0.3);
+  pointer-events: auto;
+  will-change: transform, opacity;
+  transition: border-color 250ms ease, box-shadow 250ms ease;
+  background: #041416;
+}
+
+.halo-wheel-card:hover {
+  border-color: rgba(196, 174, 136, 0.75);
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.95), 0 0 25px rgba(197, 160, 89, 0.25);
+}
+
+.halo-wheel-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Coluna Direita: Conteúdo Editorial Alinhado à Direita */
+.closing-split-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  text-align: right;
+  position: relative;
+  z-index: 2;
+}
+
+.closing-split-title {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+.closing-aux-line {
+  display: block;
+  font-family: var(--title);
+  font-size: clamp(34px, 4.4vw, 56px);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #ffffff !important;
+  text-shadow: 0 4px 20px rgba(2, 28, 29, 0.95);
+  opacity: 0;
+  will-change: transform, opacity;
+}
+
+.closing-section.is-inview .closing-aux-line {
+  animation: heroBlurRevealRight 1100ms cubic-bezier(0.16, 1, 0.3, 1) 200ms both;
+}
+
+.closing-split-brand {
+  display: inline-flex;
+  position: relative;
+  opacity: 0;
+  will-change: transform, opacity;
+}
+
+.closing-section.is-inview .closing-split-brand {
+  animation: heroWireframeIn 1100ms cubic-bezier(0.16, 1, 0.3, 1) 700ms both;
+}
+
+.closing-split-sweep {
+  font-size: clamp(52px, 7vw, 90px);
+  line-height: 0.95;
+  letter-spacing: 0.05em;
+  padding-bottom: 6px;
+  color: #ffffff;
+}
+
+.closing-section.is-inview .closing-split-sweep::before {
+  animation: wireframeToSolidFill 1200ms cubic-bezier(0.16, 1, 0.3, 1) 1200ms forwards;
+}
+
+.closing-section.is-inview .closing-split-sweep::after {
+  animation: laserScanUp 1200ms cubic-bezier(0.16, 1, 0.3, 1) 1200ms forwards;
+}
+
+.closing-split-underline {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #c4ae88 0%, #ffffff 50%, #c4ae88 100%);
+  box-shadow: 0 0 14px rgba(196, 174, 136, 0.85);
+  pointer-events: none;
+}
+
+.closing-section.is-inview .closing-split-underline {
+  animation: toledoUnderlineIn 1100ms cubic-bezier(0.16, 1, 0.3, 1) 1400ms forwards;
+}
+
+/* Botões Alinhados à Direita */
+.closing-split-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 14px;
+  margin-top: clamp(28px, 4.5vh, 42px);
+  flex-wrap: wrap;
+  opacity: 0;
+}
+
+.closing-section.is-inview .closing-split-actions {
+  animation: heroCtaFadeUp 850ms cubic-bezier(0.16, 1, 0.3, 1) 1500ms both;
+}
+
+.closing-btn-action {
+  height: 42px !important;
+  padding: 8px 24px !important;
+  font-size: 11.5px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.1em !important;
+  text-transform: uppercase !important;
+  border-radius: 999px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  transition: all 250ms ease !important;
+}
+
+.closing-btn-primary {
+  background: var(--accent, #c5a059) !important;
+  color: #051415 !important;
+  border: 1px solid var(--accent, #c5a059) !important;
+  font-weight: 700 !important;
+}
+
+.closing-btn-primary:hover {
+  background: #ffffff !important;
+  border-color: #ffffff !important;
+  color: #051415 !important;
+  transform: translateY(-2px) scale(1.03) !important;
+  box-shadow: 0 10px 25px rgba(197, 160, 89, 0.4) !important;
+}
+
+.closing-btn-whatsapp {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid rgba(255, 255, 255, 0.16) !important;
+  color: #ffffff !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+}
+
+.closing-btn-whatsapp:hover {
+  background: rgba(255, 255, 255, 0.12) !important;
+  border-color: rgba(255, 255, 255, 0.35) !important;
+  color: #ffffff !important;
+  transform: translateY(-2px) scale(1.03) !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5) !important;
+}
+
+.closing-wa-icon {
+  width: 15px;
+  height: 15px;
+  stroke: currentColor;
+}
+
+@media (max-width: 900px) {
+  .closing-split-wrap {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+  .halo-reel-container {
+    height: clamp(380px, 52vh, 440px);
+  }
+  .closing-split-right {
+    align-items: center;
+    text-align: center;
+  }
+  .closing-split-title {
+    align-items: center;
+  }
+  .closing-aux-line {
+    font-size: clamp(34px, 9.8vw, 48px);
+  }
+  .closing-split-sweep {
+    font-size: clamp(52px, 14.5vw, 72px);
+  }
+  .closing-split-actions {
+    justify-content: center;
+    gap: 10px;
+    margin-top: 24px;
+  }
+  .closing-btn-action {
+    height: 38px !important;
+    padding: 7px 18px !important;
+    font-size: 10.5px !important;
+  }
+}

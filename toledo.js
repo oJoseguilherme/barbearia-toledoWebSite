@@ -786,3 +786,216 @@ document.querySelectorAll('#contato').forEach(section => {
     section.classList.add('is-inview');
   }
 });
+
+
+// ==========================================================================
+// Halo Reel 3D (Perspectiva Elíptica Contínua com Matemática Pura a 60fps)
+// ==========================================================================
+function initHaloReel(container) {
+  if (!container) return;
+
+  const stage = container.querySelector('.halo-reel-stage') || container;
+  const items = [
+    { src: 'imagens/carrossel/img4.jpg', alt: 'Corte e barba na Barbearia Toledo' },
+    { src: 'imagens/carrossel/img5.jpg', alt: 'Ambiente e atendimento exclusivo' },
+    { src: 'imagens/carrossel/img6.jpg', alt: 'Acabamento e estilo masculino' },
+    { src: 'imagens/carrossel/img7.jpg', alt: 'Toalha quente e barboterapia' },
+    { src: 'imagens/carrossel/img8.jpg', alt: 'Excelência e precisão no corte' },
+    { src: 'imagens/carrossel/img9.jpg', alt: 'Tradição e modernidade desde 2015' }
+  ];
+
+  const count = items.length;
+  if (!count) return;
+
+  const TAU = Math.PI * 2;
+  const baseCardW = 135;
+  const baseCardH = 185;
+  const minScale = 0.38;
+  const radiusXRatio = 0.44;
+  const radiusYRatio = 0.35;
+  const centerXRatio = 0.50; // Centralizado no container do carrossel
+  const spread = 1.15;
+  const maxCards = 32;
+  const holdDuration = 1200;
+  const stepDuration = 650;
+
+  let width = container.offsetWidth || 500;
+  let height = container.offsetHeight || 450;
+
+  // Calcular slots da elipse
+  let radiusX = width * radiusXRatio;
+  let radiusY = height * radiusYRatio;
+
+  const slots = Math.max(
+    count,
+    Math.min(
+      maxCards,
+      Math.ceil(TAU * Math.max(radiusX / (baseCardW * spread), radiusY / (baseCardH * spread)))
+    )
+  );
+  const step = slots ? TAU / slots : 0;
+
+  const fit = Math.max(0.5, Math.min(1, Math.min(width / (radiusX + baseCardW), height / (2 * radiusY + baseCardH))));
+  const cardW = Math.round(baseCardW * fit);
+  const cardH = Math.round(baseCardH * fit);
+
+  // Renderizar DOM dos cards
+  stage.innerHTML = '';
+  const cards = [];
+
+  for (let i = 0; i < slots; i++) {
+    const item = items[i % count];
+    const cardEl = document.createElement('div');
+    cardEl.className = 'halo-wheel-card';
+    cardEl.style.width = cardW + 'px';
+    cardEl.style.height = cardH + 'px';
+    cardEl.style.marginLeft = (-cardW / 2) + 'px';
+    cardEl.style.marginTop = (-cardH / 2) + 'px';
+    cardEl.style.left = (centerXRatio * 100) + '%';
+    cardEl.style.top = '50%';
+
+    const imgEl = document.createElement('img');
+    imgEl.src = item.src;
+    imgEl.alt = item.alt;
+    imgEl.loading = 'lazy';
+    imgEl.draggable = false;
+    cardEl.appendChild(imgEl);
+
+    stage.appendChild(cardEl);
+    cards.push(cardEl);
+  }
+
+  // Estado de rotação física
+  let rotation = 0;
+  let targetRotation = 0;
+  let isDragging = false;
+  let isHovered = false;
+  let dragStartLeft = 0;
+  let dragStartTop = 0;
+  let dragStartAngle = 0;
+  let dragLastAngle = 0;
+
+  function pointerAngle(clientX, clientY) {
+    const rect = container.getBoundingClientRect();
+    const cx = rect.left + width * centerXRatio;
+    const cy = rect.top + height / 2;
+    return Math.atan2((clientY - cy) / (radiusY || 1), (clientX - cx) / (radiusX || 1));
+  }
+
+  function updateCards(rot) {
+    for (let i = 0; i < slots; i++) {
+      const angle = i * step + rot;
+      const cos = Math.cos(angle);
+      const sin = Math.sin(angle);
+
+      const x = cos * radiusX;
+      const y = sin * radiusY;
+      const scale = minScale + (1 - minScale) * ((cos + 1) / 2);
+      const z = Math.round(scale * 1000);
+      const opacity = Math.max(0.2, (cos + 1) / 2 * 0.95 + 0.05);
+
+      const card = cards[i];
+      card.style.transform = `translate3d(${x.toFixed(2)}px, ${y.toFixed(2)}px, 0) scale(${scale.toFixed(3)})`;
+      card.style.zIndex = z;
+      card.style.opacity = opacity.toFixed(2);
+    }
+  }
+
+  // Autoplay
+  let lastStepTime = performance.now();
+  let animatingSnap = false;
+  let snapStartTime = 0;
+  let snapFromRot = 0;
+  let snapToRot = 0;
+
+  function easeOutCubic(t) {
+    return 1 - Math.pow(1 - t, 3);
+  }
+
+  function loop(now) {
+    if (animatingSnap) {
+      const elapsed = now - snapStartTime;
+      const progress = Math.min(1, elapsed / stepDuration);
+      rotation = snapFromRot + (snapToRot - snapFromRot) * easeOutCubic(progress);
+      updateCards(rotation);
+      if (progress >= 1) {
+        animatingSnap = false;
+        lastStepTime = now;
+      }
+    } else if (!isDragging && !isHovered) {
+      if (now - lastStepTime > holdDuration) {
+        animatingSnap = true;
+        snapStartTime = now;
+        snapFromRot = rotation;
+        snapToRot = Math.round(rotation / step) * step - step;
+      }
+    }
+    requestAnimationFrame(loop);
+  }
+
+  requestAnimationFrame(loop);
+
+  // Eventos de Pointer para Drag suave
+  container.addEventListener('pointerdown', (e) => {
+    if (e.button && e.button !== 0) return;
+    isDragging = true;
+    animatingSnap = false;
+    dragStartAngle = pointerAngle(e.clientX, e.clientY);
+    dragLastAngle = dragStartAngle;
+    container.setPointerCapture?.(e.pointerId);
+  });
+
+  window.addEventListener('pointermove', (e) => {
+    if (!isDragging) return;
+    const currentAngle = pointerAngle(e.clientX, e.clientY);
+    let delta = ((currentAngle - dragLastAngle + Math.PI * 3) % TAU) - Math.PI;
+    dragLastAngle = currentAngle;
+    rotation += delta;
+    updateCards(rotation);
+  });
+
+  const onPointerUp = (e) => {
+    if (!isDragging) return;
+    isDragging = false;
+    try { container.releasePointerCapture?.(e.pointerId); } catch(err) {}
+
+    // Snap para o card mais próximo
+    animatingSnap = true;
+    snapStartTime = performance.now();
+    snapFromRot = rotation;
+    snapToRot = Math.round(rotation / step) * step;
+  };
+
+  window.addEventListener('pointerup', onPointerUp);
+  window.addEventListener('pointercancel', onPointerUp);
+
+  container.addEventListener('mouseenter', () => { isHovered = true; });
+  container.addEventListener('mouseleave', () => { isHovered = false; });
+
+  // Redimensionamento
+  window.addEventListener('resize', () => {
+    width = container.offsetWidth || 500;
+    height = container.offsetHeight || 450;
+    radiusX = width * radiusXRatio;
+    radiusY = height * radiusYRatio;
+    updateCards(rotation);
+  }, { passive: true });
+
+  updateCards(0);
+}
+
+document.querySelectorAll('.halo-reel-container').forEach(initHaloReel);
+
+// ScrollTrigger para acionar animação da seção de fechamento split
+document.querySelectorAll('#reserva').forEach(section => {
+  if (window.ScrollTrigger) {
+    ScrollTrigger.create({
+      trigger: section,
+      start: 'top 75%',
+      onEnter: () => section.classList.add('is-inview'),
+      onEnterBack: () => section.classList.add('is-inview')
+    });
+  } else {
+    section.classList.add('is-inview');
+  }
+});
