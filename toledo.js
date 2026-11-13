@@ -771,3 +771,18 @@ function initReviewsStack(container) {
 }
 
 document.querySelectorAll('.reviews-stack-container').forEach(initReviewsStack);
+
+
+// ScrollTrigger para secao de contato
+document.querySelectorAll('#contato').forEach(section => {
+  if (window.ScrollTrigger) {
+    ScrollTrigger.create({
+      trigger: section,
+      start: 'top 75%',
+      onEnter: () => section.classList.add('is-inview'),
+      onEnterBack: () => section.classList.add('is-inview')
+    });
+  } else {
+    section.classList.add('is-inview');
+  }
+});
