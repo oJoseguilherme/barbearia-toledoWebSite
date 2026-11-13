@@ -60,8 +60,57 @@ if (header) {
   updateHeader();
 }
 document.querySelectorAll('a[href="#inicio"]').forEach(a=>{a.addEventListener('click',e=>{e.preventDefault();window.scrollTo({top:0,behavior:'smooth'});});});
-const heroCopy=document.querySelector('.hero-copy');
-if(heroCopy&&'IntersectionObserver' in window){const heroObs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){heroCopy.classList.add('is-inview');heroObs.unobserve(heroCopy);}})},{threshold:0.15});heroObs.observe(heroCopy);}else if(heroCopy){heroCopy.classList.add('is-inview');}
+
+// ==========================================================================
+// Revelação Editorial no Scroll (Apresentação Visual: Efeitos Ativam Só no Local)
+// ==========================================================================
+function initEditorialScrollReveal() {
+  const targets = [
+    { selector: '.hero-copy', threshold: 0.15, rootMargin: '0px 0px -5% 0px' },
+    { selector: '#trabalhos', threshold: 0.12, rootMargin: '0px 0px -10% 0px' },
+    { selector: '#equipe', threshold: 0.12, rootMargin: '0px 0px -10% 0px' },
+    { selector: '#avaliacoes', threshold: 0.12, rootMargin: '0px 0px -10% 0px' },
+    { selector: '#contato', threshold: 0.12, rootMargin: '0px 0px -10% 0px' },
+    { selector: '#reserva', threshold: 0.10, rootMargin: '0px 0px -8% 0px' },
+    { selector: '.history-section', threshold: 0.12, rootMargin: '0px 0px -10% 0px' }
+  ];
+
+  if ('IntersectionObserver' in window) {
+    targets.forEach(item => {
+      const els = document.querySelectorAll(item.selector);
+      if (!els.length) return;
+      const obs = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-inview');
+            obs.unobserve(entry.target);
+          }
+        });
+      }, {
+        threshold: item.threshold,
+        rootMargin: item.rootMargin
+      });
+      els.forEach(el => obs.observe(el));
+    });
+  } else {
+    const checkScroll = () => {
+      const vh = window.innerHeight;
+      targets.forEach(item => {
+        document.querySelectorAll(item.selector).forEach(el => {
+          if (!el.classList.contains('is-inview')) {
+            const r = el.getBoundingClientRect();
+            if (r.top < vh * 0.88 && r.bottom > 0) {
+              el.classList.add('is-inview');
+            }
+          }
+        });
+      });
+    };
+    window.addEventListener('scroll', checkScroll, { passive: true });
+    checkScroll();
+  }
+}
+initEditorialScrollReveal();
 const video=document.querySelector('#hero-video'),videoButton=document.querySelector('.video-control');
 if(video){if(videoButton){let manualPause=false;videoButton.addEventListener('click',async()=>{if(video.paused){manualPause=false;try{await video.play()}catch{videoButton.textContent='Reproduzir vídeo'}}else{manualPause=true;video.pause()}});video.addEventListener('play',()=>videoButton.textContent='Pausar vídeo');video.addEventListener('pause',()=>videoButton.textContent='Reproduzir vídeo');}if('IntersectionObserver'in window)new IntersectionObserver(es=>es.forEach(e=>{if(!e.isIntersecting)video.pause();else if(!reduce.matches)video.play().catch(()=>{})}),{threshold:.15}).observe(video);reduce.addEventListener('change',e=>{if(e.matches)video.pause()})}
 // ==========================================================================
@@ -79,18 +128,6 @@ function initWorksShowcase(section) {
   if (!menu || !frame || !img) return;
 
   const items = [...menu.querySelectorAll('.showcase-item')];
-
-  // Ativa a animação do título ao entrar no campo de visão
-  if (window.ScrollTrigger) {
-    ScrollTrigger.create({
-      trigger: section,
-      start: 'top 75%',
-      onEnter: () => section.classList.add('is-inview'),
-      onEnterBack: () => section.classList.add('is-inview')
-    });
-  } else {
-    section.classList.add('is-inview');
-  }
 
   const procedures = [
     { name: 'Visagismo Masculino', after: 'imagens/VisagismoDepois.png', before: 'imagens/VisagismoAntes.png' },
@@ -616,20 +653,6 @@ function initCurvedLensCarousel(root) {
   updateCopy(initialIndex);
 }
 
-// Inicializacao de secoes de equipe para efeito in-view
-document.querySelectorAll('#equipe').forEach(section => {
-  if (window.ScrollTrigger) {
-    ScrollTrigger.create({
-      trigger: section,
-      start: 'top 75%',
-      onEnter: () => section.classList.add('is-inview'),
-      onEnterBack: () => section.classList.add('is-inview')
-    });
-  } else {
-    section.classList.add('is-inview');
-  }
-});
-
 document.querySelectorAll('.clc-root').forEach(initCurvedLensCarousel);
 document.querySelectorAll('.portrait-carousel').forEach(initPortraits);
 
@@ -760,40 +783,10 @@ function initReviewsStack(container) {
     }
   });
 
-  // Disparo com ScrollTrigger (adiciona efeito in-view no título da seção)
-  const reviewsSection = container.closest('.reviews-section');
-  if (reviewsSection) {
-    if (window.ScrollTrigger) {
-      ScrollTrigger.create({
-        trigger: reviewsSection,
-        start: 'top 75%',
-        onEnter: () => reviewsSection.classList.add('is-inview'),
-        onEnterBack: () => reviewsSection.classList.add('is-inview')
-      });
-    } else {
-      reviewsSection.classList.add('is-inview');
-    }
-  }
-
   updateStack();
 }
 
 document.querySelectorAll('.reviews-stack-container').forEach(initReviewsStack);
-
-
-// ScrollTrigger para secao de contato
-document.querySelectorAll('#contato').forEach(section => {
-  if (window.ScrollTrigger) {
-    ScrollTrigger.create({
-      trigger: section,
-      start: 'top 75%',
-      onEnter: () => section.classList.add('is-inview'),
-      onEnterBack: () => section.classList.add('is-inview')
-    });
-  } else {
-    section.classList.add('is-inview');
-  }
-});
 
 
 // ==========================================================================
@@ -1017,17 +1010,3 @@ function initHaloReel(container) {
 }
 
 document.querySelectorAll('.halo-reel-container').forEach(initHaloReel);
-
-// ScrollTrigger para acionar animação da seção de fechamento split
-document.querySelectorAll('#reserva').forEach(section => {
-  if (window.ScrollTrigger) {
-    ScrollTrigger.create({
-      trigger: section,
-      start: 'top 75%',
-      onEnter: () => section.classList.add('is-inview'),
-      onEnterBack: () => section.classList.add('is-inview')
-    });
-  } else {
-    section.classList.add('is-inview');
-  }
-});
