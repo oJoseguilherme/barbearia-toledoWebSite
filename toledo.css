@@ -2064,3 +2064,268 @@ footer p {
     will-change: auto;
   }
 }
+
+
+/* ==========================================================================
+   3D Curved Lens Carousel (WebGL) - Equipe Toledo
+   ========================================================================== */
+.clc-root {
+  position: relative;
+  width: 100%;
+  height: clamp(520px, 72vh, 680px);
+  overflow: hidden;
+  isolation: isolate;
+  outline: none;
+  user-select: none;
+  -webkit-user-select: none;
+  border-radius: var(--radius-lg, 24px);
+  background: radial-gradient(circle at 50% 40%, rgba(26, 31, 46, 0.4), rgba(11, 12, 16, 0.95));
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  margin-top: clamp(24px, 4vw, 40px);
+  margin-bottom: 24px;
+}
+
+.clc-root:focus-visible {
+  box-shadow: 0 0 0 2px var(--accent, #c5a059), inset 0 0 0 2px rgba(255, 255, 255, 0.2);
+}
+
+.clc-glow {
+  position: absolute;
+  inset: -20%;
+  background: radial-gradient(50% 40% at 50% 46%, rgba(197, 160, 89, 0.08), transparent 70%);
+  pointer-events: none;
+}
+
+.clc-grain {
+  position: absolute;
+  inset: 0;
+  opacity: 0.04;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.clc-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  cursor: grab;
+  touch-action: pan-y;
+}
+
+.clc-canvas:active {
+  cursor: grabbing;
+}
+
+.clc-top {
+  position: absolute;
+  left: clamp(20px, 4vw, 44px);
+  right: clamp(20px, 4vw, 44px);
+  top: clamp(20px, 3.5vw, 36px);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--text, #e2e8f0);
+  opacity: 0.75;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.clc-top b {
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  color: var(--accent, #c5a059);
+}
+
+.clc-copy {
+  position: absolute;
+  left: clamp(20px, 4vw, 44px);
+  bottom: clamp(24px, 4vw, 44px);
+  max-width: min(560px, 68%);
+  color: var(--text, #f8fafc);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.clc-kicker {
+  display: block;
+  font-size: 11px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--accent, #c5a059);
+  opacity: 0.9;
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+.clc-title {
+  font-family: var(--font-display, "Cinzel", Georgia, serif);
+  font-weight: 600;
+  font-size: clamp(38px, 6vw, 76px);
+  line-height: 0.95;
+  letter-spacing: -0.01em;
+  margin: 0;
+  display: block;
+  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.7);
+}
+
+.clc-ch {
+  display: inline-block;
+  transform: translateY(105%) rotate(6deg);
+  opacity: 0;
+  transition: transform 0.85s cubic-bezier(0.2, 0.9, 0.1, 1), opacity 0.55s ease;
+}
+
+.clc-line {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.08em;
+}
+
+.clc-in .clc-ch {
+  transform: none;
+  opacity: 1;
+}
+
+.clc-cap {
+  display: block;
+  margin-top: 12px;
+  font-size: clamp(13px, 1.4vw, 15px);
+  line-height: 1.5;
+  color: rgba(226, 232, 240, 0.75);
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.7s ease 0.25s, transform 0.7s cubic-bezier(0.2, 0.9, 0.1, 1) 0.25s;
+  max-width: 36ch;
+}
+
+.clc-in .clc-cap {
+  opacity: 1;
+  transform: none;
+}
+
+.clc-ctl {
+  position: absolute;
+  right: clamp(20px, 4vw, 44px);
+  bottom: clamp(24px, 4vw, 44px);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 16px;
+  color: var(--text, #f8fafc);
+  z-index: 2;
+}
+
+.clc-count {
+  font-size: 13px;
+  letter-spacing: 0.18em;
+  font-variant-numeric: tabular-nums;
+  opacity: 0.85;
+}
+
+.clc-count i {
+  font-style: normal;
+  opacity: 0.45;
+}
+
+.clc-bar {
+  width: 130px;
+  height: 2px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.15);
+  overflow: hidden;
+}
+
+.clc-bar-fill {
+  display: block;
+  height: 100%;
+  width: 100%;
+  background: var(--accent, #c5a059);
+  transform-origin: 0 50%;
+  transition: transform 0.7s cubic-bezier(0.2, 0.9, 0.1, 1);
+}
+
+.clc-btns {
+  display: flex;
+  gap: 10px;
+}
+
+.clc-btn {
+  width: 46px;
+  height: 46px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  color: var(--text, #f8fafc);
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 10px 25px -8px rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition: transform 0.35s cubic-bezier(0.3, 1.6, 0.5, 1), background 0.3s ease, border-color 0.3s ease;
+}
+
+.clc-btn:hover {
+  transform: translateY(-2px) scale(1.06);
+  background: rgba(197, 160, 89, 0.18);
+  border-color: var(--accent, #c5a059);
+  color: #fff;
+}
+
+.clc-btn:active {
+  transform: scale(0.94);
+}
+
+.clc-btn:focus-visible {
+  outline: 2px solid var(--accent, #c5a059);
+  outline-offset: 3px;
+}
+
+.clc-btn svg {
+  width: 18px;
+  height: 18px;
+}
+
+.clc-fallback {
+  display: none;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(62vw, 340px);
+  aspect-ratio: 4/5;
+  transform: translate(-50%, -50%);
+  object-fit: cover;
+  border-radius: 14px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
+}
+
+.clc-no-gl .clc-fallback {
+  display: block;
+}
+
+@media (max-width: 640px) {
+  .clc-root {
+    height: 560px;
+  }
+  .clc-copy {
+    max-width: calc(100% - 40px);
+    bottom: 90px;
+  }
+  .clc-ctl {
+    flex-direction: row;
+    align-items: center;
+    left: 20px;
+    right: 20px;
+    justify-content: space-between;
+  }
+  .clc-bar {
+    width: 80px;
+  }
+}
