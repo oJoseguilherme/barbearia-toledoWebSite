@@ -442,22 +442,29 @@ section, .wrap {
 .drawer-links {
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: clamp(10px, 1.8vh, 16px);
   margin-block: auto;
-  padding-block: 24px;
+  padding-block: 16px;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+
+.drawer-links::-webkit-scrollbar {
+  display: none;
 }
 
 .drawer-links a {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 14px;
   font-family: var(--title);
-  font-size: clamp(24px, 3.2vw, 32px);
+  font-size: clamp(20px, 2.6vw, 26px);
   letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--ink);
   text-decoration: none;
   transition: color 200ms ease, transform 200ms ease;
+  white-space: nowrap;
 }
 
 .drawer-links a:hover {
