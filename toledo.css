@@ -4107,8 +4107,8 @@ footer p {
     animation: toledoUnderlineIn 850ms cubic-bezier(0.16, 1, 0.3, 1) 1050ms forwards !important;
   }
 
-  /* Botões no Mobile: um embaixo do outro.
-     "Agendar nesta unidade" em cima e "Ver localização" embaixo colocado para a direita */
+  /* Botões no Mobile: posicionamento ultra respirável conforme o print do usuário.
+     "Agendar nesta unidade" em cima na altura do primeiro X e "Ver localização" embaixo na altura do segundo X */
   .hero-actions {
     display: flex !important;
     flex-direction: column !important;
@@ -4118,30 +4118,36 @@ footer p {
     margin-inline: auto !important;
     margin-left: auto !important;
     margin-right: auto !important;
-    margin-top: clamp(28px, 5vh, 42px) !important;
-    margin-bottom: clamp(16px, 3vh, 28px) !important;
-    gap: 12px !important;
-    width: min(calc(100% - 32px), 320px) !important;
+    /* Distância generosa abaixo de TOLEDO exatamente onde o usuário colocou o primeiro X */
+    margin-top: clamp(110px, 20vh, 180px) !important;
+    margin-bottom: clamp(60px, 12vh, 110px) !important;
+    /* Espaçamento amplo entre o primeiro e o segundo botão onde o usuário colocou o segundo X */
+    gap: clamp(24px, 4.5vh, 42px) !important;
+    width: min(calc(100% - 32px), 330px) !important;
     max-width: 100% !important;
     overflow-x: visible !important;
   }
 
-  /* "Agendar nesta unidade" em cima, ocupando o lado esquerdo */
+  /* "Agendar nesta unidade" em cima, ocupando o lado esquerdo/centro na posição do primeiro X */
   .hero-actions .hero-cta:first-child {
     align-self: flex-start !important;
-    margin: 0 !important;
+    margin-left: clamp(8px, 3vw, 24px) !important;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
   }
 
-  /* "Ver localização" embaixo, colocado para a direita */
+  /* "Ver localização" embaixo, colocado para a direita exatamente na altura do segundo X */
   .hero-actions .hero-loc-btn {
     align-self: flex-end !important;
-    margin: 0 !important;
+    margin-right: clamp(4px, 2vw, 16px) !important;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
   }
 
   .hero-actions .hero-btn-sm {
-    padding: 8px 18px !important;
+    padding: 9px 20px !important;
     font-size: 11px !important;
-    height: 38px !important;
+    height: 40px !important;
     letter-spacing: 0.08em !important;
     white-space: nowrap !important;
     flex-shrink: 0 !important;
