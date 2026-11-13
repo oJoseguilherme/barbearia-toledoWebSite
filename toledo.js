@@ -923,35 +923,20 @@ function initHaloReel(container) {
     }
   }
 
-  // Autoplay
-  let lastStepTime = performance.now();
-  let animatingSnap = false;
-  let snapStartTime = 0;
-  let snapFromRot = 0;
-  let snapToRot = 0;
-
-  function easeOutCubic(t) {
-    return 1 - Math.pow(1 - t, 3);
-  }
+  // Autoplay Contínuo e Fluido (Rodando de baixo para cima, em sentido anti-horário)
+  let lastTime = performance.now();
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const autoSpeed = reduceMotion ? 0 : -0.00042; // radianos/ms: gira continuamente de baixo para cima
 
   function loop(now) {
-    if (animatingSnap) {
-      const elapsed = now - snapStartTime;
-      const progress = Math.min(1, elapsed / stepDuration);
-      rotation = snapFromRot + (snapToRot - snapFromRot) * easeOutCubic(progress);
+    const dt = Math.min(64, now - lastTime);
+    lastTime = now;
+
+    if (!isDragging) {
+      rotation += autoSpeed * dt;
       updateCards(rotation);
-      if (progress >= 1) {
-        animatingSnap = false;
-        lastStepTime = now;
-      }
-    } else if (!isDragging && !isHovered) {
-      if (now - lastStepTime > holdDuration) {
-        animatingSnap = true;
-        snapStartTime = now;
-        snapFromRot = rotation;
-        snapToRot = Math.round(rotation / step) * step - step;
-      }
     }
+
     requestAnimationFrame(loop);
   }
 
@@ -961,7 +946,6 @@ function initHaloReel(container) {
   container.addEventListener('pointerdown', (e) => {
     if (e.button && e.button !== 0) return;
     isDragging = true;
-    animatingSnap = false;
     dragStartAngle = pointerAngle(e.clientX, e.clientY);
     dragLastAngle = dragStartAngle;
     container.setPointerCapture?.(e.pointerId);
@@ -980,19 +964,10 @@ function initHaloReel(container) {
     if (!isDragging) return;
     isDragging = false;
     try { container.releasePointerCapture?.(e.pointerId); } catch(err) {}
-
-    // Snap para o card mais próximo
-    animatingSnap = true;
-    snapStartTime = performance.now();
-    snapFromRot = rotation;
-    snapToRot = Math.round(rotation / step) * step;
   };
 
   window.addEventListener('pointerup', onPointerUp);
   window.addEventListener('pointercancel', onPointerUp);
-
-  container.addEventListener('mouseenter', () => { isHovered = true; });
-  container.addEventListener('mouseleave', () => { isHovered = false; });
 
   // Redimensionamento
   window.addEventListener('resize', () => {
