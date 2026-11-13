@@ -816,19 +816,20 @@ function initHaloReel(container) {
   if (!count) return;
 
   const TAU = Math.PI * 2;
-  const baseCardW = 135;
-  const baseCardH = 185;
-  const minScale = 0.38;
-  const radiusXRatio = 0.44;
-  const radiusYRatio = 0.35;
-  const centerXRatio = 0.50; // Centralizado no container do carrossel
+  const isMobile = window.innerWidth <= 900;
+  const baseCardW = isMobile ? 155 : 195;
+  const baseCardH = isMobile ? 220 : 275;
+  const minScale = 0.28;
+  const radiusXRatio = isMobile ? 0.42 : 0.48;
+  const radiusYRatio = isMobile ? 0.32 : 0.35;
+  const centerXRatio = isMobile ? 0.18 : 0.06; // Ancorado na parede esquerda: cards orbitam entrando e saindo da parede
   const spread = 1.15;
   const maxCards = 32;
-  const holdDuration = 1200;
-  const stepDuration = 650;
+  const holdDuration = 1350;
+  const stepDuration = 680;
 
   let width = container.offsetWidth || 500;
-  let height = container.offsetHeight || 450;
+  let height = container.offsetHeight || 580;
 
   // Calcular slots da elipse
   let radiusX = width * radiusXRatio;
@@ -843,7 +844,7 @@ function initHaloReel(container) {
   );
   const step = slots ? TAU / slots : 0;
 
-  const fit = Math.max(0.5, Math.min(1, Math.min(width / (radiusX + baseCardW), height / (2 * radiusY + baseCardH))));
+  const fit = Math.max(0.65, Math.min(1.05, height / (2 * radiusY + baseCardH * 0.9)));
   const cardW = Math.round(baseCardW * fit);
   const cardH = Math.round(baseCardH * fit);
 
@@ -898,14 +899,36 @@ function initHaloReel(container) {
 
       const x = cos * radiusX;
       const y = sin * radiusY;
-      const scale = minScale + (1 - minScale) * ((cos + 1) / 2);
+
+      // Curva de escala de profundidade com destaque substancial na frente
+      const normalizedCos = (cos + 1) / 2; // 0 (parede ao fundo) a 1 (frente no centro)
+      let scale = minScale + (1 - minScale) * Math.pow(normalizedCos, 1.25);
+
+      // Quando o card está na frente/destaque, ganha ampliação adicional de até +32%
+      if (cos > 0.2) {
+        const frontT = (cos - 0.2) / 0.8;
+        scale += Math.pow(frontT, 1.4) * 0.32;
+      }
+
       const z = Math.round(scale * 1000);
-      const opacity = Math.max(0.2, (cos + 1) / 2 * 0.95 + 0.05);
+      // Opacidade: suave quando se aproxima da parede / fora da tela (0.15) e 1.0 na frente
+      const opacity = Math.max(0.14, Math.min(1, Math.pow(normalizedCos, 1.3) * 0.95 + 0.08));
 
       const card = cards[i];
       card.style.transform = `translate3d(${x.toFixed(2)}px, ${y.toFixed(2)}px, 0) scale(${scale.toFixed(3)})`;
       card.style.zIndex = z;
       card.style.opacity = opacity.toFixed(2);
+
+      // Destaque visual requintado para o card frontal
+      if (cos > 0.7) {
+        card.style.borderColor = 'rgba(196, 174, 136, 0.78)';
+        card.style.boxShadow = '0 32px 75px rgba(0, 0, 0, 0.98), 0 0 35px rgba(197, 160, 89, 0.32)';
+        card.style.filter = 'brightness(1.05)';
+      } else {
+        card.style.borderColor = 'rgba(196, 174, 136, 0.22)';
+        card.style.boxShadow = '0 16px 40px rgba(0, 0, 0, 0.85)';
+        card.style.filter = `brightness(${(0.68 + normalizedCos * 0.32).toFixed(2)})`;
+      }
     }
   }
 
@@ -982,10 +1005,11 @@ function initHaloReel(container) {
 
   // Redimensionamento
   window.addEventListener('resize', () => {
+    const isM = window.innerWidth <= 900;
     width = container.offsetWidth || 500;
-    height = container.offsetHeight || 450;
-    radiusX = width * radiusXRatio;
-    radiusY = height * radiusYRatio;
+    height = container.offsetHeight || 580;
+    radiusX = width * (isM ? 0.42 : 0.48);
+    radiusY = height * (isM ? 0.32 : 0.35);
     updateCards(rotation);
   }, { passive: true });
 

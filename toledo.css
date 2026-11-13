@@ -3683,22 +3683,22 @@ footer p {
    ========================================================================== */
 .closing-split-wrap {
   display: grid;
-  grid-template-columns: 1.1fr 0.9fr;
+  grid-template-columns: 1.25fr 0.85fr;
   align-items: center;
   gap: clamp(32px, 5vw, 64px);
   padding-block: clamp(48px, 8vh, 80px);
 }
 
-/* Coluna Esquerda: Halo Reel 3D */
+/* Coluna Esquerda: Halo Reel 3D (Efeito Órbita na Parede sem Moldura) */
 .halo-reel-container {
   position: relative;
   width: 100%;
-  height: clamp(460px, 60vh, 560px);
-  overflow: hidden;
-  border-radius: var(--radius-lg, 28px);
-  background: radial-gradient(circle at 50% 50%, rgba(12, 42, 44, 0.45) 0%, rgba(3, 14, 16, 0.8) 100%);
-  border: 1px solid rgba(196, 174, 136, 0.2);
-  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.7);
+  height: clamp(540px, 72vh, 680px);
+  overflow: visible;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
   touch-action: pan-y;
   user-select: none;
   cursor: grab;
@@ -3718,19 +3718,19 @@ footer p {
 
 .halo-wheel-card {
   position: absolute;
-  border-radius: 16px;
+  border-radius: 18px;
   overflow: hidden;
-  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.88);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.92);
   border: 1px solid rgba(196, 174, 136, 0.3);
   pointer-events: auto;
-  will-change: transform, opacity;
-  transition: border-color 250ms ease, box-shadow 250ms ease;
+  will-change: transform, opacity, filter;
+  transition: border-color 250ms ease, box-shadow 250ms ease, filter 250ms ease;
   background: #041416;
 }
 
 .halo-wheel-card:hover {
-  border-color: rgba(196, 174, 136, 0.75);
-  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.95), 0 0 25px rgba(197, 160, 89, 0.25);
+  border-color: rgba(196, 174, 136, 0.85);
+  box-shadow: 0 32px 80px rgba(0, 0, 0, 0.98), 0 0 32px rgba(197, 160, 89, 0.35);
 }
 
 .halo-wheel-card img {
@@ -3890,7 +3890,11 @@ footer p {
     gap: 32px;
   }
   .halo-reel-container {
-    height: clamp(380px, 52vh, 440px);
+    height: clamp(440px, 60vh, 520px);
+    overflow: visible;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
   }
   .closing-split-right {
     align-items: center;
