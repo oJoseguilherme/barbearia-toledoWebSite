@@ -256,7 +256,8 @@ function initCurvedLensCarousel(root) {
   const nextBtn = root.querySelector('.clc-btn-next');
   const fallbackImg = root.querySelector('.clc-fallback');
 
-  let current = 0;
+  const initialIndex = parseInt(root.dataset.initial || '0', 10);
+  let current = initialIndex;
   let shown = false;
 
   function wrap(i, total) {
@@ -339,7 +340,7 @@ function initCurvedLensCarousel(root) {
   const gl = canvas.getContext('webgl', { premultipliedAlpha: true, antialias: true, alpha: true });
   if (!gl) {
     root.classList.add('clc-no-gl');
-    updateCopy(0);
+    updateCopy(initialIndex);
     return;
   }
 
@@ -404,7 +405,7 @@ function initCurvedLensCarousel(root) {
   if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) {
     console.warn("3d-curved-carousel GL error: " + gl.getProgramInfoLog(prog));
     root.classList.add('clc-no-gl');
-    updateCopy(0);
+    updateCopy(initialIndex);
     return;
   }
   gl.useProgram(prog);
@@ -455,7 +456,7 @@ function initCurvedLensCarousel(root) {
   });
 
   let W = 1, H = 1, dpr = 1, cw = 1, ch = 1, gap = 1;
-  let pos = 0, vel = 0, target = 0;
+  let pos = initialIndex, vel = 0, target = initialIndex;
   let intro = reduced.matches ? 1 : 0;
   let introStart = -1;
   let dragging = false, dragX = 0, dragPos = 0, lastX = 0, lastT = 0, flick = 0;
@@ -477,7 +478,6 @@ function initCurvedLensCarousel(root) {
     gl.clearColor(0, 0, 0, 0);
     gl.clear(gl.COLOR_BUFFER_BIT);
     gl.uniform2f(u.uRes, W, H);
-    gl.uniform2f(u.uSize, cw, ch);
     gl.uniform1f(u.uBend, bend);
     gl.uniform1f(u.uVel, reduced.matches ? 0 : Math.max(-1, Math.min(1, vel * 0.12)));
     gl.uniform1f(u.uLift, W < 640 ? 0.20 : 0.15);
@@ -489,6 +489,14 @@ function initCurvedLensCarousel(root) {
       const order = Math.abs(d);
       const t = Math.max(0, Math.min(1, (intro - order * 0.12) / 0.6));
       const e = 1 - Math.pow(1 - t, 3);
+
+      // Pequena aumentada no card do barbeiro que fica no meio (+10% de escala e destaque focal)
+      const centerFactor = Math.max(0, 1 - Math.min(1, Math.abs(d)));
+      const scaleBoost = 1.0 + (0.10 * Math.pow(centerFactor, 1.6));
+      const cardW = cw * scaleBoost;
+      const cardH = ch * scaleBoost;
+      gl.uniform2f(u.uSize, cardW, cardH);
+
       gl.bindTexture(gl.TEXTURE_2D, tex[i].t);
       gl.uniform1f(u.uX, x);
       gl.uniform1f(u.uIntro, e);
@@ -598,14 +606,14 @@ function initCurvedLensCarousel(root) {
     if (visible) {
       if (!shown) {
         shown = true;
-        updateCopy(0);
+        updateCopy(initialIndex);
       }
       kick();
     }
   });
   io.observe(root);
 
-  updateCopy(0);
+  updateCopy(initialIndex);
 }
 
 // Inicializacao de secoes de equipe para efeito in-view
