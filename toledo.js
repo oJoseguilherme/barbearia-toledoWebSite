@@ -287,6 +287,7 @@ function initCurvedLensCarousel(root) {
 
   const copyEl = root.querySelector('.clc-copy');
   const titleLineEl = root.querySelector('.clc-title .clc-line');
+  const instaBtn = root.querySelector('.clc-action-insta');
   const prevBtn = root.querySelector('.clc-btn-prev');
   const nextBtn = root.querySelector('.clc-btn-next');
   const fallbackImg = root.querySelector('.clc-fallback');
@@ -369,6 +370,12 @@ function initCurvedLensCarousel(root) {
     if (fallbackImg) {
       fallbackImg.src = slide.image;
       fallbackImg.alt = slide.alt || slide.title;
+    }
+
+    if (instaBtn) {
+      const instaUrl = slide.instagram || 'https://www.instagram.com/barbeariatoledo/';
+      instaBtn.href = instaUrl;
+      instaBtn.setAttribute('aria-label', `Instagram de ${slide.title}`);
     }
   }
 
